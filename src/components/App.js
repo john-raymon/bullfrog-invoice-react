@@ -9,7 +9,6 @@ import {
 import Login from './Login'
 
 import '../styles/application.css';
-import logo from '../images/small_logo.png';
 
 const Test = (props) => {
   return (
@@ -37,14 +36,13 @@ function ProtectedRoute({ component: Component, auth, ...rest}) {
 }
 
 class App extends Component {
-
   render() {
     return (
-        <Switch>
-          <ProtectedRoute path="/" exact auth={true} component={Test} />
-          <Route path="/login" exact component={Login} />
-          <ProtectedRoute path="/*" auth={true} component={Test} />
-        </Switch>
+      <Switch>
+        <ProtectedRoute path="/" exact auth={false} component={Test} />
+        <Route path="/login" exact component={Login} />
+        <ProtectedRoute path="/*" auth={false} component={Test} />
+      </Switch>
     );
   }
 }

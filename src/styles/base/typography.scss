@@ -13,6 +13,6 @@
 $din_bold: 'din_bold';
 
 .dinTitle {
+  @extend .f2, .tracked, .lh-title;
   font-family: $din_bold;
-  letter-spacing: 2.2rem;
 }

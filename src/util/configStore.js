@@ -4,15 +4,16 @@ import { createBrowserHistory } from 'history'
 // middlewares
 import thunkMiddleware from 'redux-thunk'
 import promiseMiddleware from 'redux-promise-middleware'
-import createLogger from 'redux-logger'
+import logger from 'redux-logger'
 import { routerMiddleware } from 'connected-react-router'
 
 export const history = createBrowserHistory();
 const configureStore = (persistedState) => {
-  const middlewares = [thunkMiddleware, routerMiddleware(history)]
+  const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+  const middlewares = [thunkMiddleware, logger, routerMiddleware(history)]
 	return createStore(
     createRootReducer(history),
-    compose(
+    composeEnhancers(
       applyMiddleware(...middlewares))
     )
 }

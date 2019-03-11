@@ -1526,7 +1526,7 @@ code, .code {
      -l  = large
 
 */
-.tracked {
+.tracked, .dinTitle {
   letter-spacing: .1em; }
 
 .tracked-tight {
@@ -1549,7 +1549,7 @@ code, .code {
 .lh-solid {
   line-height: 1; }
 
-.lh-title {
+.lh-title, .dinTitle {
   line-height: 1.25; }
 
 .lh-copy {
@@ -3613,7 +3613,7 @@ code, .code {
 .f1 {
   font-size: 3rem; }
 
-.f2 {
+.f2, .dinTitle {
   font-size: 2.25rem; }
 
 .f3 {
@@ -6892,5 +6892,7 @@ code, .code {
   font-style: normal; }
 
 .dinTitle {
-  font-family: "din_bold";
-  letter-spacing: 2.2rem; }
+  font-family: "din_bold"; }
+
+.html {
+  font-size: 16px; }
