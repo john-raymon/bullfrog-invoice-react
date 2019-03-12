@@ -1526,7 +1526,7 @@ code, .code {
      -l  = large
 
 */
-.tracked, .dinTitle {
+.tracked, .dinTitle, .dinLabel, .InputField {
   letter-spacing: .1em; }
 
 .tracked-tight {
@@ -1552,7 +1552,7 @@ code, .code {
 .lh-title, .dinTitle {
   line-height: 1.25; }
 
-.lh-copy {
+.lh-copy, .dinLabel, .InputField {
   line-height: 1.5; }
 
 /*
@@ -3274,7 +3274,7 @@ code, .code {
   margin-top: .25rem;
   margin-bottom: .25rem; }
 
-.mv2 {
+.mv2, .InputField {
   margin-top: .5rem;
   margin-bottom: .5rem; }
 
@@ -3537,7 +3537,7 @@ code, .code {
 .tr {
   text-align: right; }
 
-.tc {
+.tc, .InputField {
   text-align: center; }
 
 .tj {
@@ -3619,10 +3619,10 @@ code, .code {
 .f3 {
   font-size: 1.5rem; }
 
-.f4 {
+.f4, .dinLabel, .InputField {
   font-size: 1.25rem; }
 
-.f5 {
+.f5, .InputField {
   font-size: 1rem; }
 
 .f6 {
@@ -6884,6 +6884,12 @@ code, .code {
   .v-btm-l {
     vertical-align: bottom; } }
 
+.measure-960 {
+  max-width: 60rem; }
+
+.measure-1024 {
+  max-width: 64rem; }
+
 @font-face {
   font-family: 'din_bold';
   src: url("../fonts/din_alternate_bold-webfont.eot");
@@ -6894,5 +6900,20 @@ code, .code {
 .dinTitle {
   font-family: "din_bold"; }
 
+.dinLabel, .InputField {
+  font-family: "din_bold"; }
+
 .html {
   font-size: 16px; }
+
+.ArrowIcon {
+  width: 0.68rem;
+  height: 1.18rem; }
+
+.InputField {
+  outline: none;
+  background: #fff;
+  width: 100%;
+  border: 0.18rem solid #D8D8D8;
+  border-radius: 0.25rem;
+  height: 56px; }

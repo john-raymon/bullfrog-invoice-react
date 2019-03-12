@@ -1,2 +1,15 @@
 .html {
   font-size: 16px; }
+
+.ArrowIcon {
+  width: 0.68rem;
+  height: 1.18rem; }
+
+.InputField {
+  outline: none;
+  background: #fff;
+  width: 80%;
+  border: 0.18rem solid #D8D8D8;
+  border-radius: 0.25rem;
+  height: 56px;
+  max-width: 493px; }

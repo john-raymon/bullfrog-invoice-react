@@ -1,3 +1,18 @@
 .html {
   font-size: 16px;
 }
+
+.ArrowIcon {
+  width: 0.68rem;
+  height: 1.18rem;
+}
+
+.InputField {
+  @extend .mv2, .dinLabel, .f5, .tc;
+  outline: none;
+  background: #fff;
+  width: 100%;
+  border: 0.18rem solid #D8D8D8;
+  border-radius: 0.25rem;
+  height: 56px;
+}

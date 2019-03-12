@@ -16,3 +16,8 @@ $din_bold: 'din_bold';
   @extend .f2, .tracked, .lh-title;
   font-family: $din_bold;
 }
+
+.dinLabel {
+  @extend .f4, .tracked, .lh-copy;
+  font-family: $din_bold;
+}
