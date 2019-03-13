@@ -46,8 +46,6 @@ class App extends Component {
   render() {
     return (
       <div>
-        <header>
-        </header>
         <Switch>
           <ProtectedRoute path="/" exact component={Dashboard} />
           <Route path="/login" exact component={Login} />
