@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import {
   Route,
@@ -50,9 +50,9 @@ class App extends Component {
   render() {
     return (
       <Switch>
-        <ProtectedRoute path="/" exact auth={false} component={Home} />
+        <ProtectedRoute path="/" exact component={Home} />
         <Route path="/login" exact component={Login} />
-        // <ProtectedRoute path="/*" auth={false} component={NotFound} />
+        <ProtectedRoute path="/*" component={NotFound} />
       </Switch>
     );
   }

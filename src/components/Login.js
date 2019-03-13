@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { push } from 'connected-react-router'
 import { connect } from 'react-redux'
-import agent from '../util/agent'
 import { attemptLogin } from '../state/actions/authActions'
 import Arrow from '../images/arrow';
 import logo from '../images/small_logo.png';
@@ -23,20 +22,41 @@ class Login extends Component {
     })
   }
 
-  login () {
-    this.props.attemptLogin(this.state.email, this.state.password)
-  }
-
-  render() {
+  componentDidMount() {
     const locationState = this.props.location.state
     if (this.props.isAuth) {
-      alert(JSON.stringify(locationState))
       if (locationState) {
         this.props.push(this.props.location.state.from);
       } else {
         this.props.push('/');
       }
     }
+  }
+
+  login () {
+    this.props.attemptLogin(this.state.email, this.state.password).catch((error) => {
+      if (error.response.statusCode === 401 || error.response.statusCode === 403) {
+        alert('Your email or password is incorrect')
+        console.log('this is the error ----->', error)
+        return;
+      }
+      alert('there was an error')
+      console.log('this is the error ----->', error)
+    })
+  }
+
+  componentDidUpdate() {
+    const locationState = this.props.location.state
+    if (this.props.isAuth) {
+      if (locationState) {
+        this.props.push(this.props.location.state.from);
+      } else {
+        this.props.push('/');
+      }
+    }
+  }
+
+  render() {
     return(
       <div className="w-100 vh-100 flex flex-row items-center measure-1024 center">
         <div className="fl w-50 flex flex-column items-cen7ter">
@@ -45,7 +65,7 @@ class Login extends Component {
             <br />
             Sign in below.
             <span className="db mt3">
-              <img src={logo} width="25%" height="auto" />
+              <img src={logo} width="25%" height="auto" alt="" />
             </span>
           </p>
         </div>
@@ -53,9 +73,12 @@ class Login extends Component {
           <div className="w-100 measure ph3">
             <input className="InputField" type="email" name="email" value={this.state.email} placeholder="Knack Email" onChange={this.handleChange}/>
             <input className="InputField" type="password" name="password" value={this.state.password} placeholder="Knack Password" onChange={this.handleChange}/>
-            <p className="flex flex-row items-center dinLabel f7 blue self-start pointer" onClick={this.login}>
+            <button
+              className="flex flex-row items-center dinLabel f7 blue self-start pointer bn bg-transparent mt3"
+              onClick={this.login}
+              disabled={this.props.loading}>
               SIGN IN <div className="ArrowIcon mh2"><Arrow /></div>
-            </p>
+            </button>
           </div>
         </div>
       </div>
@@ -63,7 +86,7 @@ class Login extends Component {
   }
 }
 
-export default connect(state => ({isAuth: state.auth.isAuth}), { push,
+export default connect(state => ({isAuth: state.auth.isAuth, loading: state.auth.loading}), { push,
   test: () => ({type: "CHANGE"}),
   attemptLogin
  })(Login);
