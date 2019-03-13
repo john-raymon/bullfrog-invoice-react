@@ -13,11 +13,11 @@
 $din_bold: 'din_bold';
 
 .dinTitle {
-  @extend .f2, .tracked, .lh-title;
+  @extend .f2, .tracked, .lh-title !optional;
   font-family: $din_bold;
 }
 
 .dinLabel {
-  @extend .f4, .tracked, .lh-copy;
+  @extend .f4, .tracked, .lh-copy !optional;
   font-family: $din_bold;
 }

@@ -6,5 +6,7 @@
   font-style: normal; }
 
 .dinTitle {
-  font-family: "din_bold";
-  letter-spacing: 2.2rem; }
+  font-family: "din_bold"; }
+
+.dinLabel {
+  font-family: "din_bold"; }

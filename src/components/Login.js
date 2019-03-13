@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { push } from 'connected-react-router'
 import { connect } from 'react-redux'
-
+import agent from '../util/agent'
+import { attemptLogin } from '../state/actions/authActions'
 import Arrow from '../images/arrow';
 import logo from '../images/small_logo.png';
 
@@ -9,16 +10,36 @@ class Login extends Component {
   constructor(props) {
     super(props)
     this.login = this.login.bind(this)
+    this.handleChange = this.handleChange.bind(this)
+    this.state = {
+      email: '',
+      password: ''
+    }
+  }
+
+  handleChange (e) {
+    this.setState({
+      [e.target.name]: e.target.value
+    })
   }
 
   login () {
-    this.props.push(this.props.location.state.from)
+    this.props.attemptLogin(this.state.email, this.state.password)
   }
 
   render() {
+    const locationState = this.props.location.state
+    if (this.props.isAuth) {
+      alert(JSON.stringify(locationState))
+      if (locationState) {
+        this.props.push(this.props.location.state.from);
+      } else {
+        this.props.push('/');
+      }
+    }
     return(
       <div className="w-100 vh-100 flex flex-row items-center measure-1024 center">
-        <div className="fl w-50 flex flex-column items-center">
+        <div className="fl w-50 flex flex-column items-cen7ter">
           <p className="dinTitle">
             Welcome back,
             <br />
@@ -30,9 +51,9 @@ class Login extends Component {
         </div>
         <div className="fl w-50 flex flex-column items-center">
           <div className="w-100 measure ph3">
-            <input className="InputField" type="email" value="" placeholder="Knack Email"/>
-            <input className="InputField" type="password" value="" placeholder="Knack Password" />
-            <p className="flex flex-row items-center dinLabel f7 blue self-start pointer">
+            <input className="InputField" type="email" name="email" value={this.state.email} placeholder="Knack Email" onChange={this.handleChange}/>
+            <input className="InputField" type="password" name="password" value={this.state.password} placeholder="Knack Password" onChange={this.handleChange}/>
+            <p className="flex flex-row items-center dinLabel f7 blue self-start pointer" onClick={this.login}>
               SIGN IN <div className="ArrowIcon mh2"><Arrow /></div>
             </p>
           </div>
@@ -42,4 +63,7 @@ class Login extends Component {
   }
 }
 
-export default connect(null, { push })(Login);
+export default connect(state => ({isAuth: state.auth.isAuth}), { push,
+  test: () => ({type: "CHANGE"}),
+  attemptLogin
+ })(Login);

@@ -1,26 +1,36 @@
 import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux'
 import {
   Route,
   Link,
   Redirect,
   Switch
 } from "react-router";
-
 import Login from './Login'
 
 import '../styles/application.css';
 
-const Test = (props) => {
+
+const Home = (props) => {
   return (
-  <div>Hello </div>
+  <div>Home </div>
   )
 };
 
-function ProtectedRoute({ component: Component, auth, ...rest}) {
+const NotFound = (props) => {
+  return (
+  <div>Not Found </div>
+  )
+};
+
+const mapStateToProps = (state) => ({
+  isAuth: state.auth.isAuth
+})
+const ProtectedRoute = connect(mapStateToProps ,null)(({ component: Component, isAuth, ...rest}) => {
   return (
     <Route
       {...rest}
-      render={props => auth ? (
+      render={props => isAuth ? (
           <Component {...props} />
         ) : (
           <Redirect
@@ -33,15 +43,16 @@ function ProtectedRoute({ component: Component, auth, ...rest}) {
       }
     />
   );
-}
+})
+
 
 class App extends Component {
   render() {
     return (
       <Switch>
-        <ProtectedRoute path="/" exact auth={false} component={Test} />
+        <ProtectedRoute path="/" exact auth={false} component={Home} />
         <Route path="/login" exact component={Login} />
-        <ProtectedRoute path="/*" auth={false} component={Test} />
+        // <ProtectedRoute path="/*" auth={false} component={NotFound} />
       </Switch>
     );
   }

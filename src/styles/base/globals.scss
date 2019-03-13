@@ -8,7 +8,7 @@
 }
 
 .InputField {
-  @extend .mv2, .dinLabel, .f5, .tc;
+  @extend .mv2, .dinLabel, .f5, .tc !optional;
   outline: none;
   background: #fff;
   width: 100%;

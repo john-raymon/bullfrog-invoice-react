@@ -8,8 +8,7 @@
 .InputField {
   outline: none;
   background: #fff;
-  width: 80%;
+  width: 100%;
   border: 0.18rem solid #D8D8D8;
   border-radius: 0.25rem;
-  height: 56px;
-  max-width: 493px; }
+  height: 56px; }
