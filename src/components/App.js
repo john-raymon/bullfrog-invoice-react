@@ -6,16 +6,12 @@ import {
   Redirect,
   Switch
 } from "react-router";
+
+import Dashboard from './Dashboard'
 import Login from './Login'
 
 import '../styles/application.css';
 
-
-const Home = (props) => {
-  return (
-  <div>Home </div>
-  )
-};
 
 const NotFound = (props) => {
   return (
@@ -49,11 +45,15 @@ const ProtectedRoute = connect(mapStateToProps ,null)(({ component: Component, i
 class App extends Component {
   render() {
     return (
-      <Switch>
-        <ProtectedRoute path="/" exact component={Home} />
-        <Route path="/login" exact component={Login} />
-        <ProtectedRoute path="/*" component={NotFound} />
-      </Switch>
+      <div>
+        <header>
+        </header>
+        <Switch>
+          <ProtectedRoute path="/" exact component={Dashboard} />
+          <Route path="/login" exact component={Login} />
+          <ProtectedRoute path="/*" component={NotFound} />
+        </Switch>
+      </div>
     );
   }
 }
