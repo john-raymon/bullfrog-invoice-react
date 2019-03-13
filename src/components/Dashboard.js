@@ -13,18 +13,18 @@ class Dashboard extends Component {
     return (
       <div>
         <header>
-          <div className="flex flex-row items-center justify-around pv4">
+          <div className="flex flex-row items-center justify-around pv4 ph1 bb b--light-gray">
             <img src={logo} width="65px" height="auto" alt="" />
             <nav className="flex flex-row self-stretch">
               <ul className="flex flex-row items-end list pa0 ma0">
                 <li>
-                  <p className="pa0 ma0 mh3 dinLabel gray">Dashboard</p>
+                  <p className="pa0 ma0 mh4 dinLabel gray">Dashboard</p>
                 </li>
                 <li>
-                  <p className="pa0 ma0 mh3 dinLabel gray">Create an Invoice</p>
+                  <p className="pa0 ma0 mh4 dinLabel gray">Create an Invoice</p>
                 </li>
                 <li>
-                  <p className="pa0 ma0 mh3 dinLabel gray">Settings</p>
+                  <p className="pa0 ma0 mh4 dinLabel gray">Settings</p>
                 </li>
               </ul>
             </nav>
