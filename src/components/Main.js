@@ -1,8 +1,12 @@
 import React, { Component } from 'react'
-import {Route} from 'react-router'
+import { connect } from 'react-redux'
+import { Route } from 'react-router'
+
 
 import Header from './Header'
 import Dashboard from './Dashboard'
+
+import { logout } from '../state/actions/authActions'
 
 
 class Main extends Component {
@@ -10,13 +14,15 @@ class Main extends Component {
     super(props)
     this.logout = this.logout.bind(this)
   }
-  logout(){
 
+  logout(){
+    this.props.logout()
   }
+
   render() {
     return (
       <div>
-        <Header />
+        <Header onLogout={this.logout} />
         <main>
           <Route exact path={this.props.match.path} component={Dashboard} />
         </main>
@@ -26,4 +32,4 @@ class Main extends Component {
 }
 
 
-export default Main
+export default connect(null, { logout })(Main)

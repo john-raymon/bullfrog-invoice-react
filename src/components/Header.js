@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom'
 import Arrow from '../images/arrow';
 import logo from '../images/small_logo.png';
 
-export default () => {
+export default ({onLogout}) => {
   return (
   <header>
     <div className="flex flex-row items-center justify-around pv3 ph1 bb b--light-gray">
@@ -22,6 +22,7 @@ export default () => {
         </ul>
       </nav>
       <button
+        onClick={onLogout}
         className="flex flex-row items-center self-center dinLabel f7 blue self-start pointer bn bg-transparent dim">
         SIGN OUT <div className="ArrowIcon mh2"><Arrow /></div>
       </button>

@@ -12,3 +12,7 @@ export const attemptLogin = (email, password) => dispatch => {
     })
   })
 }
+
+export const logout = () => ({
+  type: "LOGOUT"
+})

@@ -10,6 +10,7 @@ export default (state = initialState, { type, payload = {} } ) => {
       return {...state, token: payload.token, isAuth: payload.isAuth, loading: false}
     case `${"LOGIN"}_PENDING`:
       return {...state, loading: true}
+    case "LOGOUT":
     case `${"LOGIN"}_REJECTED`:
       return {...state, token: null, isAuth: false, loading: false}
     case "CHANGE":
