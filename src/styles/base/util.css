@@ -1,3 +1,6 @@
+.active {
+  color: black; }
+
 .measure-960 {
   max-width: 60rem; }
 

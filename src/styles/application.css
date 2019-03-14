@@ -6884,6 +6884,9 @@ code, .code {
   .v-btm-l {
     vertical-align: bottom; } }
 
+.active {
+  color: black; }
+
 .measure-960 {
   max-width: 60rem; }
 
@@ -6905,6 +6908,9 @@ code, .code {
 
 .html {
   font-size: 16px; }
+
+a {
+  text-decoration: none; }
 
 .ArrowIcon {
   width: 0.68rem;

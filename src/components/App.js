@@ -7,7 +7,7 @@ import {
   Switch
 } from "react-router";
 
-import Dashboard from './Dashboard'
+import Main from './Main'
 import Login from './Login'
 
 import '../styles/application.css';
@@ -47,7 +47,7 @@ class App extends Component {
     return (
       <div>
         <Switch>
-          <ProtectedRoute path="/" exact component={Dashboard} />
+          <ProtectedRoute path="/" exact component={Main} />
           <Route path="/login" exact component={Login} />
           <ProtectedRoute path="/*" component={NotFound} />
         </Switch>
