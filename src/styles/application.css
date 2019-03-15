@@ -6893,6 +6893,9 @@ code, .code {
 .measure-1024 {
   max-width: 64rem; }
 
+.measure-70 {
+  max-width: 70rem; }
+
 @font-face {
   font-family: 'din_bold';
   src: url("../fonts/din_alternate_bold-webfont.eot");
