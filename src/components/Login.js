@@ -86,7 +86,7 @@ class Login extends Component {
   }
 }
 
-export default connect(state => ({isAuth: state.auth.isAuth, loading: state.auth.loading}), { push,
+export default connect(state => ({isAuth: state.auth.isAuth, loading: state.status.authLoading}), { push,
   test: () => ({type: "CHANGE"}),
   attemptLogin
  })(Login);

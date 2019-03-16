@@ -9,3 +9,6 @@
 
 .measure-70 {
   max-width: 70rem; }
+
+.shadow-custom {
+  box-shadow: 0px 6px 16px 0 rgba(0, 0, 0, 0.04); }

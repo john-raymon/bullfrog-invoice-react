@@ -1,17 +1,16 @@
 const initialState = {
-  isAuth: false,
-  token: null
+  authLoading: false
 }
 
 export default (state = initialState, { type, payload = {} } ) => {
   switch (type) {
     case `${"LOGIN"}_FULFILLED`:
-      return {...state, token: payload.token, isAuth: payload.isAuth}
+      return {...state, authLoading: false}
+    case `${"LOGIN"}_PENDING`:
+      return {...state, authLoading: true}
     case "LOGOUT":
     case `${"LOGIN"}_REJECTED`:
-      return {...state, token: null, isAuth: false}
-    case "CHANGE":
-      return {...state, isAuth: true}
+      return {...state, authLoading: false}
     default:
       return state;
   }

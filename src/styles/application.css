@@ -6896,6 +6896,9 @@ code, .code {
 .measure-70 {
   max-width: 70rem; }
 
+.shadow-custom {
+  box-shadow: 0px 6px 16px 0 rgba(0, 0, 0, 0.04); }
+
 @font-face {
   font-family: 'din_bold';
   src: url("../fonts/din_alternate_bold-webfont.eot");
