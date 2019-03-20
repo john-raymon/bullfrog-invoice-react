@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
 
+// Views
+import CreateInvoiceButton from '../views/CreateInvoiceButton'
+
 class Dashboard extends Component {
   constructor(props) {
     super(props)
@@ -38,79 +41,10 @@ class Dashboard extends Component {
                     <p className="dinLabel near-black f7 ma0 w-25 tracked-mega">
                       03/16/19
                     </p>
-                    <p className="dinLabel near-black f7 ma0 w-50 tracked-mega">
+                    <p className="dinLabel near-black f7 ma0 w-50 tracked-mega small-caps">
                       Alexson Wilson
                     </p>
-                  </div>
-                </li>
-                <li>
-                  <div className="flex flex-row items-center bb b--light-gray pv1">
-                    <p className="dinLabel near-black f7 ma0 w-25 tracked-mega">
-                      03/16/19
-                    </p>
-                    <p className="dinLabel near-black f7 ma0 w-50 tracked-mega">
-                      Alexson Wilson
-                    </p>
-                  </div>
-                </li>
-                <li>
-                  <div className="flex flex-row items-center bb b--light-gray pv1">
-                    <p className="dinLabel near-black f7 ma0 w-25 tracked-mega">
-                      03/16/19
-                    </p>
-                    <p className="dinLabel near-black f7 ma0 w-50 tracked-mega">
-                      Alexson Wilson
-                    </p>
-                  </div>
-                </li>
-                <li>
-                  <div className="flex flex-row items-center bb b--light-gray pv1">
-                    <p className="dinLabel near-black f7 ma0 w-25 tracked-mega">
-                      03/16/19
-                    </p>
-                    <p className="dinLabel near-black f7 ma0 w-50 tracked-mega">
-                      Alexson Wilson
-                    </p>
-                  </div>
-                </li>
-                <li>
-                  <div className="flex flex-row items-center bb b--light-gray pv1">
-                    <p className="dinLabel near-black f7 ma0 w-25 tracked-mega">
-                      03/16/19
-                    </p>
-                    <p className="dinLabel near-black f7 ma0 w-50 tracked-mega">
-                      Alexson Wilson
-                    </p>
-                  </div>
-                </li>
-                <li>
-                  <div className="flex flex-row items-center bb b--light-gray pv1">
-                    <p className="dinLabel near-black f7 ma0 w-25 tracked-mega">
-                      03/16/19
-                    </p>
-                    <p className="dinLabel near-black f7 ma0 w-50 tracked-mega">
-                      Alexson Wilson
-                    </p>
-                  </div>
-                </li>
-                <li>
-                  <div className="flex flex-row items-center bb b--light-gray pv1">
-                    <p className="dinLabel near-black f7 ma0 w-25 tracked-mega">
-                      03/16/19
-                    </p>
-                    <p className="dinLabel near-black f7 ma0 w-50 tracked-mega">
-                      Alexson Wilson
-                    </p>
-                  </div>
-                </li>
-                <li>
-                  <div className="flex flex-row items-center bb b--light-gray pv1">
-                    <p className="dinLabel near-black f7 ma0 w-25 tracked-mega">
-                      03/16/19
-                    </p>
-                    <p className="dinLabel near-black f7 ma0 w-50 tracked-mega">
-                      Alexson Wilson
-                    </p>
+                    <CreateInvoiceButton />
                   </div>
                 </li>
               </ul>
