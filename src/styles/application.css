@@ -1420,11 +1420,11 @@ code, .code {
    FORMS
    
 */
-.input-reset {
+.input-reset, .input-reset:default {
   -webkit-appearance: none;
   -moz-appearance: none; }
 
-.button-reset::-moz-focus-inner, .input-reset::-moz-focus-inner {
+.button-reset::-moz-focus-inner, .input-reset::-moz-focus-inner, .input-reset:default::-moz-focus-inner {
   border: 0;
   padding: 0; }
 
@@ -6901,6 +6901,9 @@ code, .code {
 
 .shadow-custom {
   box-shadow: 0px 6px 16px 0 rgba(0, 0, 0, 0.04); }
+
+.input-reset:default {
+  border: none; }
 
 @font-face {
   font-family: 'din_bold';

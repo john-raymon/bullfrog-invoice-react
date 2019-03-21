@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
 
 // Views
-import CreateInvoiceButton from '../views/CreateInvoiceButton'
+import ListButton from '../views/ListButton'
+
+// Images
+import searchIcon from '../images/search-icon.png';
 
 class Dashboard extends Component {
   constructor(props) {
@@ -44,7 +47,9 @@ class Dashboard extends Component {
                     <p className="dinLabel near-black f7 ma0 w-50 tracked-mega small-caps">
                       Alexson Wilson
                     </p>
-                    <CreateInvoiceButton />
+                    <ListButton>
+                      CREATE INVOICE
+                    </ListButton >
                   </div>
                 </li>
               </ul>
@@ -61,9 +66,24 @@ class Dashboard extends Component {
           </div>
           <div className="w-50">
             <div className="w-100 ba b--light-gray bw1 h5 br3 ph4 pt1 shadow-custom">
-              <p className="dinLabel tl underline mid-gray">
-                Find a Customer
-              </p>
+              <div className="flex flex-row items-center bt- bl-0 br-0 bb b--light-gray mt3 mb2 w-70 pv1">
+                <span>
+                  <img src={searchIcon} width="16" height="auto" />
+                </span>
+                <input className="dinLabel pa0 ml2 tl mid-gray input-reset bn outline-0 flex-grow-1" type="text" placeholder="Find a Customer" />
+              </div>
+              <ul className="list ma0 pa0 overflow-scroll h4">
+                <li>
+                  <div className="flex flex-row justify-between items-center bb b--light-gray pv1">
+                    <p className="dinLabel near-black f7 ma0 w-50 tracked-mega small-caps">
+                      Alexson Wilson
+                    </p>
+                    <ListButton>
+                      CREATE INVOICE
+                    </ListButton >
+                  </div>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
