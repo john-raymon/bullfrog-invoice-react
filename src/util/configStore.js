@@ -22,6 +22,7 @@ const persistConfig = {
 const persistedReducer = persistReducer(persistConfig, createRootReducer(history))
 
 const localStorageMiddleware = store => next => action => {
+  const validActions = ["INIT_APP"]
   if (action.type === "LOGIN_FULLFILLED") {
     if (!action.error) {
       localforage.setItem('jwt', action.payload.token)
@@ -30,6 +31,8 @@ const localStorageMiddleware = store => next => action => {
   } else if (action.type === "LOGOUT" || action.type === "EXPIRED") {
     localforage.setItem('jwt', '');
     agent.setToken(null);
+  } else if ( validActions.includes(action.type) ) {
+    agent.setToken(store.getState().auth.token)
   }
   next(action);
 };

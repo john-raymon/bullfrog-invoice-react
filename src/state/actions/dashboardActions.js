@@ -8,8 +8,17 @@ export function fetchInvoicesToDo() {
         // right now we're just maxing out and not accounting for if there is more
         // than 1 page, since we're expecting the Invoice-to-do Knack record to be
         // remove when saved as draft on our Backend
+
+        console.log('this is the res status!!!', res)
+        if (res.status === 401) {
+          dispatch({ type: "LOGOUT" })
+          return Promise.reject()
+        }
+
         return res;
-      }).catch(err => err)
+      }).catch((err) => {
+        return Promise.reject(err)
+      })
     })
   }
 }

@@ -13,14 +13,14 @@ export default (state = initialState, { type, payload = {} } ) => {
       dashboard: {
         ...state.dashboard,
         invoicesToDo: null
-      }  
+      }
     }
     case "FETCH_INVOICES_TO_DO_REJECTED":
     return {
       ...state,
       dashboard: {
         ...state.dashboard,
-        invoicesToDo: payload.err
+        invoicesToDo: payload
       }
     }
     default:

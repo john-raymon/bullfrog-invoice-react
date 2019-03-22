@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
+// Selectors
+import getInvoicesToDo from '../state/selectors/getInvoicesToDo'
+
 // Views
 import ListButton from '../views/ListButton'
 
@@ -120,11 +123,12 @@ const mapStateToProps = state => {
   const { dashboard: dashboardErrors } = errors
   return {
     isLoading: {
-      invoicesToDo: dashboardStatus.invoicesToDo,
+      invoicesToDo: dashboardStatus.invoicesToDo
     },
     isError: {
       invoicesToDo: dashboardErrors.invoicesToDo
-    }
+    },
+    invoicesToDo: []
   }
 }
 export default connect(mapStateToProps, null)(Dashboard)

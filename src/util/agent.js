@@ -9,6 +9,7 @@ const responseBody = res => res.body;
 
 let token = null;
 const tokenPlugin = req => {
+  console.log('the token object right now!', token)
   if (token) {
     req.set('authorization', `${token}`);
   }
