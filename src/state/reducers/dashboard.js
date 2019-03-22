@@ -7,7 +7,7 @@ export default (state = initialState, { type, payload = {} }) => {
     case "FETCH_INVOICES_TO_DO_FULFILLED":
       return {
         ...state,
-        invoicesToDo: payload.res
+        invoicesToDo: payload
       }
     default:
       return state;
