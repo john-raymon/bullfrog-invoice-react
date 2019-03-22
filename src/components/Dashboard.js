@@ -59,9 +59,26 @@ class Dashboard extends Component {
         <div className="flex flex-row w-100 items-start pt4">
          <div className="w-50 pr4">
             <div className="w-100 ba b--light-gray bw1 h5 br3 ph4 pt1 shadow-custom">
-              <p className="dinLabel tl mid-gray">
+              <p className="dinLabel tl mid-gray mb0">
                 Previous Estimates ({`0`})
               </p>
+              <div className="w-100 mt2">
+                <ul className="list ma0 pa0 overflow-scroll h4">
+                  <li>
+                    <div className="flex flex-row items-center bb b--light-gray pv1">
+                      <p className="dinLabel near-black f7 ma0 w-25 tracked-mega">
+                        03/16/19
+                      </p>
+                      <p className="dinLabel near-black f7 ma0 w-50 tracked-mega small-caps">
+                        Alexson Wilson
+                      </p>
+                      <ListButton>
+                        CREATE INVOICE
+                      </ListButton >
+                    </div>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
           <div className="w-50">
