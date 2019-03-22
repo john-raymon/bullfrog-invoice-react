@@ -15,7 +15,7 @@ class Dashboard extends Component {
   render() {
     const { props, state } = this
     const invoicesToDo = () => {
-      props.
+      return null;
     }
     return(
       <div className="flex flex-column w-100 measure-70 center pt5 ph4">
@@ -121,7 +121,7 @@ const mapStateToProps = state => {
   return {
     isLoading: {
       invoicesToDo: dashboardStatus.invoicesToDo,
-    }
+    },
     isError: {
       invoicesToDo: dashboardErrors.invoicesToDo
     }
