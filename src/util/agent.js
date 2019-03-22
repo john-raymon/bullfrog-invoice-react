@@ -25,12 +25,11 @@ const requests = {
     superagent.post(`${API_ROOT}${url}`, body).use(tokenPlugin).then(responseBody)
 };
 
-const Auth = {
-  login: (email, password) =>
-    requests.post('users/login', { email, password })
-};
-
 export default {
-  Auth,
+  Auth: {
+    login: (email, password) =>
+    requests.post('users/login', { email, password })
+  },
+  requests,
   setToken: _token => { token = _token; }
 };
