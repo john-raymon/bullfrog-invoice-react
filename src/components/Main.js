@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Route } from 'react-router'
 
-
 import Header from './Header'
 import Dashboard from './Dashboard'
 
+import { initApp } from '../state/actions/applicationActions'
 import { logout } from '../state/actions/authActions'
 
 
@@ -13,6 +13,10 @@ class Main extends Component {
   constructor(props){
     super(props)
     this.logout = this.logout.bind(this)
+  }
+
+  componentDidMount() {
+    this.props.initApp()
   }
 
   logout(){
@@ -32,4 +36,4 @@ class Main extends Component {
 }
 
 
-export default connect(null, { logout })(Main)
+export default connect(null, { logout, initApp })(Main)

@@ -1,5 +1,8 @@
 const initialState = {
-  authLoading: false
+  authLoading: false,
+  dashboard: {
+    invoicesToDo: false
+  }
 }
 
 export default (state = initialState, { type, payload = {} } ) => {
@@ -11,6 +14,25 @@ export default (state = initialState, { type, payload = {} } ) => {
     case "LOGOUT":
     case `${"LOGIN"}_REJECTED`:
       return {...state, authLoading: false}
+
+    // status of dashboardActions
+    case "FETCH_INVOICES_TO_DO_PENDING":
+      return {
+        ...state,
+        dashboard: {
+          ...state.dashboard,
+          invoicesToDo: true
+        }
+      }
+    case "FETCH_INVOICES_TO_DO_FULFILLED":
+    case "FETCH_INVOICES_TO_DO_REJECTED":
+    return {
+      ...state,
+      dashboard: {
+        ...state.dashboard,
+        invoicesToDo: false
+      }
+    }
     default:
       return state;
   }

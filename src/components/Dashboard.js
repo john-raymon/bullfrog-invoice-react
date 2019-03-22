@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 
 // Views
 import ListButton from '../views/ListButton'
@@ -12,6 +13,10 @@ class Dashboard extends Component {
   }
 
   render() {
+    const { props, state } = this
+    const invoicesToDo = () => {
+      props.
+    }
     return(
       <div className="flex flex-column w-100 measure-70 center pt5 ph4">
         <div className="flex flex-row w-100 items-start">
@@ -109,5 +114,17 @@ class Dashboard extends Component {
   }
 }
 
-
-export default Dashboard;
+const mapStateToProps = state => {
+  const { status, errors} = state
+  const { dashboard: dashboardStatus } = status
+  const { dashboard: dashboardErrors } = errors
+  return {
+    isLoading: {
+      invoicesToDo: dashboardStatus.invoicesToDo,
+    }
+    isError: {
+      invoicesToDo: dashboardErrors.invoicesToDo
+    }
+  }
+}
+export default connect(mapStateToProps, null)(Dashboard)
