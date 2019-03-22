@@ -1,7 +1,10 @@
 import agent from '../../util/agent'
 
 export function fetchInvoicesToDo() {
-  return dispatch => {
+  return (dispatch, getState) => {
+    const { token } = getState().auth
+    agent.setToken(token)
+    console.log('this is the current agent')
     return dispatch({
       type: "FETCH_INVOICES_TO_DO",
       payload: agent.requests.get('knack/invoices-to-do?rows_per_page=1000').then((res) => {
