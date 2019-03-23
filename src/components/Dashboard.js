@@ -142,4 +142,5 @@ const mapStateToProps = state => {
     invoicesToDo: !(dashboardErrors.invoicesToDo && dashboardStatus.invoicesToDo) ? getInvoicesToDo(state) : []
   }
 }
+
 export default connect(mapStateToProps, null)(Dashboard)

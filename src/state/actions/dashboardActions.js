@@ -7,7 +7,7 @@ export function fetchInvoicesToDo() {
     console.log('this is the current agent')
     return dispatch({
       type: "FETCH_INVOICES_TO_DO",
-      payload: agent.requests.get('knack/invoices-to-do?rows_per_page=1000').then((res) => {
+      payload: agent.requests.get('knack/invoices-to-do?rows_per_page=1000&sort_field=field_405&sort_order=asc').then((res) => {
         // right now we're just maxing out and not accounting for if there is more
         // than 1 page, since we're expecting the Invoice-to-do Knack record to be
         // remove when saved as draft on our Backend
