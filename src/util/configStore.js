@@ -5,6 +5,7 @@ import localforage from 'localforage'
 import { createBrowserHistory } from 'history'
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage' // defaults to localStorage for web and AsyncStorage for react-native
+import { createStateSyncMiddleware } from 'redux-state-sync';
 // middlewares
 import thunkMiddleware from 'redux-thunk'
 import promiseMiddleware from 'redux-promise-middleware'
@@ -36,7 +37,7 @@ const localStorageMiddleware = store => next => action => {
 
 const configureStore = (persistedState) => {
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-  const middlewares = [thunkMiddleware, logger, promiseMiddleware, localStorageMiddleware, routerMiddleware(history)]
+  const middlewares = [thunkMiddleware, logger, promiseMiddleware, localStorageMiddleware, routerMiddleware(history), createStateSyncMiddleware({blacklist: ["@@router/LOCATION_CHANGE"]})]
 	let store = createStore(
     persistedReducer,
     composeEnhancers(

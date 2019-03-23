@@ -18,7 +18,30 @@ class Dashboard extends Component {
   render() {
     const { props, state } = this
     const invoicesToDo = () => {
-      return null;
+      if (props.isLoading.invoicesToDo) {
+        return (<p>Loading ... </p>)
+      }
+      if (props.isError.invoicesToDo) {
+        return (<p>There seems to be an error</p>)
+      }
+      console.log('these are the invoices to do', props.invoicesToDo)
+      return props.invoicesToDo.map((invoice, index) => {
+        return (
+          <li>
+            <div className="flex flex-row items-center bb b--light-gray pv1">
+              <p className="dinLabel near-black f7 ma0 w-25 tracked-mega">
+                { invoice.date }
+              </p>
+              <p className="dinLabel near-black f7 ma0 w-50 tracked-mega small-caps">
+                { invoice.customer.name || 'No Name' }
+              </p>
+              <ListButton>
+                CREATE INVOICE
+              </ListButton >
+            </div>
+          </li>
+        )
+      })
     }
     return(
       <div className="flex flex-column w-100 measure-70 center pt5 ph4">
@@ -47,19 +70,7 @@ class Dashboard extends Component {
                 </p>
               </div>
               <ul className="list ma0 pa0 overflow-scroll h4">
-                <li>
-                  <div className="flex flex-row items-center bb b--light-gray pv1">
-                    <p className="dinLabel near-black f7 ma0 w-25 tracked-mega">
-                      03/16/19
-                    </p>
-                    <p className="dinLabel near-black f7 ma0 w-50 tracked-mega small-caps">
-                      Alexson Wilson
-                    </p>
-                    <ListButton>
-                      CREATE INVOICE
-                    </ListButton >
-                  </div>
-                </li>
+                { invoicesToDo() }
               </ul>
             </div>
           </div>
@@ -128,7 +139,7 @@ const mapStateToProps = state => {
     isError: {
       invoicesToDo: dashboardErrors.invoicesToDo
     },
-    invoicesToDo: []
+    invoicesToDo: !(dashboardErrors.invoicesToDo && dashboardStatus.invoicesToDo) ? getInvoicesToDo(state) : []
   }
 }
 export default connect(mapStateToProps, null)(Dashboard)
