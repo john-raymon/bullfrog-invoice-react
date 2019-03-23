@@ -27,6 +27,7 @@ const requests = {
 };
 
 export default {
+
   Auth: {
     login: (email, password) =>
     requests.post('users/login', { email, password })
