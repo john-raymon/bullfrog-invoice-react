@@ -1,4 +1,5 @@
 import agent from '../../util/agent'
+import _debounce from 'lodash/debounce';
 
 export function fetchInvoicesToDo() {
   return (dispatch, getState) => {
@@ -29,23 +30,27 @@ export function fetchInvoicesToDo() {
   }
 }
 
+const innerFunction = _debounce((dispatch, searchQuery) => {
+  return dispatch({
+    type: "FETCH_KNACK_CUSTOMERS",
+    payload: agent.requests.get(`knack/search-customers?searchFor=${searchQuery}`)
+      .then(res => {
+        if (res.status === 401) {
+          dispatch({ type: "LOGOUT" })
+          return Promise.reject()
+        }
+        return res
+      }).catch(err => {
+        // if (err.status === 401) {
+        //   dispatch({ type: "LOGOUT" })
+        // }
+        return Promise.reject(err)
+      })
+  })
+}, 300);
+
 export function fetchKnackCustomers(searchQuery) {
   return (dispatch) => {
-    return dispatch({
-      type: "FETCH_KNACK_CUSTOMERS",
-      payload: agent.requests.get(`knack/search-customers?searchFor=${searchQuery}`)
-        .then(res => {
-          if (res.status === 401) {
-            dispatch({ type: "LOGOUT" })
-            return Promise.reject()
-          }
-          return res
-        }).catch(err => {
-          // if (err.status === 401) {
-          //   dispatch({ type: "LOGOUT" })
-          // }
-          return Promise.reject(err)
-        })
-    })
+    return innerFunction(dispatch, searchQuery);
   }
 }

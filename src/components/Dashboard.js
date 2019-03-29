@@ -43,7 +43,7 @@ class Dashboard extends Component {
       console.log('these are the invoices to do', props.invoicesToDo)
       return props.invoicesToDo.map((invoice, index) => {
         return (
-          <li>
+          <li key={index}>
             <div className="flex flex-row items-center bb b--light-gray pv1">
               <p className="dinLabel near-black f7 ma0 w-25 tracked-mega">
                 { invoice.date }
@@ -66,9 +66,14 @@ class Dashboard extends Component {
       if (props.isError.customers) {
         return (<p>There seems to be an error</p>)
       }
+      if (!props.customers.length && this.state.searchQuery.trim()) {
+        return (
+          <p>We could find any customers on Knack relating to your search.</p>
+        )
+      }
       return props.customers.map((customer, index) => {
         return (
-          <li>
+          <li key={index}>
             <div className="flex flex-row justify-between items-center bb b--light-gray pv1">
               <p className="dinLabel near-black f7 ma0 w-50 tracked-mega small-caps">
                 {customer.customerName}
