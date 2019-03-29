@@ -68,7 +68,16 @@ class Dashboard extends Component {
       }
       return props.customers.map((customer, index) => {
         return (
-          <p>invoice</p>
+          <li>
+            <div className="flex flex-row justify-between items-center bb b--light-gray pv1">
+              <p className="dinLabel near-black f7 ma0 w-50 tracked-mega small-caps">
+                {customer.customerName}
+              </p>
+              <ListButton>
+                CREATE INVOICE
+              </ListButton >
+            </div>
+          </li>
         )
       })
     }
@@ -145,16 +154,7 @@ class Dashboard extends Component {
                   />
               </div>
               <ul className="list ma0 pa0 overflow-scroll h4">
-                <li>
-                  <div className="flex flex-row justify-between items-center bb b--light-gray pv1">
-                    <p className="dinLabel near-black f7 ma0 w-50 tracked-mega small-caps">
-                      Alexson Wilson
-                    </p>
-                    <ListButton>
-                      CREATE INVOICE
-                    </ListButton >
-                  </div>
-                </li>
+                {customerSearchResults()}
               </ul>
             </div>
           </div>
