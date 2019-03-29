@@ -58,7 +58,7 @@ class Dashboard extends Component {
 
           <div className="w-50 ba b--light-gray bw1 h5 br3 ph4 pt1 shadow-custom">
             <p className="dinLabel tr mid-gray mb0">
-              Invoices To Do ({`0`})
+              Invoices To Do ({props.invoicesToDo.length ||`0`})
             </p>
             <div className="w-100">
               <div className="flex flex-row items-center bb b--light-gray bw1 pb1">
