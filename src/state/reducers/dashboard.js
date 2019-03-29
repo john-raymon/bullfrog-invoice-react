@@ -1,5 +1,6 @@
 const initialState = {
-  invoicesToDo: {}
+  invoicesToDo: {},
+  customers: {}
 }
 
 export default (state = initialState, { type, payload = {} }) => {
@@ -8,6 +9,11 @@ export default (state = initialState, { type, payload = {} }) => {
       return {
         ...state,
         invoicesToDo: payload
+      }
+    case "FETCH_KNACK_CUSTOMERS_FULFILLED":
+      return {
+        ...state,
+        customers: payload
       }
     default:
       return state;

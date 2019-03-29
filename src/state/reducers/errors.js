@@ -1,6 +1,7 @@
 const initialState = {
   dashboard: {
-    invoicesToDo: null
+    invoicesToDo: null,
+    customers: null
   }
 }
 
@@ -21,6 +22,23 @@ export default (state = initialState, { type, payload = {} } ) => {
       dashboard: {
         ...state.dashboard,
         invoicesToDo: payload
+      }
+    }
+    case "FETCH_KNACK_CUSTOMERS_PENDING":
+    case "FETCH_KNACK_CUSTOMERS_FULFILLED":
+    return {
+      ...state,
+      dashboard: {
+        ...state.dashboard,
+        customers: null
+      }
+    }
+    case "FETCH_KNACK_CUSTOMERS_REJECTED":
+    return {
+      ...state,
+      dashboard: {
+        ...state.dashboard,
+        customers: payload
       }
     }
     default:

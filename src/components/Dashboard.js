@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 
 // Selectors
 import getInvoicesToDo from '../state/selectors/getInvoicesToDo'
+import getCustomerSearchResults from '../state/selectors/getCustomerSearchResults'
 
 // Views
 import ListButton from '../views/ListButton'
@@ -10,9 +11,24 @@ import ListButton from '../views/ListButton'
 // Images
 import searchIcon from '../images/search-icon.png';
 
+// Dashboard Actions
+import { fetchKnackCustomers } from '../state/actions/dashboardActions'
+
+
 class Dashboard extends Component {
   constructor(props) {
     super(props)
+    this.handleSearchChange = this.handleSearchChange.bind(this)
+    this.state = {
+      searchQuery: ''
+    }
+  }
+
+  handleSearchChange(e) {
+    this.setState({
+      [e.target.name] : e.target.value
+    })
+    this.props.fetchKnackCustomers(this.state.searchQuery)
   }
 
   render() {
@@ -40,6 +56,19 @@ class Dashboard extends Component {
               </ListButton >
             </div>
           </li>
+        )
+      })
+    }
+    const customerSearchResults = () => {
+      if (props.isLoading.customers) {
+        return (<p>Loading</p>)
+      }
+      if (props.isError.customers) {
+        return (<p>There seems to be an error</p>)
+      }
+      return props.customers.map((customer, index) => {
+        return (
+          <p>invoice</p>
         )
       })
     }
@@ -106,7 +135,14 @@ class Dashboard extends Component {
                 <span>
                   <img src={searchIcon} width="16" height="auto" />
                 </span>
-                <input className="dinLabel pa0 ml2 tl mid-gray input-reset bn outline-0 flex-grow-1" type="text" placeholder="Find a Customer" />
+                <input
+                  onChange={this.handleSearchChange}
+                  className="dinLabel pa0 ml2 tl mid-gray input-reset bn outline-0 flex-grow-1"
+                  type="text"
+                  name="searchQuery"
+                  placeholder="Find a Customer"
+                  value={this.state.searchQuery}
+                  />
               </div>
               <ul className="list ma0 pa0 overflow-scroll h4">
                 <li>
@@ -134,13 +170,16 @@ const mapStateToProps = state => {
   const { dashboard: dashboardErrors } = errors
   return {
     isLoading: {
-      invoicesToDo: dashboardStatus.invoicesToDo
+      invoicesToDo: dashboardStatus.invoicesToDo,
+      customers: dashboardStatus.customers
     },
     isError: {
-      invoicesToDo: dashboardErrors.invoicesToDo
+      invoicesToDo: dashboardErrors.invoicesToDo,
+      customers: dashboardErrors.customers
     },
-    invoicesToDo: !(dashboardErrors.invoicesToDo && dashboardStatus.invoicesToDo) ? getInvoicesToDo(state) : []
+    invoicesToDo: !(dashboardErrors.invoicesToDo && dashboardStatus.invoicesToDo) ? getInvoicesToDo(state) : [],
+    customers: !(dashboardErrors.customers && dashboardStatus.customers) ? getCustomerSearchResults(state) : []
   }
 }
 
-export default connect(mapStateToProps, null)(Dashboard)
+export default connect(mapStateToProps, { fetchKnackCustomers })(Dashboard)

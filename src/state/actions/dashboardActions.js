@@ -28,3 +28,24 @@ export function fetchInvoicesToDo() {
     })
   }
 }
+
+export function fetchKnackCustomers(searchQuery) {
+  return (dispatch) => {
+    return dispatch({
+      type: "FETCH_KNACK_CUSTOMERS",
+      payload: agent.requests.get(`knack/search-customers?searchFor=${encodeURIComponent(searchQuery)}`)
+        .then(res => {
+          if (res.status === 401) {
+            dispatch({ type: "LOGOUT" })
+            return Promise.reject()
+          }
+          return res
+        }).catch(err => {
+          // if (err.status === 401) {
+          //   dispatch({ type: "LOGOUT" })
+          // }
+          return Promise.reject(err)
+        })
+    })
+  }
+}

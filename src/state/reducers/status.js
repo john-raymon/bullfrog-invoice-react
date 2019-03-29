@@ -1,7 +1,8 @@
 const initialState = {
   authLoading: false,
   dashboard: {
-    invoicesToDo: false
+    invoicesToDo: false,
+    customers: false
   }
 }
 
@@ -31,6 +32,23 @@ export default (state = initialState, { type, payload = {} } ) => {
       dashboard: {
         ...state.dashboard,
         invoicesToDo: false
+      }
+    }
+    case "FETCH_KNACK_CUSTOMERS_PENDING":
+    return {
+      ...state,
+      dashboard: {
+        ...state.dashboard,
+        customers: true
+      }
+    }
+    case "FETCH_KNACK_CUSTOMERS_FULFILLED":
+    case "FETCH_KNACK_CUSTOMERS_REJECTED":
+    return {
+      ...state,
+      dashboard: {
+        ...state.dashboard,
+        customers: false
       }
     }
     default:
