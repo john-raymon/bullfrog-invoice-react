@@ -9,7 +9,7 @@ export default createSelector(
   invoicesToDo => {
     console.log('invoices to do look like', invoicesToDo)
     const invoices = _get(invoicesToDo, "records", []).map((invoice, index) => {
-      const { id: customerId, identifier: customerName } = invoice["field_570_raw"]
+      const { id: customerId, identifier: customerName } = invoice["field_570_raw"][0]
       return {
         date: invoice["field_405"],
         customer: {
