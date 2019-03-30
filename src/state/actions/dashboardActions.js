@@ -41,9 +41,9 @@ const innerFunction = _debounce((dispatch, searchQuery) => {
         }
         return res
       }).catch(err => {
-        // if (err.status === 401) {
-        //   dispatch({ type: "LOGOUT" })
-        // }
+        if (err.status === 401) {
+          dispatch({ type: "LOGOUT" })
+        }
         return Promise.reject(err)
       })
   })
