@@ -158,7 +158,7 @@ class Dashboard extends Component {
                   value={this.state.searchQuery}
                   />
               </div>
-              <ul className="list ma0 pa0 overflow-scroll h4">
+              <ul className="list mt2 mb0 mh0 pa0 overflow-scroll h5">
                 {customerSearchResults()}
               </ul>
             </div>
