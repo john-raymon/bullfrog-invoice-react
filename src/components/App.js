@@ -13,12 +13,6 @@ import Login from './Login'
 import '../styles/application.css';
 
 
-const NotFound = (props) => {
-  return (
-  <div>Not Found </div>
-  )
-};
-
 const mapStateToProps = (state) => ({
   isAuth: state.auth.isAuth
 })
@@ -47,9 +41,8 @@ class App extends Component {
     return (
       <div>
         <Switch>
-          <ProtectedRoute path="/" exact component={Main} />
           <Route path="/login" exact component={Login} />
-          <ProtectedRoute path="/*" component={NotFound} />
+          <ProtectedRoute path="/" component={Main} />
         </Switch>
       </div>
     );
