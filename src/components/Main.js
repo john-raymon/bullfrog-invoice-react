@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Route } from 'react-router'
+import { Route, Switch } from 'react-router'
 
 import Header from './Header'
 import Dashboard from './Dashboard'
+import CreateInvoice from './CreateInvoice'
 import NotFound from './../views/NotFound'
 
 import { initApp } from '../state/actions/applicationActions'
@@ -29,9 +30,11 @@ class Main extends Component {
       <div>
         <Header onLogout={this.logout} />
         <main>
-          <Route exact path={this.props.match.path} component={Dashboard} />
-          <Route exact path={this.props.match.path + 'invoices/new'} component={Dashboard} />
-          <Route path="/*" exact component={NotFound} />
+          <Switch>
+            <Route exact path={this.props.match.path} component={Dashboard} />
+            <Route exact path={this.props.match.path + 'invoices/new'} component={CreateInvoice} />
+            <Route path="/*" component={NotFound} />
+          </Switch>
         </main>
       </div>
     )
