@@ -8,14 +8,15 @@ class CreateInvoice extends Component {
       customerFullName: '',
       customerAddress: '',
       customerAddress: '',
-      customerCityState: ''
+      customerCityState: '',
+      dateOfLoss: "2019-01-01"
     }
   }
   render() {
     return (
       <div className="flex flex-row measure-70 center pt5 mb5">
 
-        <div className="flex flex-column w-50 pr6">
+        <div className="flex flex-column w-50 pr5">
           <p className="dinTitle pa0 ma0 f3 mb3">
             Invoice Details
           </p>
@@ -88,10 +89,80 @@ class CreateInvoice extends Component {
               Zip Code
             </p>
           </label>
+
+          <p className="dinTitle pa0 ma0 f4 mid-gray mb3 mt4">
+            CLAIM DETAILS
+          </p>
+
+          <input
+            className="InputField"
+            type="text"
+            name="insuranceCarrier"
+            placeholder="Enter the name of the insurance carrier"
+            value={this.state.insuranceCarrier}
+          />
+          <label for="insuranceCarrier">
+            <p className="dinLabel pa0 ma0 mb3 f6">
+              Insurance Carrier
+            </p>
+          </label>
+
+          <input
+            className="InputField"
+            type="text"
+            name="policyNumber"
+            placeholder="Policy Number"
+            value={this.state.policyNumber}
+          />
+          <label for="policyNumber">
+            <p className="dinLabel pa0 ma0 mb3 f6">
+              Policy Number
+            </p>
+          </label>
+
+          <input
+            className="InputField"
+            type="text"
+            name="claimNumber"
+            placeholder="Claim Number"
+            value={this.state.claimNumber}
+          />
+          <label for="claimNumber">
+            <p className="dinLabel pa0 ma0 mb3 f6">
+              Claim Number
+            </p>
+          </label>
+
+          <input
+            className="InputField measure-1"
+            type="date"
+            name="dateOfLoss"
+            value={this.state.dateOfLoss}
+          />
+          <label for="dateOfLoss">
+            <p className="dinLabel pa0 ma0 mb3 f6">
+              Date of Loss
+            </p>
+          </label>
         </div>
 
-        <div className="flex flex-column w-50 pl6">
-          testing
+        <div className="flex flex-column w-50 pl5">
+          <p className="dinTitle pa0 ma0 f3 mb3">
+            Rooms
+          </p>
+
+          <input
+            className="InputField measure-1"
+            type="text"
+            name="newRoomName"
+            placeholder="Enter the room name"
+            value={this.state.newRoomName}
+          />
+          <label for="newRoomName">
+            <p className="dinLabel pa0 ma0 mb3 f6">
+              Room Name
+            </p>
+          </label>
         </div>
       </div>
     )
