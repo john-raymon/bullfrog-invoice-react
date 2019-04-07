@@ -163,6 +163,25 @@ class CreateInvoice extends Component {
               Room Name
             </p>
           </label>
+
+          <div className="flex flex-row items-center justify-between">
+            <div className="flex flex-row items-center justify-between w-50">
+              <div className="w-30 flex flex-column items-center">
+                <input
+                  className="InputField tc"
+                  type="number"
+                  name="newRoomLength"
+                  placeholder="0"
+                  value={this.state.newRoomLength}
+                />
+                <label for="newRoomLength">
+                  <p className="dinLabel pa0 ma0 mb3 f6">
+                    Length
+                  </p>
+                </label>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     )
