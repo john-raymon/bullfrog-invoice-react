@@ -11,7 +11,7 @@ export default ({onLogout}) => {
       <nav className="flex flex-row self-stretch">
         <ul className="flex flex-row items-end list pa0 ma0">
           <li>
-            <NavLink to='/' className="pa0 ma0 mh4 dinLabel gray">Dashboard</NavLink>
+            <NavLink to='/' exact className="pa0 ma0 mh4 dinLabel gray">Dashboard</NavLink>
           </li>
           <li>
             <NavLink to="/invoices/new" className="pa0 ma0 mh4 dinLabel gray dim pointer">Create an Invoice</NavLink>
