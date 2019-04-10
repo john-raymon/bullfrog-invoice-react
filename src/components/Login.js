@@ -63,7 +63,7 @@ class Login extends Component {
           <p className="dinTitle">
             Welcome back,
             <br />
-            Sign in below.
+            Sign in.
             <span className="db mt3">
               <img src={logo} width="25%" height="auto" alt="" />
             </span>
