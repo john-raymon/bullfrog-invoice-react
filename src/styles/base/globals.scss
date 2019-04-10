@@ -14,7 +14,15 @@ a {
   outline: none;
   background: #fff;
   width: 100%;
-  border: 0.18rem solid #D8D8D8;
+  border: 0.12rem solid #E4E4E4;
   border-radius: 0.25rem;
   height: 56px;
+}
+
+.GenericButton {
+  outline: none;
+  background: #fff;
+  width: 100%;
+  border: 0.1rem solid #E4E4E4;
+  cursor: pointer;
 }
