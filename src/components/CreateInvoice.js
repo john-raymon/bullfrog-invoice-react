@@ -13,7 +13,27 @@ class CreateInvoice extends Component {
       newRoomName: '',
       newRoomLength: '',
       newRoomWidth: '',
-      newRoomHeight: ''
+      newRoomHeight: '',
+      newRoomLineItems: '',
+      rooms: [
+        {
+          name: '',
+          length: '',
+          width: '',
+          height: '',
+          lineItems: [
+            {
+              description: '',
+              uom: '',
+              materialCost: '',
+              laborCost: '',
+              totalMaterial: '',
+              totalLabor: ''
+            },
+            totalCost: ''
+          ]
+        }
+      ]
     }
   }
   render() {
