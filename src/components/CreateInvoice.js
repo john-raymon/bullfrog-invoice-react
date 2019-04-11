@@ -17,18 +17,19 @@ class CreateInvoice extends Component {
       newRoomLineItems: '',
       rooms: [
         {
-          name: '',
-          length: '',
-          width: '',
-          height: '',
+          name: 'Living Room',
+          length: '12',
+          width: '10',
+          height: '8',
           lineItems: [
             {
-              description: '',
-              uom: '',
-              materialCost: '',
-              laborCost: '',
+              description: 'floor',
+              uom: 'LF',
+              materialCost: '4',
+              laborCost: '14',
               totalMaterial: '',
               totalLabor: ''
+              quantity: '14'
             }
           ],
           roomTotals: {
