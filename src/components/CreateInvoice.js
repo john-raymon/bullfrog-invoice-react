@@ -28,7 +28,7 @@ class CreateInvoice extends Component {
               materialCost: '4',
               laborCost: '14',
               totalMaterial: '',
-              totalLabor: ''
+              totalLabor: '',
               quantity: '14'
             }
           ],
