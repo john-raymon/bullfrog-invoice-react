@@ -32,7 +32,7 @@ class Main extends Component {
         <main>
           <Switch>
             <Route exact path={this.props.match.path} component={Dashboard} />
-            <Route exact path={this.props.match.path + 'invoices/new'} component={CreateInvoice} />
+            <Route path={this.props.match.path + 'invoices/new'} component={CreateInvoice} />
             <Route path="/*" component={NotFound} />
           </Switch>
         </main>
