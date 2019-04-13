@@ -1,5 +1,8 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
+
+import createUUID from '../util/createUUID'
+
 import Arrow from '../images/arrow';
 import logo from '../images/small_logo.png';
 
@@ -14,7 +17,7 @@ export default ({onLogout}) => {
             <NavLink to='/' exact className="pa0 ma0 mh4 dinLabel gray">Dashboard</NavLink>
           </li>
           <li>
-            <NavLink to="/invoices/new" className="pa0 ma0 mh4 dinLabel gray dim pointer">Create an Invoice</NavLink>
+            <NavLink to={`/invoices/new/${createUUID()}`} className="pa0 ma0 mh4 dinLabel gray dim pointer">Create an Invoice</NavLink>
           </li>
           <li>
             <NavLink to="/settings" className="pa0 ma0 mh4 dinLabel gray dim pointer">Settings</NavLink>
