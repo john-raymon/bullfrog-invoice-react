@@ -2,6 +2,8 @@ import React, { Component, createRef } from 'react'
 
 import { Route, Link } from 'react-router-dom'
 
+import createUUID from '../util/createUUID'
+
 import Arrow from '../images/arrow';
 import TrashIcon from '../images/trash-icon'
 
@@ -15,6 +17,10 @@ import {
 } from 'react-accessible-accordion'
 
 class LineItems extends Component {
+  constructor(props) {
+    super(props)
+  }
+
   render() {
     return (
       <div className="LineItems fixed top-0 left-0 w-100 z-1 vh-100 bg-black-70">
@@ -23,7 +29,7 @@ class LineItems extends Component {
             <p className="sticky top-0 dinTitle pa0 ma0 f3 mb3 ttc pt4">
               line items
               <span className="mid-gray f5 ttc db pt1">
-                living room
+                {this.props.room.name}
               </span>
             </p>
             <div className="relative h-auto w-100 min-height-vh-75">
@@ -50,6 +56,8 @@ class CreateInvoice extends Component {
     this.autoSave = this.autoSave.bind(this)
     this.invoiceContainerRef = createRef()
     this.draftTimeoutId = null;
+    const test1 = createUUID();
+    const test2 = createUUID();
     this.state = {
       invoiceName: '',
       customerFullName: '',
@@ -61,8 +69,8 @@ class CreateInvoice extends Component {
       newRoomWidth: '',
       newRoomHeight: '8',
       newRoomLineItems: '',
-      rooms: [
-        {
+      rooms: {
+        [test1]: {
           name: 'Living Room',
           length: '12',
           width: '10',
@@ -84,7 +92,7 @@ class CreateInvoice extends Component {
             totalCost: ''
           }
         },
-        {
+        [test2]: {
           name: 'Living Room',
           length: '12',
           width: '10',
@@ -106,7 +114,7 @@ class CreateInvoice extends Component {
             totalCost: ''
           }
         }
-      ],
+      },
       totalCost: '',
       errors: {
         newRoom: ''
@@ -141,14 +149,31 @@ class CreateInvoice extends Component {
     // auto SAVE
     // use an instance of the agent, with the token from the state to make a request to the server
     // creating a new draft invoice with the UUID, or updating a draft invoice that has the same UUID
-    // if not a draft invoice anymore then redirect to pdf detailed version 
+    // if not a draft invoice anymore then redirect to pdf detailed version
     console.log('saved')
   }
 
-  handleChange(e) {
-    this.setState({
-      [e.target.name]: e.target.value
-    })
+  handleChange(e, uuid) {
+    // console.log('this is the target', e.target.name, this.state.rooms[uuid])
+    if (uuid) {
+      const eventTargetName = e.target.name
+      const eventTargetValue = e.target.value
+      console.log('i am in the form of ', eventTargetName)
+      this.setState((prevState) => ({
+        ...prevState,
+        rooms: {
+          ...prevState.rooms,
+          [uuid]: {
+            ...prevState.rooms[uuid],
+            [eventTargetName]: eventTargetValue
+          }
+        }
+      }))
+    } else {
+      this.setState({
+        [e.target.name]: e.target.value
+      })
+    }
   }
 
   addNewRoom() {
@@ -167,6 +192,8 @@ class CreateInvoice extends Component {
       }))
     }
 
+    const newUUID = createUUID()
+
     this.setState((prevState) =>
       ({
         errors: { ...prevState.errors, newRoom: '' },
@@ -174,9 +201,9 @@ class CreateInvoice extends Component {
         newRoomLength : '' ,
         newRoomWidth : '' ,
         newRoomHeight : '8',
-        rooms: [
+        rooms: {
           ...prevState.rooms,
-          {
+          [newUUID] : {
             name: name,
             length: length,
             width: width,
@@ -189,7 +216,7 @@ class CreateInvoice extends Component {
               totalCost: ''
             }
           }
-        ]
+        }
       })
     )
 
@@ -432,17 +459,18 @@ class CreateInvoice extends Component {
                 </button>
               </div>
 
-              <div className="RoomsAccordion__container mt4">
+              <div className="RoomsAccordion__container mt5">
                 <Accordion>
                   {
-                    this.state.rooms.map((room, key) => {
+                    Object.keys(this.state.rooms).map((roomUUID, key) => {
+                      const room = this.state.rooms[roomUUID]
                       return (
                         <AccordionItem
                           key={key}
                         >
                           <AccordionItemHeading className="w-100">
                             <AccordionItemButton className="accordion__button flex flex-row items-center justify-between">
-                              <p className="tc dinLabel f7 ttu"> { room.name } </p>
+                              <p className="tc dinLabel f7 ttu"> { room.name || roomUUID } </p>
                               <div className="flex flex-row items-center justify-between">
                                 <button
                                   className="flex flex-row items-center self-center dinLabel f8 mid-gray pointer bn bg-transparent dim">
@@ -478,9 +506,10 @@ class CreateInvoice extends Component {
                               <input
                                 className="InputField measure-1"
                                 type="text"
-                                name="newRoomName"
+                                name="name"
+                                onChange={(e) => this.handleChange(e, roomUUID)}
                                 placeholder="Enter the room name"
-                                value={this.state.newRoomName}
+                                value={room.name}
                               />
                               <label for="newRoomName">
                                 <p className="dinLabel pa0 ma0 mb3 f6">
@@ -540,7 +569,7 @@ class CreateInvoice extends Component {
                                 </div>
 
                               </div>
-                              <Link to={`${this.props.match.path.replace(':draftId', this.props.match.params.draftId)}/line-items/${key}`}>
+                              <Link to={`${this.props.match.path.replace(':draftId', this.props.match.params.draftId)}/line-items/${roomUUID}`}>
                                 <div
                                   className="flex flex-row items-center dinLabel f7 mid-gray self-start pointer bt-0 bl-0 br-0 bg-transparent mt2"
                                 >
@@ -573,7 +602,8 @@ class CreateInvoice extends Component {
           <div className="flex flex-column w-100 mt4">
             <ul className="list bb b-w1 b--light-gray pa0">
               {
-                this.state.rooms.map((room, key) => {
+                Object.keys(this.state.rooms).map((roomUUID, key) => {
+                  const room = this.state.rooms[roomUUID]
                   return (
                     <li className="flex flex-row items-center justify-between">
                       <p className="dinLabel f6 ttu">
