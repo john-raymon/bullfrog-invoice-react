@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component, createRef } from 'react'
 
 import { Route, Link } from 'react-router-dom'
 
@@ -47,6 +47,9 @@ class CreateInvoice extends Component {
     super(props)
     this.handleChange = this.handleChange.bind(this)
     this.addNewRoom = this.addNewRoom.bind(this)
+    this.autoSave = this.autoSave.bind(this)
+    this.invoiceContainerRef = createRef()
+    this.draftTimeoutId = null;
     this.state = {
       invoiceName: '',
       customerFullName: '',
@@ -111,6 +114,34 @@ class CreateInvoice extends Component {
     }
   }
 
+  componentDidUpdate() {
+    // If a timer is already started, clear it
+    if (this.draftTimeoutId) clearTimeout(this.draftTimeoutId);
+
+    // Set timer that will autosave this invoice on the backend when it fires
+    this.draftTimeoutId = setTimeout(this.autoSave, 1250)
+  }
+
+  componentDidMount() {
+    this.invoiceContainerRef.current.addEventListener('keydown', () => {
+
+      // If a timer is already started, clear it
+      if (this.draftTimeoutId) clearTimeout(this.draftTimeoutId);
+
+      // Set timer that will autosave this invoice on the backend when it fires
+      this.draftTimeoutId = setTimeout(this.autoSave, 1250)
+    })
+  }
+
+  componentWillUnmount() {
+    if (this.draftTimeoutId) clearTimeout(this.draftTimeoutId)
+  }
+
+  autoSave() {
+    // auto SAVE
+    alert('saved')
+  }
+
   handleChange(e) {
     this.setState({
       [e.target.name]: e.target.value
@@ -163,7 +194,7 @@ class CreateInvoice extends Component {
 
   render() {
     return (
-      <Fragment>
+      <div ref={this.invoiceContainerRef}>
         <Route path={`${this.props.match.path}/line-items/:roomId`} render={(props) => <LineItems room={this.state.rooms[props.match.params.roomId]} {...this.props} {...props} />} />
         <div className="flex flex-column measure-70 center pt5 mb5">
           <div className="flex flex-row w100">
@@ -571,7 +602,7 @@ class CreateInvoice extends Component {
             </div>
           </div>
         </div>
-      </Fragment>
+      </div>
     )
   }
 }
