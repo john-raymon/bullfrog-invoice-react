@@ -139,7 +139,10 @@ class CreateInvoice extends Component {
 
   autoSave() {
     // auto SAVE
-    alert('saved')
+    // use an instance of the agent, with the token from the state to make a request to the server
+    // creating a new draft invoice with the UUID, or updating a draft invoice that has the same UUID
+    // if not a draft invoice anymore then redirect to pdf detailed version 
+    console.log('saved')
   }
 
   handleChange(e) {
