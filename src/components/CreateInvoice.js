@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 
-import { Route } from 'react-router'
+import { Route, Link } from 'react-router-dom'
 
 import Arrow from '../images/arrow';
 import TrashIcon from '../images/trash-icon'
@@ -18,8 +18,25 @@ class LineItems extends Component {
   render() {
     return (
       <div className="LineItems fixed top-0 left-0 w-100 z-1 vh-100 bg-black-70">
-        <div className="relative"></div>
-        Line Items { this.props.match.params.roomId}
+        <div className="fixed top-0 left-0 vh-75 w-100 bg-white overflow-scroll">
+          <div className="measure-70 center">
+            <p className="sticky top-0 dinTitle pa0 ma0 f3 mb3 ttc pt4">
+              line items
+              <span className="mid-gray f5 ttc db pt1">
+                living room
+              </span>
+            </p>
+            <div className="relative h-auto w-100 min-height-vh-75">
+
+            </div>
+            <div className="sticky bottom-0 flex justify-center">
+              <p className="dinLabel mid-gray f6 ttu pointer"
+                onClick={() => this.props.history.goBack()}>
+                close
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     )
   }
@@ -147,7 +164,7 @@ class CreateInvoice extends Component {
   render() {
     return (
       <Fragment>
-        <Route path="/invoices/new/line-items/:roomId" render={(props) => <LineItems {...this.props} {...props} />} />
+        <Route path={`${this.props.match.path}/line-items/:roomId`} render={(props) => <LineItems room={this.state.rooms[props.match.params.roomId]} {...this.props} {...props} />} />
         <div className="flex flex-column measure-70 center pt5 mb5">
           <div className="flex flex-row w100">
 
@@ -366,12 +383,13 @@ class CreateInvoice extends Component {
                   </div>
 
                 </div>
-                <button
-                  className="flex flex-row items-center dinLabel f7 mid-gray self-start pointer bt-0 bl-0 br-0 bg-transparent mt2"
-                >
-                  ADD LINE ITEMS
-                </button>
-
+                {
+                //   <button
+                //   className="flex flex-row items-center dinLabel f7 mid-gray self-start pointer bt-0 bl-0 br-0 bg-transparent mt2"
+                // >
+                //   ADD LINE ITEMS
+                // </button>
+                }
                 <button
                   className="GenericButton tc dinLabel pv3 f7 mt3"
                   onClick={this.addNewRoom}
@@ -488,11 +506,13 @@ class CreateInvoice extends Component {
                                 </div>
 
                               </div>
-                              <button
-                                className="flex flex-row items-center dinLabel f7 mid-gray self-start pointer bt-0 bl-0 br-0 bg-transparent mt2"
-                              >
-                                EDIT LINE ITEMS
-                              </button>
+                              <Link to={`${this.props.match.path.replace(':draftId', this.props.match.params.draftId)}/line-items/${key}`}>
+                                <div
+                                  className="flex flex-row items-center dinLabel f7 mid-gray self-start pointer bt-0 bl-0 br-0 bg-transparent mt2"
+                                >
+                                  ADD/EDIT LINE ITEMS
+                                </div>
+                              </Link>
                             </div>
                           </AccordionItemPanel>
                         </AccordionItem>
