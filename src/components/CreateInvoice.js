@@ -21,19 +21,90 @@ class LineItems extends Component {
     super(props)
   }
 
+  componentDidMount() {
+    if (!Object.keys(this.props.room).length) {
+      this.props.history.goBack()
+    }
+  }
+
   render() {
     return (
       <div className="LineItems fixed top-0 left-0 w-100 z-1 vh-100 bg-black-70">
         <div className="fixed top-0 left-0 vh-75 w-100 bg-white overflow-scroll">
           <div className="measure-70 center">
-            <p className="sticky top-0 dinTitle pa0 ma0 f3 mb3 ttc pt4">
+            <p className="sticky top-0 dinTitle pa0 ma0 f3 mb3 ttc pt4 bg-white-70">
               line items
               <span className="mid-gray f5 ttc db pt1">
                 {this.props.room.name}
               </span>
             </p>
             <div className="relative h-auto w-100 min-height-vh-75">
+              <div className="LineItemLabels flex flex-row items-centers ttu bb bw1 pb1 b--light-gray">
+                <p className="dinLabel f7 mid-gray w-25 pa0 ma0">
+                  description
+                </p>
+                <p className="dinLabel f7 mid-gray w-25 pa0 ma0">
+                  qty
+                </p>
+                <p className="dinLabel f7 mid-gray w-25 pa0 ma0">
+                  uom
+                </p>
+                <p className="dinLabel f7 mid-gray w-25 pa0 ma0">
+                  labor unit
+                </p>
+                <p className="dinLabel f7 mid-gray w-25 pa0 ma0">
+                  material unit
+                </p>
+                <p className="dinLabel f7 mid-gray w-25 pa0 ma0">
+                  total material
+                </p>
+                <p className="dinLabel f7 mid-gray w-25 pa0 ma0">
+                  total labor
+                </p>
+              </div>
 
+              <Accordion>
+                { Object.keys(this.props.room).length &&
+                  Object.keys(this.props.room.lineItems).map((lineItemUUID, key) => {
+                    const lineItem = this.props.room.lineItems[lineItemUUID]
+                    return (
+                      <AccordionItem
+                        key={key}
+                      >
+                        <AccordionItemHeading className="w-100">
+                          <AccordionItemButton className="relative accordion__button flex flex-row items-center ttc pv3">
+                            <p className="dinLabel f7 mid-gray w-25 pa0 ma0">
+                              { lineItem.description }
+                            </p>
+                            <p className="dinLabel f7 mid-gray w-25 pa0 ma0">
+                              { lineItem.quantity }
+                            </p>
+                            <p className="dinLabel f7 mid-gray w-25 pa0 ma0">
+                              { lineItem.uom }
+                            </p>
+                            <p className="dinLabel f7 mid-gray w-25 pa0 ma0">
+                              { lineItem.laborCost }
+                            </p>
+                            <p className="dinLabel f7 mid-gray w-25 pa0 ma0">
+                              { lineItem.materialCost }
+                            </p>
+                            <p className="dinLabel f7 mid-gray w-25 pa0 ma0">
+                              { lineItem.totalMaterial }
+                            </p>
+                            <p className="dinLabel f7 mid-gray w-25 pa0 ma0">
+                              { lineItem.totalLabor }
+                            </p>
+                            <div className="absolute right-0 h-100 ArrowIcon mh2"><Arrow /></div>
+                          </AccordionItemButton>
+                        </AccordionItemHeading>
+                        <AccordionItemPanel>
+                          Testing
+                        </AccordionItemPanel>
+                      </AccordionItem>
+                    )
+                  })
+                }
+              </Accordion>
             </div>
             <div className="sticky bottom-0 flex justify-center">
               <p className="dinLabel mid-gray f6 ttu pointer"
@@ -58,6 +129,7 @@ class CreateInvoice extends Component {
     this.draftTimeoutId = null;
     const test1 = createUUID();
     const test2 = createUUID();
+    const lineItemTest1 = createUUID();
     this.state = {
       invoiceName: '',
       customerFullName: '',
@@ -75,8 +147,8 @@ class CreateInvoice extends Component {
           length: '12',
           width: '10',
           height: '8',
-          lineItems: [
-            {
+          lineItems: {
+            [lineItemTest1]: {
               description: 'floor',
               uom: 'LF',
               materialCost: '4',
@@ -85,29 +157,7 @@ class CreateInvoice extends Component {
               totalLabor: '',
               quantity: '14'
             }
-          ],
-          roomTotals: {
-            totalLabor: '',
-            totalMaterial: '',
-            totalCost: ''
-          }
-        },
-        [test2]: {
-          name: 'Living Room',
-          length: '12',
-          width: '10',
-          height: '8',
-          lineItems: [
-            {
-              description: 'floor',
-              uom: 'LF',
-              materialCost: '4',
-              laborCost: '14',
-              totalMaterial: '',
-              totalLabor: '',
-              quantity: '14'
-            }
-          ],
+          },
           roomTotals: {
             totalLabor: '',
             totalMaterial: '',
@@ -225,7 +275,7 @@ class CreateInvoice extends Component {
   render() {
     return (
       <div ref={this.invoiceContainerRef}>
-        <Route path={`${this.props.match.path}/line-items/:roomId`} render={(props) => <LineItems room={this.state.rooms[props.match.params.roomId]} {...this.props} {...props} />} />
+        <Route path={`${this.props.match.path}/line-items/:roomId`} render={(props) => <LineItems room={this.state.rooms[props.match.params.roomId] || {}} {...this.props} {...props} />} />
         <div className="flex flex-column measure-70 center pt5 mb5">
           <div className="flex flex-row w100">
 
@@ -473,31 +523,11 @@ class CreateInvoice extends Component {
                               <p className="tc dinLabel f7 ttu"> { room.name || roomUUID } </p>
                               <div className="flex flex-row items-center justify-between">
                                 <button
-                                  className="flex flex-row items-center self-center dinLabel f8 mid-gray pointer bn bg-transparent dim">
-                                  DELETE
+                                  className="flex flex-row items-center self-center dinLabel f8 mid-gray pointer bn bg-transparent dim ttu">
+                                  delete
                                   <div className="ArrowIcon mh2"><TrashIcon /></div>
                                 </button>
-                                <AccordionItemState>
-                                  {
-                                    ({ expanded }) => {
-                                      if (expanded) {
-                                        return (
-                                          <button
-                                            className="flex flex-row items-center self-center dinLabel f8 mid-gray pointer bn bg-transparent dim">
-                                            SAVE
-                                          </button>
-                                        )
-                                      }
-                                      return (
-                                        <button
-                                          className="flex flex-row items-center self-center dinLabel f8 pointer mid-gray bn bg-transparent dim">
-                                          EDIT
-                                        </button>
-                                      )
-                                    }
-                                  }
-                                </AccordionItemState>
-                                <div className="ArrowIcon mh3"><Arrow /></div>
+                                <div className="ArrowIcon mh2"><Arrow /></div>
                               </div>
                             </AccordionItemButton>
                           </AccordionItemHeading>
@@ -607,7 +637,7 @@ class CreateInvoice extends Component {
                   return (
                     <li className="flex flex-row items-center justify-between">
                       <p className="dinLabel f6 ttu">
-                        { room.name }
+                        { room.name || roomUUID }
                       </p>
                       <p className="dinLabel f6">
                         <span className="ttu">total: </span>
