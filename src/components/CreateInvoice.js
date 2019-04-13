@@ -262,7 +262,7 @@ class CreateInvoice extends Component {
               />
               <label for="customersFullName">
                 <p className="dinLabel pa0 ma0 mb3 f6">
-                  Customer's Full Name
+                  Customers Full Name
                 </p>
               </label>
 
