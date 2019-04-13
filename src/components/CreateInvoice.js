@@ -308,8 +308,8 @@ class CreateInvoice extends Component {
                 </p>
               </label>
 
-              <p className="dinTitle pa0 ma0 f4 mid-gray mb3 mt4">
-                CLAIM DETAILS
+              <p className="dinTitle pa0 ma0 f4 mid-gray mb3 mt4 ttu">
+                claim details
               </p>
 
               <input
