@@ -158,10 +158,10 @@ class LineItems extends Component {
                       <div className="w-20 flex flex-column items-center mr2">
                         <div className="relative InputField flex flex-row justify-center pointer">
                           <p className="dinLabel ttu mid-gray f7 pa0 ma0 self-center mr3">
-                            uom
+                            { this.props.newLineItemUOM || 'UOM'}
                           </p>
                           <div className="ArrowIcon self-center rotate-90"><Arrow /></div>
-                          <select name="newUOM" className="absolute top-0 left-0 w-100 h-100 o-0 pointer">
+                          <select onChange={this.props.handleChange} name="newLineItemUOM" className="absolute top-0 left-0 w-100 h-100 o-0 pointer">
                             <option>cubic yard</option>
                             <option>day</option>
                             <option>each</option>
@@ -180,9 +180,9 @@ class LineItems extends Component {
                             <option>week</option>
                           </select>
                         </div>
-                        <label for="newUOM">
-                          <p className="dinLabel pa0 ma0 mb2 f7 ttc">
-                            UOM
+                        <label for="newLineItemUOM">
+                          <p className="dinLabel pa0 ma0 mb2 f7 ttu">
+                            uom
                           </p>
                         </label>
                       </div>
@@ -241,6 +241,7 @@ class CreateInvoice extends Component {
       newRoomLineItems: '',
       newLineItemDescription: '',
       newLineItemQuantity: '0',
+      newLineItemUOM: '',
       rooms: {
         [test1]: {
           name: 'Living Room',
@@ -376,7 +377,7 @@ class CreateInvoice extends Component {
   render() {
     return (
       <div ref={this.invoiceContainerRef}>
-        <Route path={`${this.props.match.path}/line-items/:roomId`} render={(props) => <LineItems  newLineItemDescription={this.state.newLineItemDescription} newLineItemQuantity={this.state.newLineItemQuantity} errors={this.state.errors} handleChange={this.handleChange} room={this.state.rooms[props.match.params.roomId] || {}} {...this.props} {...props} />} />
+        <Route path={`${this.props.match.path}/line-items/:roomId`} render={(props) => <LineItems  newLineItemUOM={this.state.newLineItemUOM} newLineItemDescription={this.state.newLineItemDescription} newLineItemQuantity={this.state.newLineItemQuantity} errors={this.state.errors} handleChange={this.handleChange} room={this.state.rooms[props.match.params.roomId] || {}} {...this.props} {...props} />} />
         <div className="flex flex-column measure-70 center pt5 mb5">
           <div className="flex flex-row w100">
 
