@@ -161,23 +161,22 @@ class LineItems extends Component {
                             { this.props.newLineItemUOM || 'UOM'}
                           </p>
                           <div className="ArrowIcon self-center rotate-90"><Arrow /></div>
-                          <select onChange={this.props.handleChange} name="newLineItemUOM" className="absolute top-0 left-0 w-100 h-100 o-0 pointer">
-                            <option>cubic yard</option>
-                            <option>day</option>
-                            <option>each</option>
-                            <option>hour</option>
-                            <option>job cost</option>
-                            <option>linear foot</option>
-                            <option>lump sum</option>
-                            <option>mininum change</option>
-                            <option>month</option>
-                            <option>room</option>
-                            <option>square foot</option>
-                            <option>square</option>
-                            <option>square yard</option>
-                            <option>ton</option>
-                            <option>unit</option>
-                            <option>week</option>
+                          <select onChange={this.props.handleChange} name="newLineItemUOM" className="absolute top-0 left-0 w-100 h-100 o-0 pointer ttc">
+                            <option value="CY">cubic yard</option>
+                            <option value="DA">day</option>
+                            <option value="EA">each</option>
+                            <option value="HR">hour</option>
+                            <option value="JC">job cost</option>
+                            <option value="LF">linear foot</option>
+                            <option value="LS">lump sum</option>
+                            <option value="MC">mininum change</option>
+                            <option value="MO">month</option>
+                            <option value="RM">room</option>
+                            <option value="SF">square foot</option>
+                            <option value="SQ">square</option>
+                            <option value="SY">square yard</option>
+                            <option value="TN">ton</option>
+                            <option value="WK">week</option>
                           </select>
                         </div>
                         <label for="newLineItemUOM">
