@@ -117,7 +117,7 @@ class LineItems extends Component {
                       value={this.props.newLineItemDescription}
                       onChange={this.props.handleChange}
                     />
-                    <label for="newLineItemDescription">
+                    <label htmlFor="newLineItemDescription">
                       <p className="dinLabel pa0 ma0 mb2 f7 ttc">
                         description
                       </p>
@@ -133,28 +133,13 @@ class LineItems extends Component {
                           onChange={this.props.handleChange}
                           value={this.props.newLineItemQuantity}
                         />
-                        <label for="newLineItemQuantity">
+                        <label htmlFor="newLineItemQuantity">
                           <p className="dinLabel pa0 ma0 mb2 f7 ttc">
                             qty
                           </p>
                         </label>
                       </div>
 
-                      <div className="w-20 flex flex-column items-center mr2">
-                        <input
-                          className="InputField tc"
-                          type="number"
-                          name="newLineItemQuantity"
-                          placeholder="0"
-                          onChange={this.props.handleChange}
-                          value={this.props.newLineItemQuantity}
-                        />
-                        <label for="newLineItemQuantity">
-                          <p className="dinLabel pa0 ma0 mb2 f7 ttc">
-                            qty
-                          </p>
-                        </label>
-                      </div>
                       <div className="w-20 flex flex-column items-center mr2">
                         <div className="relative InputField flex flex-row justify-center pointer">
                           <p className="dinLabel ttu mid-gray f7 pa0 ma0 self-center mr3">
@@ -179,12 +164,57 @@ class LineItems extends Component {
                             <option value="WK">week</option>
                           </select>
                         </div>
-                        <label for="newLineItemUOM">
+                        <label htmlFor="newLineItemUOM">
                           <p className="dinLabel pa0 ma0 mb2 f7 ttu">
                             uom
                           </p>
                         </label>
                       </div>
+
+                      <div className="w-20 flex flex-column items-center mr2">
+                        <div className="flex flex-row items-center">
+                          <span className="dinLabel f7 mh1">
+                            $
+                          </span>
+                          <input
+                            type="number"
+                            step="0.01"
+                            min="0.01"
+                            className="InputField tc"
+                            name="newLineItemLaborCost"
+                            value={this.props.newLineItemLaborCost}
+                            onChange={this.props.handleChange}
+                          />
+                        </div>
+                        <label htmlFor="newLineItemLaborCost">
+                          <p className="dinLabel pa0 ma0 mb2 f7 ttc">
+                            labor
+                          </p>
+                        </label>
+                      </div>
+
+                      <div className="w-20 flex flex-column items-center mr2">
+                        <div className="flex flex-row items-center">
+                          <span className="dinLabel f7 mh1">
+                            $
+                          </span>
+                          <input
+                            type="number"
+                            step="0.01"
+                            min="0.01"
+                            className="InputField tc"
+                            name="newLineItemMaterialCost"
+                            value={this.props.newLineItemMaterialCost}
+                            onChange={this.props.handleChange}
+                          />
+                        </div>
+                        <label htmlFor="newLineItemMaterialCost">
+                          <p className="dinLabel pa0 ma0 mb2 f7 ttc">
+                            material
+                          </p>
+                        </label>
+                      </div>
+
                     </div>
                     {
                     //   <button
@@ -327,6 +357,12 @@ class CreateInvoice extends Component {
     }
   }
 
+  addNewLineItem() {
+    const {
+
+    } = this.state
+  }
+
   addNewRoom() {
     const {
       newRoomName : name ,
@@ -393,7 +429,7 @@ class CreateInvoice extends Component {
                 value={this.state.invoiceName}
                 onChange={this.handleChange}
               />
-              <label for="invoiceName">
+              <label htmlFor="invoiceName">
                 <p className="dinLabel pa0 ma0 mb3 f6">
                   Invoice Name
                 </p>
@@ -411,7 +447,7 @@ class CreateInvoice extends Component {
                 value={this.state.customersFullName}
                 onChange={this.handleChange}
               />
-              <label for="customersFullName">
+              <label htmlFor="customersFullName">
                 <p className="dinLabel pa0 ma0 mb3 f6">
                   Customers Full Name
                 </p>
@@ -425,7 +461,7 @@ class CreateInvoice extends Component {
                 value={this.state.customersAddress}
                 onChange={this.handleChange}
               />
-              <label for="customersAddress">
+              <label htmlFor="customersAddress">
                 <p className="dinLabel pa0 ma0 mb3 f6">
                   Customer's Address
                 </p>
@@ -439,7 +475,7 @@ class CreateInvoice extends Component {
                 value={this.state.customesrCityState}
                 onChange={this.handleChange}
               />
-              <label for="customersCityState">
+              <label htmlFor="customersCityState">
                 <p className="dinLabel pa0 ma0 mb3 f6">
                   City, State
                 </p>
@@ -453,7 +489,7 @@ class CreateInvoice extends Component {
                 value={this.state.customersZipCode}
                 onChange={this.handleChange}
               />
-              <label for="customersZipcode">
+              <label htmlFor="customersZipcode">
                 <p className="dinLabel pa0 ma0 mb3 f6">
                   Zip Code
                 </p>
@@ -471,7 +507,7 @@ class CreateInvoice extends Component {
                 value={this.state.insuranceCarrier}
                 onChange={this.handleChange}
               />
-              <label for="insuranceCarrier">
+              <label htmlFor="insuranceCarrier">
                 <p className="dinLabel pa0 ma0 mb3 f6">
                   Insurance Carrier
                 </p>
@@ -485,7 +521,7 @@ class CreateInvoice extends Component {
                 value={this.state.policyNumber}
                 onChange={this.handleChange}
               />
-              <label for="policyNumber">
+              <label htmlFor="policyNumber">
                 <p className="dinLabel pa0 ma0 mb3 f6">
                   Policy Number
                 </p>
@@ -499,7 +535,7 @@ class CreateInvoice extends Component {
                 value={this.state.claimNumber}
                 onChange={this.handleChange}
               />
-              <label for="claimNumber">
+              <label htmlFor="claimNumber">
                 <p className="dinLabel pa0 ma0 mb3 f6">
                   Claim Number
                 </p>
@@ -512,7 +548,7 @@ class CreateInvoice extends Component {
                 value={this.state.dateOfLoss}
                 onChange={this.handleChange}
               />
-              <label for="dateOfLoss">
+              <label htmlFor="dateOfLoss">
                 <p className="dinLabel pa0 ma0 mb3 f6">
                   Date of Loss
                 </p>
@@ -534,7 +570,7 @@ class CreateInvoice extends Component {
                   value={this.state.newRoomName}
                   onChange={this.handleChange}
                 />
-                <label for="newRoomName">
+                <label htmlFor="newRoomName">
                   <p className="dinLabel pa0 ma0 mb3 f6">
                     Room Name
                   </p>
@@ -553,7 +589,7 @@ class CreateInvoice extends Component {
                         onChange={this.handleChange}
                         value={this.state.newRoomLength}
                       />
-                      <label for="newRoomLength">
+                      <label htmlFor="newRoomLength">
                         <p className="dinLabel pa0 ma0 mb3 f6">
                           Length
                         </p>
@@ -569,7 +605,7 @@ class CreateInvoice extends Component {
                         onChange={this.handleChange}
                         value={this.state.newRoomWidth}
                       />
-                      <label for="newRoomWidth">
+                      <label htmlFor="newRoomWidth">
                         <p className="dinLabel pa0 ma0 mb3 f6">
                           Width
                         </p>
@@ -585,7 +621,7 @@ class CreateInvoice extends Component {
                         value={this.state.newRoomHeight}
                         onChange={this.handleChange}
                       />
-                    <label for="newRoomHeight">
+                    <label htmlFor="newRoomHeight">
                         <p className="dinLabel pa0 ma0 mb3 f6">
                           Height
                         </p>
@@ -642,7 +678,7 @@ class CreateInvoice extends Component {
                                 placeholder="Enter the room name"
                                 value={room.name}
                               />
-                              <label for="newRoomName">
+                              <label htmlFor="newRoomName">
                                 <p className="dinLabel pa0 ma0 mb3 f6">
                                   Room Name
                                 </p>
@@ -660,7 +696,7 @@ class CreateInvoice extends Component {
                                       placeholder="0"
                                       value={this.state.newRoomLength}
                                     />
-                                    <label for="newRoomLength">
+                                    <label htmlFor="newRoomLength">
                                       <p className="dinLabel pa0 ma0 mb3 f6">
                                         Length
                                       </p>
@@ -675,7 +711,7 @@ class CreateInvoice extends Component {
                                       placeholder="0"
                                       value={this.state.newRoomWidth}
                                     />
-                                    <label for="newRoomWidth">
+                                    <label htmlFor="newRoomWidth">
                                       <p className="dinLabel pa0 ma0 mb3 f6">
                                         Width
                                       </p>
@@ -690,7 +726,7 @@ class CreateInvoice extends Component {
                                       placeholder="8"
                                       value={this.state.newRoomHeight}
                                     />
-                                  <label for="newRoomHeight">
+                                  <label htmlFor="newRoomHeight">
                                       <p className="dinLabel pa0 ma0 mb3 f6">
                                         Height
                                       </p>
@@ -736,7 +772,7 @@ class CreateInvoice extends Component {
                 Object.keys(this.state.rooms).map((roomUUID, key) => {
                   const room = this.state.rooms[roomUUID]
                   return (
-                    <li className="flex flex-row items-center justify-between">
+                    <li className="flex flex-row items-center justify-between" key={key}>
                       <p className="dinLabel f6 ttu">
                         { room.name || roomUUID }
                       </p>
