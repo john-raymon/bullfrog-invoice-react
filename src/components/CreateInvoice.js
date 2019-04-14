@@ -94,7 +94,7 @@ class LineItems extends Component {
                             <p className="dinLabel f7 mid-gray w-25 pa0 ma0">
                               { lineItem.totalLabor }
                             </p>
-                            <div className="absolute right-0 h-100 ArrowIcon mh2"><Arrow /></div>
+                            <div className="absolute right-0 h-100 ArrowIcon mh2 rotate-90"><Arrow /></div>
                           </AccordionItemButton>
                         </AccordionItemHeading>
                         <AccordionItemPanel>
@@ -105,6 +105,104 @@ class LineItems extends Component {
                   })
                 }
               </Accordion>
+              <div className="flex flex-row justify-between mt4">
+                <div className="w-50 br bw1 b--light-gray pr4">
+                  <div className="NewLineItem__container">
+                    { this.props.errors.newLineItem && ( <p className="dinLabel red f6 o-70"> {this.state.errors.newLineItem } </p> )}
+                    <input
+                      className="InputField measure-1"
+                      type="text"
+                      name="newLineItemDescription"
+                      placeholder="Enter the line-item's description"
+                      value={this.props.newLineItemDescription}
+                      onChange={this.props.handleChange}
+                    />
+                    <label for="newLineItemDescription">
+                      <p className="dinLabel pa0 ma0 mb2 f7 ttc">
+                        description
+                      </p>
+                    </label>
+
+                    <div className="flex flex-row items-center flex-wrap justify-start">
+                      <div className="w-20 flex flex-column items-center mr2">
+                        <input
+                          className="InputField tc"
+                          type="number"
+                          name="newLineItemQuantity"
+                          placeholder="0"
+                          onChange={this.props.handleChange}
+                          value={this.props.newLineItemQuantity}
+                        />
+                        <label for="newLineItemQuantity">
+                          <p className="dinLabel pa0 ma0 mb2 f7 ttc">
+                            qty
+                          </p>
+                        </label>
+                      </div>
+
+                      <div className="w-20 flex flex-column items-center mr2">
+                        <input
+                          className="InputField tc"
+                          type="number"
+                          name="newLineItemQuantity"
+                          placeholder="0"
+                          onChange={this.props.handleChange}
+                          value={this.props.newLineItemQuantity}
+                        />
+                        <label for="newLineItemQuantity">
+                          <p className="dinLabel pa0 ma0 mb2 f7 ttc">
+                            qty
+                          </p>
+                        </label>
+                      </div>
+                      <div className="w-20 flex flex-column items-center mr2">
+                        <div className="relative InputField flex flex-row justify-center pointer">
+                          <p className="dinLabel ttu mid-gray f7 pa0 ma0 self-center mr3">
+                            uom
+                          </p>
+                          <div className="ArrowIcon self-center rotate-90"><Arrow /></div>
+                          <select name="newUOM" className="absolute top-0 left-0 w-100 h-100 o-0 pointer">
+                            <option>cubic yard</option>
+                            <option>day</option>
+                            <option>each</option>
+                            <option>hour</option>
+                            <option>job cost</option>
+                            <option>linear foot</option>
+                            <option>lump sum</option>
+                            <option>mininum change</option>
+                            <option>month</option>
+                            <option>room</option>
+                            <option>square foot</option>
+                            <option>square</option>
+                            <option>square yard</option>
+                            <option>ton</option>
+                            <option>unit</option>
+                            <option>week</option>
+                          </select>
+                        </div>
+                        <label for="newUOM">
+                          <p className="dinLabel pa0 ma0 mb2 f7 ttc">
+                            UOM
+                          </p>
+                        </label>
+                      </div>
+                    </div>
+                    {
+                    //   <button
+                    //   className="flex flex-row items-center dinLabel f7 mid-gray self-start pointer bt-0 bl-0 br-0 bg-transparent mt2"
+                    // >
+                    //   ADD LINE ITEMS
+                    // </button>
+                    }
+                    <button
+                      className="GenericButton tc dinLabel pv3 f7 mt3"
+                      onClick={this.addNewRoom}
+                      >
+                      ADD ROOM
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
             <div className="sticky bottom-0 flex justify-center">
               <p className="dinLabel mid-gray f6 ttu pointer"
@@ -141,6 +239,8 @@ class CreateInvoice extends Component {
       newRoomWidth: '',
       newRoomHeight: '8',
       newRoomLineItems: '',
+      newLineItemDescription: '',
+      newLineItemQuantity: '0',
       rooms: {
         [test1]: {
           name: 'Living Room',
@@ -167,7 +267,8 @@ class CreateInvoice extends Component {
       },
       totalCost: '',
       errors: {
-        newRoom: ''
+        newRoom: '',
+        newLineItem: ''
       }
     }
   }
@@ -275,7 +376,7 @@ class CreateInvoice extends Component {
   render() {
     return (
       <div ref={this.invoiceContainerRef}>
-        <Route path={`${this.props.match.path}/line-items/:roomId`} render={(props) => <LineItems room={this.state.rooms[props.match.params.roomId] || {}} {...this.props} {...props} />} />
+        <Route path={`${this.props.match.path}/line-items/:roomId`} render={(props) => <LineItems  newLineItemDescription={this.state.newLineItemDescription} newLineItemQuantity={this.state.newLineItemQuantity} errors={this.state.errors} handleChange={this.handleChange} room={this.state.rooms[props.match.params.roomId] || {}} {...this.props} {...props} />} />
         <div className="flex flex-column measure-70 center pt5 mb5">
           <div className="flex flex-row w100">
 
