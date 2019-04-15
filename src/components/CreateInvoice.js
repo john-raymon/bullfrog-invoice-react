@@ -31,7 +31,7 @@ class LineItems extends Component {
     return (
       <div className="LineItems fixed top-0 left-0 w-100 z-1 vh-100 bg-black-70">
         <div className="fixed top-0 left-0 vh-75 w-100 bg-white overflow-scroll">
-          <div className="measure-70 center">
+          <div className="measure-70 flex flex-column center">
             <p className="sticky top-0 dinTitle pa0 ma0 f3 mb3 ttc pt4 bg-white-70">
               line items
               <span className="mid-gray f5 ttc db pt1">
@@ -235,7 +235,7 @@ class LineItems extends Component {
                 </div>
               </div>
             </div>
-            <div className="sticky bottom-0 flex justify-center">
+            <div className="sticky bottom-0 dib self-center">
               <p className="dinLabel mid-gray f6 ttu pointer"
                 onClick={() => this.props.history.goBack()}>
                 close
@@ -380,7 +380,7 @@ class CreateInvoice extends Component {
       newLineItemLaborCost : laborCost,
       newLineItemMaterialCost : materialCost,
     } = this.state
-    const numberReg = /^\d+$/;
+    const numberReg = /^-?\d*(\.\d+)?$/;
     if (!numberReg.test(laborCost) || !numberReg.test(materialCost) || !numberReg.test(quantity)) {
       return this.setState((prevState) => ({
         ...prevState,
@@ -395,7 +395,7 @@ class CreateInvoice extends Component {
         ...prevState,
         errors : {
           ...prevState.errors,
-          newLineItem: 'Labor cost, material cost, and quantity must be a number'
+          newLineItem: 'You must provide a quantity greater than 0, a UOM, and a description'
         }
       }))
     }
