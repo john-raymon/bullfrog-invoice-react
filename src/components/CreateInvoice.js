@@ -108,7 +108,7 @@ class LineItems extends Component {
               <div className="flex flex-row justify-between mt4">
                 <div className="w-50 br bw1 b--light-gray pr4">
                   <div className="NewLineItem__container">
-                    { this.props.errors.newLineItem && ( <p className="dinLabel red f6 o-70"> {this.state.errors.newLineItem } </p> )}
+                    { this.props.errors.newLineItem && ( <p className="dinLabel red f6 o-70"> {this.props.errors.newLineItem } </p> )}
                     <input
                       className="InputField measure-1"
                       type="text"
@@ -179,7 +179,8 @@ class LineItems extends Component {
                           <input
                             type="number"
                             step="0.01"
-                            min="0.01"
+                            min="0.00"
+                            onBlur={this.props.handleCostInputBlur}
                             className="InputField tc"
                             name="newLineItemLaborCost"
                             value={this.props.newLineItemLaborCost}
@@ -201,7 +202,8 @@ class LineItems extends Component {
                           <input
                             type="number"
                             step="0.01"
-                            min="0.01"
+                            min="0.00"
+                            onBlur={this.props.handleCostInputBlur}
                             className="InputField tc"
                             name="newLineItemMaterialCost"
                             value={this.props.newLineItemMaterialCost}
@@ -224,10 +226,10 @@ class LineItems extends Component {
                     // </button>
                     }
                     <button
-                      className="GenericButton tc dinLabel pv3 f7 mt3"
-                      onClick={this.addNewRoom}
+                      className="GenericButton tc dinLabel pv3 f7 mt3 ttu"
+                      onClick={this.props.addNewLineItem}
                       >
-                      ADD ROOM
+                      add line item
                     </button>
                   </div>
                 </div>
@@ -252,6 +254,8 @@ class CreateInvoice extends Component {
     this.handleChange = this.handleChange.bind(this)
     this.addNewRoom = this.addNewRoom.bind(this)
     this.autoSave = this.autoSave.bind(this)
+    this.addNewLineItem = this.addNewLineItem.bind(this)
+    this.handleCostInputBlur = this.handleCostInputBlur.bind(this)
     this.invoiceContainerRef = createRef()
     this.draftTimeoutId = null;
     const test1 = createUUID();
@@ -269,8 +273,10 @@ class CreateInvoice extends Component {
       newRoomHeight: '8',
       newRoomLineItems: '',
       newLineItemDescription: '',
-      newLineItemQuantity: '0',
+      newLineItemQuantity: '1',
       newLineItemUOM: '',
+      newLineItemLaborCost: '0.00',
+      newLineItemMaterialCost: '0.00',
       rooms: {
         [test1]: {
           name: 'Living Room',
@@ -351,16 +357,48 @@ class CreateInvoice extends Component {
         }
       }))
     } else {
-      this.setState({
-        [e.target.name]: e.target.value
+      return this.setState({
+        [e.target.name] : e.target.value
       })
     }
   }
 
+  handleCostInputBlur(e) {
+    if ((e.target.name === 'newLineItemLaborCost' || e.target.name === 'newLineItemMaterialCost') && !this.state[e.target.name].trim()) {
+      return this.setState({
+        [e.target.name] : '0.00'
+      })
+    }
+    return;
+  }
+
   addNewLineItem() {
     const {
-
+      newLineItemDescription : description,
+      newLineItemQuantity : quantity,
+      newLineItemUOM : uom,
+      newLineItemLaborCost : laborCost,
+      newLineItemMaterialCost : materialCost,
     } = this.state
+    const numberReg = /^\d+$/;
+    if (!numberReg.test(laborCost) || !numberReg.test(materialCost) || !numberReg.test(quantity)) {
+      return this.setState((prevState) => ({
+        ...prevState,
+        errors : {
+          ...prevState.errors,
+          newLineItem: 'Labor cost, material cost, and quantity must be a number'
+        }
+      }))
+    }
+    if (!description.trim() || !(quantity > 0) || !uom.trim()) {
+      return this.setState((prevState) => ({
+        ...prevState,
+        errors : {
+          ...prevState.errors,
+          newLineItem: 'Labor cost, material cost, and quantity must be a number'
+        }
+      }))
+    }
   }
 
   addNewRoom() {
@@ -373,7 +411,9 @@ class CreateInvoice extends Component {
 
     if ( (!name.trim().length || !length.trim().length || !width.trim().length || !height.trim().length) ) {
       return this.setState((prevState) => ({
+        ...prevState,
         errors: {
+          ...prevState.errors,
           newRoom: 'You must provide all fields for the new room'
         }
       }))
@@ -412,7 +452,7 @@ class CreateInvoice extends Component {
   render() {
     return (
       <div ref={this.invoiceContainerRef}>
-        <Route path={`${this.props.match.path}/line-items/:roomId`} render={(props) => <LineItems  newLineItemUOM={this.state.newLineItemUOM} newLineItemDescription={this.state.newLineItemDescription} newLineItemQuantity={this.state.newLineItemQuantity} errors={this.state.errors} handleChange={this.handleChange} room={this.state.rooms[props.match.params.roomId] || {}} {...this.props} {...props} />} />
+        <Route path={`${this.props.match.path}/line-items/:roomId`} render={(props) => <LineItems handleCostInputBlur={this.handleCostInputBlur} addNewLineItem={this.addNewLineItem} newLineItemLaborCost={this.state.newLineItemLaborCost} newLineItemMaterialCost={this.state.newLineItemMaterialCost} newLineItemUOM={this.state.newLineItemUOM} newLineItemDescription={this.state.newLineItemDescription} newLineItemQuantity={this.state.newLineItemQuantity} errors={this.state.errors} handleChange={this.handleChange} room={this.state.rooms[props.match.params.roomId] || {}} {...this.props} {...props} />} />
         <div className="flex flex-column measure-70 center pt5 mb5">
           <div className="flex flex-row w100">
 
@@ -732,7 +772,6 @@ class CreateInvoice extends Component {
                                       </p>
                                     </label>
                                   </div>
-
                                 </div>
 
                               </div>
