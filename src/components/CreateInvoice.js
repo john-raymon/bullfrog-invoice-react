@@ -227,7 +227,7 @@ class LineItems extends Component {
                     }
                     <button
                       className="GenericButton tc dinLabel pv3 f7 mt3 ttu"
-                      onClick={this.props.addNewLineItem}
+                      onClick={() => this.props.addNewLineItem(this.props.match.params.roomId)}
                       >
                       add line item
                     </button>
@@ -256,6 +256,7 @@ class CreateInvoice extends Component {
     this.autoSave = this.autoSave.bind(this)
     this.addNewLineItem = this.addNewLineItem.bind(this)
     this.handleCostInputBlur = this.handleCostInputBlur.bind(this)
+    this.calculateTotals = this.calculateTotals.bind(this)
     this.invoiceContainerRef = createRef()
     this.draftTimeoutId = null;
     const test1 = createUUID();
@@ -291,7 +292,8 @@ class CreateInvoice extends Component {
               laborCost: '14',
               totalMaterial: '',
               totalLabor: '',
-              quantity: '14'
+              quantity: '14',
+              total: '0.00'
             }
           },
           roomTotals: {
@@ -372,7 +374,20 @@ class CreateInvoice extends Component {
     return;
   }
 
-  addNewLineItem() {
+  calculateTotals(quantity, uom, laborCost, materialCost) {
+    // implement feature later on to have different precisions https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/programmanagement/estimates/basisofestimates/boemanual/files/chapter02.pdf?sfvrsn=f052688d_4
+    // for different units (UOM)
+    const laborTotal = (parseFloat(quantity) * parseFloat(laborCost)).toFixed(2)
+    const materialTotal = (parseFloat(quantity) * parseFloat(materialCost)).toFixed(2)
+    const combinedTotal = (parseFloat(laborTotal) + parseFloat(materialTotal)).toFixed(2)
+    return {
+      laborTotal,
+      materialTotal,
+      combinedTotal
+    }
+  }
+
+  addNewLineItem(roomUUID) {
     const {
       newLineItemDescription : description,
       newLineItemQuantity : quantity,
@@ -399,6 +414,39 @@ class CreateInvoice extends Component {
         }
       }))
     }
+
+    // everythng is good, continue, make calculations
+    const { laborTotal, materialTotal, combinedTotal } = this.calculateTotals(quantity, uom, laborCost, materialCost)
+    const newlineItemUUID = createUUID();
+
+    return this.setState((prevState) => ({
+      errors: { ...prevState.errors, newLineItem: '' },
+      newLineItemDescription: '',
+      newLineItemQuantity: '1',
+      newLineItemUOM: '',
+      newLineItemLaborCost: '0.00',
+      newLineItemMaterialCost: '0.00',
+      rooms: {
+        ...prevState.rooms,
+        [roomUUID]: {
+          ...prevState.rooms[roomUUID],
+          lineItems: {
+            ...prevState.rooms[roomUUID].lineItems,
+            [newlineItemUUID] : {
+              description: description,
+              uom: uom,
+              materialCost: materialCost,
+              laborCost: laborCost,
+              totalMaterial: materialTotal,
+              totalLabor: laborTotal,
+              quantity: quantity,
+              total: combinedTotal
+            }
+          }
+        }
+      }
+    }))
+
   }
 
   addNewRoom() {
