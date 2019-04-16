@@ -843,7 +843,7 @@ class CreateInvoice extends Component {
                 <input
                   type="file"
                   name="roomImages"
-                  className="absolute w-100 h-100 o-0"
+                  className="absolute w-100 h-100 o-0 pointer"
                   accept="image/png, image/jpeg"
                 />
                 <p className="dinLabel pa0 ma0 f7 gray ttu dib">
