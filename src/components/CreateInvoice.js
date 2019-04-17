@@ -68,34 +68,44 @@ class LineItems extends Component {
                 { Object.keys(this.props.room).length &&
                   Object.keys(this.props.room.lineItems).map((lineItemUUID, key) => {
                     const lineItem = this.props.room.lineItems[lineItemUUID]
+                    if (lineItem === undefined) return;
                     return (
                       <AccordionItem
                         key={key}
                       >
                         <AccordionItemHeading className="w-100">
                           <AccordionItemButton className="relative accordion__button flex flex-row items-center ttc pv3">
-                            <p className="dinLabel f7 mid-gray w-25 pa0 ma0">
+                            <p className="dinLabel f7 mid-gray w-25 pa0 ma0 overflow-scroll pr2 pt2 pb3">
                               { lineItem.description }
                             </p>
-                            <p className="dinLabel f7 mid-gray w-25 pa0 ma0">
+                            <p className="dinLabel f7 mid-gray w-25 pa0 ma0 overflow-scroll pr2 pt2 pb3">
                               { lineItem.quantity }
                             </p>
-                            <p className="dinLabel f7 mid-gray w-25 pa0 ma0">
+                            <p className="dinLabel f7 mid-gray w-25 pa0 ma0 overflow-scroll pr2 pt2 pb3">
                               { lineItem.uom }
                             </p>
-                            <p className="dinLabel f7 mid-gray w-25 pa0 ma0">
+                            <p className="dinLabel f7 mid-gray w-25 pa0 ma0 overflow-scroll pr2 pt2 pb3">
                               { lineItem.laborCost }
                             </p>
-                            <p className="dinLabel f7 mid-gray w-25 pa0 ma0">
+                            <p className="dinLabel f7 mid-gray w-25 pa0 ma0 overflow-scroll pr2 pt2 pb3">
                               { lineItem.materialCost }
                             </p>
-                            <p className="dinLabel f7 mid-gray w-25 pa0 ma0">
+                            <p className="dinLabel f7 mid-gray w-25 pa0 ma0 overflow-scroll pr2 pt2 pb3">
                               { lineItem.totalMaterial }
                             </p>
-                            <p className="dinLabel f7 mid-gray w-25 pa0 ma0">
+                            <p className="dinLabel f7 mid-gray w-25 pa0 ma0 overflow-scroll pr2 pt2 pb3">
                               { lineItem.totalLabor }
                             </p>
-                            <div className="absolute right-0 h-100 ArrowIcon mh2 rotate-90"><Arrow /></div>
+                            <div className="absolute right-0 h-100 items-center flex flex-row">
+                              <button
+                                onClick={() => this.props.removeLineItem(roomUUID, lineItemUUID)}
+                                className="flex flex-row items-center dinLabel f8 mid-gray pointer bn bg-transparent dim ttu">
+                                <div className="ArrowIcon mh1"><TrashIcon /></div>
+                              </button>
+                              <div className="ArrowIcon rotate-90 mh1">
+                                <Arrow />
+                              </div>
+                            </div>
                           </AccordionItemButton>
                         </AccordionItemHeading>
                         <AccordionItemPanel>
@@ -370,6 +380,8 @@ class CreateInvoice extends Component {
     this.handleCostInputBlur = this.handleCostInputBlur.bind(this)
     this.calculateTotals = this.calculateTotals.bind(this)
     this.handleLineItemChange = this.handleLineItemChange.bind(this)
+    this.removeRoom = this.removeRoom.bind(this)
+    this.removeLineItem = this.removeLineItem.bind(this)
     this.invoiceContainerRef = createRef()
     this.draftTimeoutId = null;
     const test1 = createUUID();
@@ -694,6 +706,31 @@ class CreateInvoice extends Component {
 
   }
 
+  removeRoom(roomUUID) {
+    return this.setState({
+      ...this.state,
+      rooms: {
+        ...this.state.rooms,
+        [roomUUID]: undefined
+      }
+    })
+  }
+
+  removeLineItem(roomUUID, lineItemUUID) {
+    return this.setState({
+      ...this.state,
+      rooms: {
+        ...this.state.rooms,
+        [roomUUID]: {
+          ...this.state.rooms[roomUUID],
+          lineItems: {
+            [lineItemUUID] : undefined
+          }
+        }
+      }
+    })
+  }
+
   render() {
     return (
       <div ref={this.invoiceContainerRef}>
@@ -712,6 +749,7 @@ class CreateInvoice extends Component {
                 handleLineItemChange={this.handleLineItemChange}
                 errors={this.state.errors}
                 handleChange={this.handleChange}
+                removeLineItem={this.removeLineItem}
                 room={this.state.rooms[props.match.params.roomId] || {}}
                 {...this.props}
                 {...props}
@@ -956,6 +994,7 @@ class CreateInvoice extends Component {
                   {
                     Object.keys(this.state.rooms).map((roomUUID, key) => {
                       const room = this.state.rooms[roomUUID]
+                      if (room === undefined) return;
                       return (
                         <AccordionItem
                           key={key}
@@ -965,6 +1004,7 @@ class CreateInvoice extends Component {
                               <p className="tc dinLabel f7 ttu"> { room.name || roomUUID } </p>
                               <div className="flex flex-row items-center justify-between">
                                 <button
+                                  onClick={() => this.removeRoom(roomUUID)}
                                   className="flex flex-row items-center self-center dinLabel f8 mid-gray pointer bn bg-transparent dim ttu">
                                   delete
                                   <div className="ArrowIcon mh2"><TrashIcon /></div>
@@ -1075,6 +1115,7 @@ class CreateInvoice extends Component {
               {
                 Object.keys(this.state.rooms).map((roomUUID, key) => {
                   const room = this.state.rooms[roomUUID]
+                  if (room === undefined) return;
                   return (
                     <li className="flex flex-row items-center justify-between" key={key}>
                       <p className="dinLabel f6 ttu">
