@@ -87,7 +87,7 @@ class Dashboard extends Component {
       })
     }
     return(
-      <div className="flex flex-column w-100 measure-70 center pt5 ph4 mb4">
+      <div className="flex flex-column w-100 measure-80 center pt5 ph3 mb4">
         <div className="flex flex-row w-100 items-start">
           <div className="w-50">
             <p className="dinTitle tl mid-gray pa0 ma0">
