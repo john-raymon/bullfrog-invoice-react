@@ -106,7 +106,7 @@ class LineItems extends Component {
                               name="description"
                               placeholder="Enter the line-item's description"
                               value={this.props.room.lineItems[lineItemUUID].description}
-                              onChange={(e) => this.props.handleChange(e, roomUUID, lineItemUUID)}
+                              onChange={(e) => this.props.handleLineItemChange(e, roomUUID, lineItemUUID)}
                             />
                             <label htmlFor="newLineItemDescription">
                               <p className="dinLabel pa0 ma0 mb2 f7 ttc">
@@ -123,7 +123,7 @@ class LineItems extends Component {
                                   placeholder="1"
                                   onBlur={(e) => this.props.handleCostInputBlur(e, roomUUID, lineItemUUID)}
                                   value={this.props.room.lineItems[lineItemUUID].quantity}
-                                  onChange={(e) => this.props.handleChange(e, roomUUID, lineItemUUID)}
+                                  onChange={(e) => this.props.handleLineItemChange(e, roomUUID, lineItemUUID)}
                                 />
                                 <label htmlFor="newLineItemQuantity">
                                   <p className="dinLabel pa0 ma0 mb2 f7 ttc">
@@ -138,7 +138,7 @@ class LineItems extends Component {
                                     { this.props.room.lineItems[lineItemUUID].uom || 'UOM'}
                                   </p>
                                   <div className="ArrowIcon self-center rotate-90"><Arrow /></div>
-                                  <select onChange={(e) => this.props.handleChange(e, roomUUID, lineItemUUID)} name="uom" className="absolute top-0 left-0 w-100 h-100 o-0 pointer ttc">
+                                  <select onChange={(e) => this.props.handleLineItemChange(e, roomUUID, lineItemUUID)} name="uom" className="absolute top-0 left-0 w-100 h-100 o-0 pointer ttc">
                                     <option value="CY">cubic yard</option>
                                     <option value="DA">day</option>
                                     <option value="EA">each</option>
@@ -176,7 +176,7 @@ class LineItems extends Component {
                                     className="InputField tc"
                                     name="laborCost"
                                     value={this.props.room.lineItems[lineItemUUID].laborCost}
-                                    onChange={(e) => this.props.handleChange(e, roomUUID, lineItemUUID)}
+                                    onChange={(e) => this.props.handleLineItemChange(e, roomUUID, lineItemUUID)}
                                   />
                                 </div>
                                 <label htmlFor="newLineItemLaborCost">
@@ -199,7 +199,7 @@ class LineItems extends Component {
                                     className="InputField tc"
                                     name="materialCost"
                                     value={this.props.room.lineItems[lineItemUUID].materialCost}
-                                    onChange={(e) => this.props.handleChange(e, roomUUID, lineItemUUID)}
+                                    onChange={(e) => this.props.handleLineItemChange(e, roomUUID, lineItemUUID)}
                                   />
                                 </div>
                                 <label htmlFor="newLineItemMaterialCost">
@@ -369,6 +369,7 @@ class CreateInvoice extends Component {
     this.addNewLineItem = this.addNewLineItem.bind(this)
     this.handleCostInputBlur = this.handleCostInputBlur.bind(this)
     this.calculateTotals = this.calculateTotals.bind(this)
+    this.handleLineItemChange = this.handleLineItemChange.bind(this)
     this.invoiceContainerRef = createRef()
     this.draftTimeoutId = null;
     const test1 = createUUID();
@@ -454,7 +455,33 @@ class CreateInvoice extends Component {
     console.log('saved')
   }
 
-  handleChange(e, uuid) {
+  // this handles updating existing lineItem's by being passed the roomUUID of
+  // the line item's room, and also the lineItemUUID of the line item
+  handleLineItemChange(e, roomUUID, lineItemUUID) {
+    const eventTargetName = e.target.name
+    const eventTargetValue = e.target.value
+    return this.setState({
+      ...this.state,
+      rooms: {
+        ...this.state.rooms,
+        [roomUUID]: {
+          ...this.state.rooms[roomUUID],
+          lineItems: {
+            ...this.state.rooms[roomUUID].lineItems,
+            [lineItemUUID] : {
+              ...this.state.rooms[roomUUID].lineItems[lineItemUUID],
+              [eventTargetName] : eventTargetValue
+            }
+          }
+        }
+      }
+    })
+  }
+
+  // this handles newLineItems and newRooms because of it being on the root of the state,
+  // it also handles existing rooms, by being passed the uuid of the room
+  handleChange(e, roomUUID) {
+    const uuid = roomUUID
     // console.log('this is the target', e.target.name, this.state.rooms[uuid])
     if (uuid) {
       const eventTargetName = e.target.name
@@ -480,9 +507,18 @@ class CreateInvoice extends Component {
   handleCostInputBlur(e, roomUUID, lineItemUUID) {
     if (lineItemUUID && roomUUID) {
       // make sure factors are not empty strings before calculating
-      if ((e.target.name === 'laborCost' || e.target.name === 'materialCost' || e.target.name === 'quantity') && !this.state.rooms[roomUUID].lineItems[lineItemUUID][e.target.name].trim()) {
+      if ((e.target.name === 'laborCost' || e.target.name === 'materialCost' || e.target.name === 'quantity')) {
         const calcCB = (prevState) => {
           let totals;
+          if (this.state.rooms[roomUUID].lineItems[lineItemUUID][e.target.name].trim()) {
+            totals = this.calculateTotals(prevState.rooms[roomUUID].lineItems[lineItemUUID].quantity, prevState.rooms[roomUUID].lineItems[lineItemUUID].uom, '0.00', prevState.rooms[roomUUID].lineItems[lineItemUUID].materialCost)
+            return {
+              ...prevState.rooms[roomUUID].lineItems[lineItemUUID],
+              totalLabor: totals.laborTotal,
+              totalMaterial: totals.materialTotal,
+              total: totals.combinedTotal
+            }
+          }
           if (e.target.name === 'laborCost') {
             totals = this.calculateTotals(prevState.rooms[roomUUID].lineItems[lineItemUUID].quantity, prevState.rooms[roomUUID].lineItems[lineItemUUID].uom, '0.00', prevState.rooms[roomUUID].lineItems[lineItemUUID].materialCost)
           } else if (e.target.name === 'materialCost') {
@@ -498,20 +534,21 @@ class CreateInvoice extends Component {
             total: totals.combinedTotal
           }
         }
-        this.setState((prevState) => ({
-          ...prevState,
+        return this.setState({
+          ...this.state,
           rooms: {
-            ...prevState.rooms,
+            ...this.state.rooms,
             [roomUUID]: {
-              ...prevState.rooms[roomUUID],
+              ...this.state.rooms[roomUUID],
               lineItems: {
-                ...prevState.rooms[roomUUID].lineItems,
-                [lineItemUUID] : calcCB(prevState)
+                ...this.state.rooms[roomUUID].lineItems,
+                [lineItemUUID] : calcCB(this.state)
               }
             }
           }
-        }))
+        })
       }
+
     }
     if ((e.target.name === 'newLineItemLaborCost' || e.target.name === 'newLineItemMaterialCost') && !this.state[e.target.name].trim()) {
       return this.setState({
@@ -659,7 +696,9 @@ class CreateInvoice extends Component {
                 newLineItemUOM={this.state.newLineItemUOM}
                 newLineItemDescription={this.state.newLineItemDescription}
                 newLineItemQuantity={this.state.newLineItemQuantity}
-                errors={this.state.errors} handleChange={this.handleChange}
+                handleLineItemChange={this.handleLineItemChange}
+                errors={this.state.errors}
+                handleChange={this.handleChange}
                 room={this.state.rooms[props.match.params.roomId] || {}}
                 {...this.props}
                 {...props}
