@@ -28,6 +28,7 @@ class LineItems extends Component {
   }
 
   render() {
+    const roomUUID = this.props.match.params.roomId
     return (
       <div className="LineItems fixed top-0 left-0 w-100 z-1 vh-100 bg-black-70">
         <div className="fixed top-0 left-0 vh-75 w-100 bg-white overflow-scroll">
@@ -98,13 +99,124 @@ class LineItems extends Component {
                           </AccordionItemButton>
                         </AccordionItemHeading>
                         <AccordionItemPanel>
-                          Testing
+                          <div className="LineItem__container w-50 pv2">
+                            <input
+                              className="InputField measure-1"
+                              type="text"
+                              name="description"
+                              placeholder="Enter the line-item's description"
+                              value={this.props.room.lineItems[lineItemUUID].description}
+                              onChange={(e) => this.props.handleChange(e, roomUUID, lineItemUUID)}
+                            />
+                            <label htmlFor="newLineItemDescription">
+                              <p className="dinLabel pa0 ma0 mb2 f7 ttc">
+                                description
+                              </p>
+                            </label>
+
+                            <div className="flex flex-row items-center flex-wrap justify-start">
+                              <div className="w-20 flex flex-column items-center mr2">
+                                <input
+                                  className="InputField tc"
+                                  type="number"
+                                  name="quantity"
+                                  placeholder="1"
+                                  onBlur={(e) => this.props.handleCostInputBlur(e, roomUUID, lineItemUUID)}
+                                  value={this.props.room.lineItems[lineItemUUID].quantity}
+                                  onChange={(e) => this.props.handleChange(e, roomUUID, lineItemUUID)}
+                                />
+                                <label htmlFor="newLineItemQuantity">
+                                  <p className="dinLabel pa0 ma0 mb2 f7 ttc">
+                                    qty
+                                  </p>
+                                </label>
+                              </div>
+
+                              <div className="w-20 flex flex-column items-center mr2">
+                                <div className="relative InputField flex flex-row justify-center pointer">
+                                  <p className="dinLabel ttu mid-gray f7 pa0 ma0 self-center mr3">
+                                    { this.props.room.lineItems[lineItemUUID].uom || 'UOM'}
+                                  </p>
+                                  <div className="ArrowIcon self-center rotate-90"><Arrow /></div>
+                                  <select onChange={(e) => this.props.handleChange(e, roomUUID, lineItemUUID)} name="uom" className="absolute top-0 left-0 w-100 h-100 o-0 pointer ttc">
+                                    <option value="CY">cubic yard</option>
+                                    <option value="DA">day</option>
+                                    <option value="EA">each</option>
+                                    <option value="HR">hour</option>
+                                    <option value="JC">job cost</option>
+                                    <option value="LF">linear foot</option>
+                                    <option value="LS">lump sum</option>
+                                    <option value="MC">mininum change</option>
+                                    <option value="MO">month</option>
+                                    <option value="RM">room</option>
+                                    <option value="SF">square foot</option>
+                                    <option value="SQ">square</option>
+                                    <option value="SY">square yard</option>
+                                    <option value="TN">ton</option>
+                                    <option value="WK">week</option>
+                                  </select>
+                                </div>
+                                <label htmlFor="newLineItemUOM">
+                                  <p className="dinLabel pa0 ma0 mb2 f7 ttu">
+                                    uom
+                                  </p>
+                                </label>
+                              </div>
+
+                              <div className="w-20 flex flex-column items-center mr2">
+                                <div className="flex flex-row items-center">
+                                  <span className="dinLabel f7 mh1">
+                                    $
+                                  </span>
+                                  <input
+                                    type="number"
+                                    step="0.01"
+                                    min="0.00"
+                                    onBlur={(e) => this.props.handleCostInputBlur(e, roomUUID, lineItemUUID)}
+                                    className="InputField tc"
+                                    name="laborCost"
+                                    value={this.props.room.lineItems[lineItemUUID].laborCost}
+                                    onChange={(e) => this.props.handleChange(e, roomUUID, lineItemUUID)}
+                                  />
+                                </div>
+                                <label htmlFor="newLineItemLaborCost">
+                                  <p className="dinLabel pa0 ma0 mb2 f7 ttc">
+                                    labor
+                                  </p>
+                                </label>
+                              </div>
+
+                              <div className="w-20 flex flex-column items-center mr2">
+                                <div className="flex flex-row items-center">
+                                  <span className="dinLabel f7 mh1">
+                                    $
+                                  </span>
+                                  <input
+                                    type="number"
+                                    step="0.01"
+                                    min="0.00"
+                                    onBlur={(e) => this.props.handleCostInputBlur(e, roomUUID, lineItemUUID)}
+                                    className="InputField tc"
+                                    name="materialCost"
+                                    value={this.props.room.lineItems[lineItemUUID].materialCost}
+                                    onChange={(e) => this.props.handleChange(e, roomUUID, lineItemUUID)}
+                                  />
+                                </div>
+                                <label htmlFor="newLineItemMaterialCost">
+                                  <p className="dinLabel pa0 ma0 mb2 f7 ttc">
+                                    material
+                                  </p>
+                                </label>
+                              </div>
+                            </div>
+                          </div>
                         </AccordionItemPanel>
                       </AccordionItem>
                     )
                   })
                 }
               </Accordion>
+
               <div className="flex flex-row justify-between mt4">
                 <div className="w-50 br bw1 b--light-gray pr4">
                   <div className="NewLineItem__container">
@@ -129,7 +241,7 @@ class LineItems extends Component {
                           className="InputField tc"
                           type="number"
                           name="newLineItemQuantity"
-                          placeholder="0"
+                          placeholder="1"
                           onChange={this.props.handleChange}
                           value={this.props.newLineItemQuantity}
                         />
@@ -227,7 +339,7 @@ class LineItems extends Component {
                     }
                     <button
                       className="GenericButton tc dinLabel pv3 f7 mt3 ttu"
-                      onClick={() => this.props.addNewLineItem(this.props.match.params.roomId)}
+                      onClick={() => this.props.addNewLineItem(roomUUID)}
                       >
                       add line item
                     </button>
@@ -365,7 +477,42 @@ class CreateInvoice extends Component {
     }
   }
 
-  handleCostInputBlur(e) {
+  handleCostInputBlur(e, roomUUID, lineItemUUID) {
+    if (lineItemUUID && roomUUID) {
+      // make sure factors are not empty strings before calculating
+      if ((e.target.name === 'laborCost' || e.target.name === 'materialCost' || e.target.name === 'quantity') && !this.state.rooms[roomUUID].lineItems[lineItemUUID][e.target.name].trim()) {
+        const calcCB = (prevState) => {
+          let totals;
+          if (e.target.name === 'laborCost') {
+            totals = this.calculateTotals(prevState.rooms[roomUUID].lineItems[lineItemUUID].quantity, prevState.rooms[roomUUID].lineItems[lineItemUUID].uom, '0.00', prevState.rooms[roomUUID].lineItems[lineItemUUID].materialCost)
+          } else if (e.target.name === 'materialCost') {
+            totals = this.calculateTotals(prevState.rooms[roomUUID].lineItems[lineItemUUID].quantity, prevState.rooms[roomUUID].lineItems[lineItemUUID].uom, prevState.rooms[roomUUID].lineItems[lineItemUUID].laborCost, '0.00')
+          } else if (e.target.name === 'quantity') {
+            totals = this.calculateTotals('0', prevState.rooms[roomUUID].lineItems[lineItemUUID].uom, prevState.rooms[roomUUID].lineItems[lineItemUUID].laborCost, prevState.rooms[roomUUID].lineItems[lineItemUUID].materialCost)
+          }
+          return {
+            ...prevState.rooms[roomUUID].lineItems[lineItemUUID],
+            [e.target.name]: (e.target.name === 'quantity' ? '0' : '0.00'),
+            totalLabor: totals.laborTotal,
+            totalMaterial: totals.materialTotal,
+            total: totals.combinedTotal
+          }
+        }
+        this.setState((prevState) => ({
+          ...prevState,
+          rooms: {
+            ...prevState.rooms,
+            [roomUUID]: {
+              ...prevState.rooms[roomUUID],
+              lineItems: {
+                ...prevState.rooms[roomUUID].lineItems,
+                [lineItemUUID] : calcCB(prevState)
+              }
+            }
+          }
+        }))
+      }
+    }
     if ((e.target.name === 'newLineItemLaborCost' || e.target.name === 'newLineItemMaterialCost') && !this.state[e.target.name].trim()) {
       return this.setState({
         [e.target.name] : '0.00'
@@ -500,7 +647,25 @@ class CreateInvoice extends Component {
   render() {
     return (
       <div ref={this.invoiceContainerRef}>
-        <Route path={`${this.props.match.path}/line-items/:roomId`} render={(props) => <LineItems handleCostInputBlur={this.handleCostInputBlur} addNewLineItem={this.addNewLineItem} newLineItemLaborCost={this.state.newLineItemLaborCost} newLineItemMaterialCost={this.state.newLineItemMaterialCost} newLineItemUOM={this.state.newLineItemUOM} newLineItemDescription={this.state.newLineItemDescription} newLineItemQuantity={this.state.newLineItemQuantity} errors={this.state.errors} handleChange={this.handleChange} room={this.state.rooms[props.match.params.roomId] || {}} {...this.props} {...props} />} />
+        <Route
+          path={`${this.props.match.path}/line-items/:roomId`}
+          render={
+            (props) =>
+              <LineItems
+                handleCostInputBlur={this.handleCostInputBlur}
+                addNewLineItem={this.addNewLineItem}
+                newLineItemLaborCost={this.state.newLineItemLaborCost}
+                newLineItemMaterialCost={this.state.newLineItemMaterialCost}
+                newLineItemUOM={this.state.newLineItemUOM}
+                newLineItemDescription={this.state.newLineItemDescription}
+                newLineItemQuantity={this.state.newLineItemQuantity}
+                errors={this.state.errors} handleChange={this.handleChange}
+                room={this.state.rooms[props.match.params.roomId] || {}}
+                {...this.props}
+                {...props}
+                />
+            }
+        />
         <div className="flex flex-column measure-70 center pt5 mb5">
           <div className="flex flex-row w100">
 
