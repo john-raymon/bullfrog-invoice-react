@@ -511,7 +511,7 @@ class CreateInvoice extends Component {
         const calcCB = (prevState) => {
           let totals;
           if (this.state.rooms[roomUUID].lineItems[lineItemUUID][e.target.name].trim()) {
-            totals = this.calculateTotals(prevState.rooms[roomUUID].lineItems[lineItemUUID].quantity, prevState.rooms[roomUUID].lineItems[lineItemUUID].uom, '0.00', prevState.rooms[roomUUID].lineItems[lineItemUUID].materialCost)
+            totals = this.calculateTotals(prevState.rooms[roomUUID].lineItems[lineItemUUID].quantity, prevState.rooms[roomUUID].lineItems[lineItemUUID].uom, prevState.rooms[roomUUID].lineItems[lineItemUUID].laborCost, prevState.rooms[roomUUID].lineItems[lineItemUUID].materialCost)
             return {
               ...prevState.rooms[roomUUID].lineItems[lineItemUUID],
               totalLabor: totals.laborTotal,
