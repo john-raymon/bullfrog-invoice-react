@@ -460,6 +460,22 @@ class CreateInvoice extends Component {
   handleLineItemChange(e, roomUUID, lineItemUUID) {
     const eventTargetName = e.target.name
     const eventTargetValue = e.target.value
+    const calcCB = (prevState) => {
+      const { laborTotal, materialTotal, combinedTotal } = this.calculateTotals(
+        (eventTargetName === 'quantity' ? (eventTargetValue.trim() || '0') : (prevState.rooms[roomUUID].lineItems[lineItemUUID].quantity.trim() || '0')),
+        prevState.rooms[roomUUID].lineItems[lineItemUUID].uom,
+        (eventTargetName === 'laborCost' ? (eventTargetValue.trim() || '0') : (prevState.rooms[roomUUID].lineItems[lineItemUUID].laborCost.trim() || '0')),
+        (eventTargetName === 'materialCost' ? (eventTargetValue.trim() || '0') : (prevState.rooms[roomUUID].lineItems[lineItemUUID].materialCost.trim() || '0' )))
+      console.log("the name and value", eventTargetName, eventTargetValue)
+      console.log('the totals are labor, material, combined,', laborTotal, materialTotal, combinedTotal)
+      return {
+        ...prevState.rooms[roomUUID].lineItems[lineItemUUID],
+        [eventTargetName] : eventTargetValue,
+        totalLabor: laborTotal,
+        totalMaterial: materialTotal,
+        total: combinedTotal
+      }
+    }
     return this.setState({
       ...this.state,
       rooms: {
@@ -468,10 +484,7 @@ class CreateInvoice extends Component {
           ...this.state.rooms[roomUUID],
           lineItems: {
             ...this.state.rooms[roomUUID].lineItems,
-            [lineItemUUID] : {
-              ...this.state.rooms[roomUUID].lineItems[lineItemUUID],
-              [eventTargetName] : eventTargetValue
-            }
+            [lineItemUUID] : calcCB(this.state)
           }
         }
       }
