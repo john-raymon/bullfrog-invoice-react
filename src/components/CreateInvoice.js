@@ -382,6 +382,8 @@ class CreateInvoice extends Component {
     this.handleLineItemChange = this.handleLineItemChange.bind(this)
     this.removeRoom = this.removeRoom.bind(this)
     this.removeLineItem = this.removeLineItem.bind(this)
+    this.sumTotals = this.sumTotals.bind(this)
+    this.sumRoomTotals = this.sumRoomTotals.bind(this)
     this.invoiceContainerRef = createRef()
     this.draftTimeoutId = null;
     const test1 = createUUID();
@@ -422,13 +424,15 @@ class CreateInvoice extends Component {
             }
           },
           roomTotals: {
-            totalLabor: '',
-            totalMaterial: '',
-            totalCost: ''
+            totalLabor: '0',
+            totalMaterial: '0',
+            totalCost: '0'
           }
         }
       },
-      totalCost: '',
+      totalLaborCost: '0',
+      totalMaterialCost: '0',
+      totalCost: '0',
       errors: {
         newRoom: '',
         newLineItem: ''
@@ -436,7 +440,43 @@ class CreateInvoice extends Component {
     }
   }
 
-  componentDidUpdate() {
+  sumTotals(roomUUID, lineItems) {
+    console.log('sumTotals() was invoked')
+    const currentRoom = this.state.rooms[roomUUID]
+    if (currentRoom === undefined) return;
+    const lineItemTotals = Object.keys(lineItems).reduce((totalsObj, lineItemUUID) => {
+      const currentLineItem = lineItems[lineItemUUID]
+      if (currentLineItem === undefined || typeof currentLineItem === "undefined") return totalsObj;
+      totalsObj.totalLabor = (parseFloat(totalsObj.totalLabor) + parseFloat(currentLineItem.totalLabor)).toFixed(2)
+      totalsObj.totalMaterial = (parseFloat(totalsObj.totalMaterial) + parseFloat(currentLineItem.totalMaterial)).toFixed(2)
+      totalsObj.totalCost = (parseFloat(totalsObj.totalCost) + parseFloat(currentLineItem.total)).toFixed(2)
+      return totalsObj
+    }, {
+      totalLabor: '0',
+      totalMaterial: '0',
+      totalCost: '0'
+    })
+    console.log('inside sumTotals() the line item totals are', lineItemTotals)
+    return lineItemTotals;
+  }
+
+  sumRoomTotals() {
+    return Object.keys(this.state.rooms).reduce((totalsObj, roomUUID) => {
+      const currentRoom = this.state.rooms[roomUUID]
+      if (currentRoom === undefined) return;
+      const { totalLabor, totalMaterial, totalCost } = currentRoom.roomTotals
+      totalsObj.totalLaborCost = (parseFloat(totalsObj.totalLaborCost) + parseFloat(totalLabor)).toFixed(2)
+      totalsObj.totalMaterialCost = (parseFloat(totalsObj.totalMaterialCost) + parseFloat(totalMaterial)).toFixed(2)
+      totalsObj.totalCost = (parseFloat(totalsObj.totalCost) + parseFloat(totalCost)).toFixed(2)
+      return totalsObj
+    }, {
+      totalLaborCost: '0',
+      totalMaterialCost: '0',
+      totalCost: '0'
+    })
+  }
+
+  componentDidUpdate(prevProps, prevState) {
     // If a timer is already started, clear it
     if (this.draftTimeoutId) clearTimeout(this.draftTimeoutId);
 
@@ -446,7 +486,6 @@ class CreateInvoice extends Component {
 
   componentDidMount() {
     this.invoiceContainerRef.current.addEventListener('keydown', () => {
-
       // If a timer is already started, clear it
       if (this.draftTimeoutId) clearTimeout(this.draftTimeoutId);
 
@@ -472,14 +511,13 @@ class CreateInvoice extends Component {
   handleLineItemChange(e, roomUUID, lineItemUUID) {
     const eventTargetName = e.target.name
     const eventTargetValue = e.target.value
+    console.log('sumTotal() about to be invoked with', eventTargetName, eventTargetValue)
     const calcCB = (prevState) => {
       const { laborTotal, materialTotal, combinedTotal } = this.calculateTotals(
         (eventTargetName === 'quantity' ? (eventTargetValue.trim() || '0') : (prevState.rooms[roomUUID].lineItems[lineItemUUID].quantity.trim() || '0')),
         prevState.rooms[roomUUID].lineItems[lineItemUUID].uom,
         (eventTargetName === 'laborCost' ? (eventTargetValue.trim() || '0') : (prevState.rooms[roomUUID].lineItems[lineItemUUID].laborCost.trim() || '0')),
         (eventTargetName === 'materialCost' ? (eventTargetValue.trim() || '0') : (prevState.rooms[roomUUID].lineItems[lineItemUUID].materialCost.trim() || '0' )))
-      console.log("the name and value", eventTargetName, eventTargetValue)
-      console.log('the totals are labor, material, combined,', laborTotal, materialTotal, combinedTotal)
       return {
         ...prevState.rooms[roomUUID].lineItems[lineItemUUID],
         [eventTargetName] : eventTargetValue,
@@ -488,6 +526,7 @@ class CreateInvoice extends Component {
         total: combinedTotal
       }
     }
+    const updatedLineItem = calcCB(this.state)
     return this.setState({
       ...this.state,
       rooms: {
@@ -496,7 +535,11 @@ class CreateInvoice extends Component {
           ...this.state.rooms[roomUUID],
           lineItems: {
             ...this.state.rooms[roomUUID].lineItems,
-            [lineItemUUID] : calcCB(this.state)
+            [lineItemUUID] : updatedLineItem
+          },
+          roomTotals: {
+            ...this.state.rooms[roomUUID].roomTotals,
+            ...this.sumTotals(roomUUID, {...this.state.rooms[roomUUID].lineItems, [lineItemUUID] : updatedLineItem })
           }
         }
       }
@@ -507,11 +550,9 @@ class CreateInvoice extends Component {
   // it also handles existing rooms, by being passed the uuid of the room
   handleChange(e, roomUUID) {
     const uuid = roomUUID
-    // console.log('this is the target', e.target.name, this.state.rooms[uuid])
     if (uuid) {
       const eventTargetName = e.target.name
       const eventTargetValue = e.target.value
-      console.log('i am in the form of ', eventTargetName)
       this.setState((prevState) => ({
         ...prevState,
         rooms: {
@@ -724,6 +765,7 @@ class CreateInvoice extends Component {
         [roomUUID]: {
           ...this.state.rooms[roomUUID],
           lineItems: {
+            ...this.state.rooms[roomUUID].lineItems,
             [lineItemUUID] : undefined
           }
         }
@@ -1037,9 +1079,10 @@ class CreateInvoice extends Component {
                                     <input
                                       className="InputField tc"
                                       type="number"
-                                      name="newRoomLength"
+                                      name="length"
                                       placeholder="0"
-                                      value={this.state.newRoomLength}
+                                      onChange={(e) => this.handleChange(e, roomUUID)}
+                                      value={room.length}
                                     />
                                     <label htmlFor="newRoomLength">
                                       <p className="dinLabel pa0 ma0 mb3 f6">
@@ -1052,9 +1095,10 @@ class CreateInvoice extends Component {
                                     <input
                                       className="InputField tc"
                                       type="number"
-                                      name="newRoomWidth"
+                                      name="width"
                                       placeholder="0"
-                                      value={this.state.newRoomWidth}
+                                      onChange={(e) => this.handleChange(e, roomUUID)}
+                                      value={room.width}
                                     />
                                     <label htmlFor="newRoomWidth">
                                       <p className="dinLabel pa0 ma0 mb3 f6">
@@ -1067,9 +1111,10 @@ class CreateInvoice extends Component {
                                     <input
                                       className="InputField tc"
                                       type="number"
-                                      name="newRoomHeight"
+                                      name="height"
                                       placeholder="8"
-                                      value={this.state.newRoomHeight}
+                                      onChange={(e) => this.handleChange(e, roomUUID)}
+                                      value={room.height}
                                     />
                                   <label htmlFor="newRoomHeight">
                                       <p className="dinLabel pa0 ma0 mb3 f6">
