@@ -31,7 +31,7 @@ class LineItems extends Component {
     const roomUUID = this.props.match.params.roomId
     return (
       <div className="LineItems fixed top-0 left-0 w-100 z-1 vh-100 bg-black-70">
-        <div className="fixed top-0 left-0 vh-75 w-100 bg-white overflow-scroll">
+        <div className="fixed top-0 left-0 vh-85 w-100 bg-white overflow-scroll">
           <div className="measure-70 flex flex-column center">
             <p className="sticky top-0 dinTitle pa0 ma0 f3 mb3 ttc pt4 bg-white-70">
               line items
@@ -148,7 +148,7 @@ class LineItems extends Component {
                                     { this.props.room.lineItems[lineItemUUID].uom || 'UOM'}
                                   </p>
                                   <div className="ArrowIcon self-center rotate-90"><Arrow /></div>
-                                  <select onChange={(e) => this.props.handleLineItemChange(e, roomUUID, lineItemUUID)} name="uom" className="absolute top-0 left-0 w-100 h-100 o-0 pointer ttc">
+                                  <select onChange={(e) => this.props.handleLineItemChange(e, roomUUID, lineItemUUID)} name="uom" className="absolute z-2 top-0 left-0 w-100 h-100 o-0 pointer ttc">
                                     <option value="CY">cubic yard</option>
                                     <option value="DA">day</option>
                                     <option value="EA">each</option>
@@ -268,7 +268,7 @@ class LineItems extends Component {
                             { this.props.newLineItemUOM || 'UOM'}
                           </p>
                           <div className="ArrowIcon self-center rotate-90"><Arrow /></div>
-                          <select onChange={this.props.handleChange} name="newLineItemUOM" className="absolute top-0 left-0 w-100 h-100 o-0 pointer ttc">
+                          <select onChange={this.props.handleChange} name="newLineItemUOM" className="absolute z-2 top-0 left-0 w-100 h-100 o-0 pointer ttc">
                             <option value="CY">cubic yard</option>
                             <option value="DA">day</option>
                             <option value="EA">each</option>
@@ -668,7 +668,16 @@ class CreateInvoice extends Component {
     // everythng is good, continue, make calculations
     const { laborTotal, materialTotal, combinedTotal } = this.calculateTotals(quantity, uom, laborCost, materialCost)
     const newlineItemUUID = createUUID();
-
+    const newLineItem = {
+      description: description,
+      uom: uom,
+      materialCost: materialCost,
+      laborCost: laborCost,
+      totalMaterial: materialTotal,
+      totalLabor: laborTotal,
+      quantity: quantity,
+      total: combinedTotal
+    }
     return this.setState((prevState) => ({
       errors: { ...prevState.errors, newLineItem: '' },
       newLineItemDescription: '',
@@ -682,16 +691,11 @@ class CreateInvoice extends Component {
           ...prevState.rooms[roomUUID],
           lineItems: {
             ...prevState.rooms[roomUUID].lineItems,
-            [newlineItemUUID] : {
-              description: description,
-              uom: uom,
-              materialCost: materialCost,
-              laborCost: laborCost,
-              totalMaterial: materialTotal,
-              totalLabor: laborTotal,
-              quantity: quantity,
-              total: combinedTotal
-            }
+            [newlineItemUUID] : newLineItem
+          },
+          roomTotals: {
+            ...this.state.rooms[roomUUID].roomTotals,
+            ...this.sumTotals(roomUUID, {...this.state.rooms[roomUUID].lineItems, [newlineItemUUID] : newLineItem })
           }
         }
       }
@@ -767,6 +771,10 @@ class CreateInvoice extends Component {
           lineItems: {
             ...this.state.rooms[roomUUID].lineItems,
             [lineItemUUID] : undefined
+          },
+          roomTotals: {
+            ...this.state.rooms[roomUUID].roomTotals,
+            ...this.sumTotals(roomUUID, {...this.state.rooms[roomUUID].lineItems, [lineItemUUID] : undefined })
           }
         }
       }
