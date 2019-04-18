@@ -463,7 +463,7 @@ class CreateInvoice extends Component {
   sumRoomTotals() {
     return Object.keys(this.state.rooms).reduce((totalsObj, roomUUID) => {
       const currentRoom = this.state.rooms[roomUUID]
-      if (currentRoom === undefined) return;
+      if (currentRoom === undefined) return totalsObj;
       const { totalLabor, totalMaterial, totalCost } = currentRoom.roomTotals
       totalsObj.totalLaborCost = (parseFloat(totalsObj.totalLaborCost) + parseFloat(totalLabor)).toFixed(2)
       totalsObj.totalMaterialCost = (parseFloat(totalsObj.totalMaterialCost) + parseFloat(totalMaterial)).toFixed(2)
@@ -477,6 +477,11 @@ class CreateInvoice extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    if (prevState.rooms !== this.state.rooms) {
+      this.setState({
+        ...this.sumRoomTotals()
+      })
+    }
     // If a timer is already started, clear it
     if (this.draftTimeoutId) clearTimeout(this.draftTimeoutId);
 
