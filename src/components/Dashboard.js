@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import createUUID from '../util/createUUID'
+import { NavLink } from 'react-router-dom'
 
 // Selectors
 import getInvoicesToDo from '../state/selectors/getInvoicesToDo'
@@ -32,7 +34,7 @@ class Dashboard extends Component {
   }
 
   render() {
-    const { props, state } = this
+    const { props } = this
     const invoicesToDo = () => {
       if (props.isLoading.invoicesToDo) {
         return (<p>Loading ... </p>)
@@ -40,7 +42,6 @@ class Dashboard extends Component {
       if (props.isError.invoicesToDo) {
         return (<p>There seems to be an error</p>)
       }
-      console.log('these are the invoices to do', props.invoicesToDo)
       return props.invoicesToDo.map((invoice, index) => {
         return (
           <li key={index}>
@@ -51,9 +52,11 @@ class Dashboard extends Component {
               <p className="dinLabel near-black f7 ma0 w-50 tracked-mega small-caps">
                 { invoice.customer.name || 'No Name' }
               </p>
-              <ListButton>
-                CREATE INVOICE
-              </ListButton >
+              <NavLink to={`/invoices/new/${createUUID()}?customer_id=${invoice.customer.id}`}>
+                <ListButton>
+                  create invoice
+                </ListButton>
+              </NavLink>
             </div>
           </li>
         )
@@ -79,7 +82,7 @@ class Dashboard extends Component {
                 {customer.customerName}
               </p>
               <ListButton>
-                CREATE INVOICE
+                create invoice
               </ListButton >
             </div>
           </li>
