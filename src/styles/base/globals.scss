@@ -1,6 +1,9 @@
 .html {
   font-size: 16px;
 }
+img {
+  max-width: none;
+}
 a {
   text-decoration: none;
 }
@@ -17,6 +20,11 @@ a {
   border: 0.12rem solid #E4E4E4;
   border-radius: 0.25rem;
   height: 56px;
+}
+
+.RoomImagesContainer {
+  height: 20rem;
+  width: auto;
 }
 
 .GenericButton {
