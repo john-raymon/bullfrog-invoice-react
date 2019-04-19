@@ -81,9 +81,11 @@ class Dashboard extends Component {
               <p className="dinLabel near-black f7 ma0 w-50 tracked-mega small-caps">
                 {customer.customerName}
               </p>
-              <ListButton>
-                create invoice
-              </ListButton >
+              <NavLink to={`/invoices/new/${createUUID()}?customer_id=${customer.id}`}>
+                <ListButton>
+                  create invoice
+                </ListButton>
+              </NavLink>
             </div>
           </li>
         )
