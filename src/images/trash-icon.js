@@ -2,8 +2,8 @@ import React from 'react';
 export default () => {
   return (
   <svg width="100%" height="100%" viewBox="0 0 11 13">
-      <g id="Create-Estimate" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-          <g id="Desktop-HD" transform="translate(-1163.000000, -578.000000)" fill="#797979" fill-rule="nonzero">
+      <g id="Create-Estimate" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+          <g id="Desktop-HD" transform="translate(-1163.000000, -578.000000)" fill="#797979" fillRule="nonzero">
               <g id="room-list-item" transform="translate(762.000000, 578.000000)">
                   <g id="delete-button" transform="translate(351.000000, 0.000000)">
                       <g id="garbage" transform="translate(50.000000, 0.000000)">
