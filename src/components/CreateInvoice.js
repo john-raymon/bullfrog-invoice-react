@@ -840,6 +840,22 @@ class CreateInvoice extends Component {
         }
       })
     }
+    const imageUUID = createUUID()
+    const previewUrl = URL.createObjectURL(file)
+    this.setState({
+      ...this.state,
+      errors: {
+        ...this.state.errors,
+        roomImages: ''
+      },
+      notUploadedImages: {
+        ...this.state.notUploadedImages,
+        [imageUUID]: {
+          file,
+          previewUrl
+        }
+      }
+    })
   }
 
   render() {
@@ -1222,6 +1238,23 @@ class CreateInvoice extends Component {
                   <p className="dinLabel pa0 ma0 f7 gray ttu dib">
                     Upload an image
                   </p>
+                </div>
+                <div className="w-100 mt3">
+                  <ul className="list pa0 ma0 flex flex-row overflow-x-scroll overflow-y-hidden h100 pb2">
+                    {
+                      Object.keys(this.state.notUploadedImages).map((imageUUID, key) => {
+                        const newImage = this.state.notUploadedImages[imageUUID]
+                        if (newImage === undefined || typeof newImage === 'undefined') return;
+                        return (
+                          <li>
+                            <div className="RoomImagesContainer mr2">
+                              <img src={newImage.previewUrl} width="auto" height="100%" />
+                            </div>
+                          </li>
+                        )
+                      })
+                    }
+                  </ul>
                 </div>
               </div>
 
