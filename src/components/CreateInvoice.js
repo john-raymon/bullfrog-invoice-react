@@ -381,6 +381,7 @@ class CreateInvoice extends Component {
     this.handleCostInputBlur = this.handleCostInputBlur.bind(this)
     this.calculateTotals = this.calculateTotals.bind(this)
     this.handleLineItemChange = this.handleLineItemChange.bind(this)
+    this.handleImageChange = this.handleImageChange.bind(this)
     this.removeRoom = this.removeRoom.bind(this)
     this.removeLineItem = this.removeLineItem.bind(this)
     this.sumTotals = this.sumTotals.bind(this)
@@ -437,7 +438,14 @@ class CreateInvoice extends Component {
       totalCost: '0',
       errors: {
         newRoom: '',
-        newLineItem: ''
+        newLineItem: '',
+        roomImages: ''
+      },
+      notUploadedImages: {
+
+      },
+      upladedImages: {
+
       }
     }
   }
@@ -818,6 +826,22 @@ class CreateInvoice extends Component {
     })
   }
 
+  handleImageChange(e) {
+    console.log('These are the user files', e.target.files)
+    const acceptedMimeTypes = ['image/jpeg', 'image/png']
+    const file = e.target.files[0]
+    if (!file) return;
+    if (!acceptedMimeTypes.includes(file.type)) {
+      return this.setState({
+        ...this.state,
+        errors: {
+          ...this.state.errors,
+          roomImages: 'You can only upload JPEG or PNG files'
+        }
+      })
+    }
+  }
+
   render() {
     return (
       <div ref={this.invoiceContainerRef}>
@@ -1186,16 +1210,19 @@ class CreateInvoice extends Component {
                 </Accordion>
               </div>
 
-              <div className="ImageUploads__container relative w-40 ba bw1 flex items-center justify-center pv2 b--light-gray br2 flex-row mt4">
-                <input
-                  type="file"
-                  name="roomImages"
-                  className="absolute w-100 h-100 o-0 pointer"
-                  accept="image/png, image/jpeg"
-                />
-                <p className="dinLabel pa0 ma0 f7 gray ttu dib">
-                  Upload an image
-                </p>
+              <div className="mt4">
+                { this.state.errors.roomImages && ( <p className="dinLabel red f6 o-70"> {this.state.errors.roomImages } </p> )}
+                <div className="ImageUploads__container relative w-40 ba bw1 flex items-center justify-center pv2 b--light-gray br2 flex-row">
+                  <input
+                    type="file"
+                    name="roomImages"
+                    className="absolute w-100 h-100 o-0 pointer"
+                    onChange={this.handleImageChange}
+                  />
+                  <p className="dinLabel pa0 ma0 f7 gray ttu dib">
+                    Upload an image
+                  </p>
+                </div>
               </div>
 
             </div>
