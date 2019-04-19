@@ -391,9 +391,9 @@ class CreateInvoice extends Component {
     const lineItemTest1 = createUUID();
     this.state = {
       invoiceName: '',
-      customerFullName: '',
-      customerAddress: '',
-      customerCityState: '',
+      customersFullName: '',
+      customersAddress: '',
+      customersCityState: '',
       dateOfLoss: "2019-01-01",
       newRoomName: '',
       newRoomLength: '',
@@ -745,9 +745,9 @@ class CreateInvoice extends Component {
             lineItems: [
             ],
             roomTotals: {
-              totalLabor: '',
-              totalMaterial: '',
-              totalCost: ''
+              totalLabor: '0',
+              totalMaterial: '0',
+              totalCost: '0'
             }
           }
         }
@@ -1179,27 +1179,49 @@ class CreateInvoice extends Component {
                       <p className="dinLabel f6 ttu">
                         { room.name || roomUUID }
                       </p>
-                      <p className="dinLabel f6">
-                        <span className="ttu">total: </span>
-                        $ { room.roomTotals.totalCost }
-                      </p>
+                      <div className="flex flex-row flex-row-reverse">
+                        <p className="dinLabel f7 pa0 mh1">
+                          <span className="ttu black-60">total: </span>
+                          ${ room.roomTotals.totalCost }
+                        </p>
+                        <p className="dinLabel f7 pa0 mh1">
+                          <span className="ttu black-60">total material: </span>
+                          ${ room.roomTotals.totalMaterial }
+                        </p>
+                        <p className="dinLabel f7 pa0 mh1">
+                          <span className="ttu black-60">total labor: </span>
+                          ${ room.roomTotals.totalLabor }
+                        </p>
+                      </div>
                     </li>
                   )
                 })
               }
             </ul>
             <div className="flex items-row items-center justify-between">
-              <ul className="list">
+              <ul className="list pa0 tl">
                 <li>
                   <p className="dinLabel f6">
-                    <span className="ttu">total cost: </span>
-                    $ { this.state.totalCost }
+                    <span className="ttu black-70">total labor: </span>
+                    ${ this.state.totalLaborCost }
+                  </p>
+                </li>
+                <li>
+                  <p className="dinLabel f6">
+                    <span className="ttu black-70">total material: </span>
+                    ${ this.state.totalMaterialCost }
+                  </p>
+                </li>
+                <li>
+                  <p className="dinLabel f6">
+                    <span className="ttu black-70">total cost: </span>
+                    ${ this.state.totalCost }
                   </p>
                 </li>
               </ul>
               <div className="w-40">
-                <button className="GenericButton tc dinLabel pv3 f7 mt3">
-                  GENERATE INVOICE
+                <button className="GenericButton tc dinLabel pv3 f7 mt3 ttu">
+                  generate invoice
                 </button>
               </div>
             </div>
