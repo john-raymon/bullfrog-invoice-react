@@ -513,7 +513,7 @@ class CreateInvoice extends Component {
             customersFullName,
             customersAddress: `${street || ''} ${street2 || ''}`,
             customersCityState: ((city && state) ? `${city} , ${state}` : ''),
-            customersZipCode: zip
+            customersZipCode: (zip || ''),
           })
         }).catch((err) => {
           console.log('error fetching customer in CreateInvoice', err)
