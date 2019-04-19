@@ -1,8 +1,9 @@
 import React, { Component, createRef } from 'react'
-
+import { connect } from 'react-redux'
 import { Route, Link } from 'react-router-dom'
 
 import createUUID from '../util/createUUID'
+import agent from '../util/agent'
 
 import Arrow from '../images/arrow';
 import TrashIcon from '../images/trash-icon'
@@ -394,6 +395,7 @@ class CreateInvoice extends Component {
       customersFullName: '',
       customersAddress: '',
       customersCityState: '',
+      customersZipCode: '',
       dateOfLoss: "2019-01-01",
       newRoomName: '',
       newRoomLength: '',
@@ -490,6 +492,36 @@ class CreateInvoice extends Component {
   }
 
   componentDidMount() {
+    // check if we have query param
+    if (this.props.location.search) {
+      const query = this.props.location.search.replace(/(^\?)/,'').split("&").reduce((queryObj, keyValue) => {
+        const [key, value] = keyValue.split("=")
+        queryObj[key] = value
+        return queryObj
+      },{})
+      const { token } = this.props
+      if (query.customer_id) {
+        agent.setToken(token)
+        agent.requests.get(`knack/search-customers/${query.customer_id}`).then(({response:res}) => {
+          if (res.statusCode === 401) {
+            this.props.dispatch({ type: "LOGOUT" })
+          }
+          const customersFullName = res.body["field_15_raw"]
+          const { city, state, zip, street, street2 } = res.body["field_59_raw"]
+          this.setState({
+            ...this.state,
+            customersFullName,
+            customersAddress: `${street || ''} ${street2 || ''}`,
+            customersCityState: ((city && state) ? `${city} , ${state}` : ''),
+            customersZipCode: zip
+          })
+        }).catch((err) => {
+          console.log('error fetching customer in CreateInvoice', err)
+        })
+      } else {
+        console.log('no search', query)
+      }
+    }
     this.invoiceContainerRef.current.addEventListener('keydown', () => {
       // If a timer is already started, clear it
       if (this.draftTimeoutId) clearTimeout(this.draftTimeoutId);
@@ -870,7 +902,7 @@ class CreateInvoice extends Component {
                 type="text"
                 name="customersCityState"
                 placeholder="City, State"
-                value={this.state.customesrCityState}
+                value={this.state.customersCityState}
                 onChange={this.handleChange}
               />
               <label htmlFor="customersCityState">
@@ -1232,4 +1264,8 @@ class CreateInvoice extends Component {
   }
 }
 
-export default CreateInvoice
+const mapStateToProps = state => ({
+  token: state.auth.token
+})
+
+export default connect(mapStateToProps)(CreateInvoice)
