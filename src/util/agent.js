@@ -22,12 +22,22 @@ const requests = {
     superagent.get(`${API_ROOT}${url}`).use(tokenPlugin).then(responseBody),
   put: (url, body) =>
     superagent.put(`${API_ROOT}${url}`, body).use(tokenPlugin).then(responseBody),
-  post: (url, body) =>
-    superagent.post(`${API_ROOT}${url}`, body).use(tokenPlugin).then(responseBody)
+  post: (url, body, files) => {
+    const __superagent = superagent.post(`${API_ROOT}${url}`, body)
+    const fileUUIDs = Object.keys(files)
+    if (fileUUIDs.length > 0) {
+      fileUUIDs.forEach((fileUUID) => {
+        if (files[fileUUID] === undefined || typeof files[fileUUID] === 'undefined') {
+          return;
+        }
+        __superagent.attach(fileUUID, files[fileUUID].file)
+      })
+    }
+    return __superagent.use(tokenPlugin).then(responseBody)
+  }
 };
 
 export default {
-
   Auth: {
     login: (email, password) =>
     requests.post('users/login', { email, password })
