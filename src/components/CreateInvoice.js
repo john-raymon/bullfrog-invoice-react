@@ -26,6 +26,7 @@ class LineItems extends Component {
     if (!Object.keys(this.props.room).length) {
       this.props.history.goBack()
     }
+
   }
 
   render() {
@@ -500,6 +501,7 @@ class CreateInvoice extends Component {
   }
 
   componentDidMount() {
+    const { token } = this.props
     // check if we have query param
     if (this.props.location.search) {
       const query = this.props.location.search.replace(/(^\?)/,'').split("&").reduce((queryObj, keyValue) => {
@@ -507,7 +509,6 @@ class CreateInvoice extends Component {
         queryObj[key] = value
         return queryObj
       },{})
-      const { token } = this.props
       if (query.customer_id) {
         agent.setToken(token)
         agent.requests.get(`knack/search-customers/${query.customer_id}`).then(({response:res}) => {
@@ -526,10 +527,20 @@ class CreateInvoice extends Component {
         }).catch((err) => {
           console.log('error fetching customer in CreateInvoice', err)
         })
-      } else {
-        console.log('no search', query)
       }
     }
+    // initialize draft invoice on backend, will find existing draft invoice,
+    // or create new draft invoice
+    agent.setToken(token)
+    agent.requests.post(`invoices/${this.props.match.params.draftId}`).then((invoice) => {
+      console.log('the invoice is', invoice)
+    }).catch((err) => {
+      if (err.status === 422 && err.response && err.response.body.error === "NOT_DRAFT") {
+        // redirect to pdf detailed version since invoice can no longer be updated
+        alert("NOT A DRAFT")
+      }
+      console.log('There was an error when attempting find or create a draft invoice on CreateInvoice componentDidMount', { ...err })
+    })
     this.invoiceContainerRef.current.addEventListener('keydown', () => {
       // If a timer is already started, clear it
       if (this.draftTimeoutId) clearTimeout(this.draftTimeoutId);
