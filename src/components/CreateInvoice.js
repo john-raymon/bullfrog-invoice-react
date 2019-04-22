@@ -26,7 +26,6 @@ class LineItems extends Component {
     if (!Object.keys(this.props.room).length) {
       this.props.history.goBack()
     }
-
   }
 
   render() {
@@ -386,6 +385,8 @@ class CreateInvoice extends Component {
     this.removeRoom = this.removeRoom.bind(this)
     this.removeLineItem = this.removeLineItem.bind(this)
     this.sumTotals = this.sumTotals.bind(this)
+    this.removePreviewImage = this.removePreviewImage.bind(this)
+    this.removeUploadedImage = this.removeUploadedImage.bind(this)
     this.sumRoomTotals = this.sumRoomTotals.bind(this)
     this.invoiceContainerRef = createRef()
     this.draftTimeoutId = null;
@@ -445,7 +446,7 @@ class CreateInvoice extends Component {
       notUploadedImages: {
 
       },
-      upladedImages: {
+      uploadedImages: {
 
       }
     }
@@ -534,6 +535,9 @@ class CreateInvoice extends Component {
     agent.setToken(token)
     agent.requests.post(`invoices/${this.props.match.params.draftId}`).then((invoice) => {
       console.log('the invoice is', invoice)
+      this.setState({
+        uploadedImages: invoice.images ? invoice.images : {}
+      })
     }).catch((err) => {
       if (err.status === 422 && err.response && err.response.body.error === "NOT_DRAFT") {
         // redirect to pdf detailed version since invoice can no longer be updated
@@ -544,7 +548,6 @@ class CreateInvoice extends Component {
     this.invoiceContainerRef.current.addEventListener('keydown', () => {
       // If a timer is already started, clear it
       if (this.draftTimeoutId) clearTimeout(this.draftTimeoutId);
-
       // Set timer that will autosave this invoice on the backend when it fires
       this.draftTimeoutId = setTimeout(this.autoSave, 1250)
     })
@@ -833,6 +836,36 @@ class CreateInvoice extends Component {
             ...this.sumTotals(roomUUID, {...this.state.rooms[roomUUID].lineItems, [lineItemUUID] : undefined })
           }
         }
+      }
+    })
+  }
+
+  removePreviewImage(imageUUID) {
+    // not in db or cloudinary yet so simply remove
+    this.setState({
+      ...this.state,
+      notUploadedImages: {
+        ...this.state.notUploadedImages,
+        [imageUUID]: undefined
+      }
+    })
+  }
+
+  removeUploadedImage(imageId) {
+    const { token } = this.props
+    const { draftId } = this.props.match.params
+    agent.setToken(token)
+    agent.requests
+    .post(`invoices/${draftId}/remove-image/${encodeURIComponent(imageId)}`)
+    .then((res) => {
+      if (res.id === draftId) { // consider it deleted succesfully
+        this.setState({
+          ...this.state,
+          uploadedImages : {
+            ...this.state.uploadedImages,
+            [imageId] : undefined
+          }
+        })
       }
     })
   }
@@ -1258,8 +1291,36 @@ class CreateInvoice extends Component {
                         if (newImage === undefined || typeof newImage === 'undefined') return;
                         return (
                           <li>
-                            <div className="RoomImagesContainer mr2">
+                            <div className="RoomImagesContainer mr2 flex flex-column pb4">
                               <img src={newImage.previewUrl} width="auto" height="100%" />
+                              <button
+                                onClick={() => {
+                                  this.removePreviewImage(imageUUID)
+                                  }
+                                }
+                                className="flex flex-row items-center self-center dinLabel f8 mid-gray pointer bn bg-transparent dim ttu">
+                                delete
+                                <div className="ArrowIcon mh2"><TrashIcon /></div>
+                              </button>
+                            </div>
+                          </li>
+                        )
+                      })
+                    }
+                    {
+                      Object.keys(this.state.uploadedImages).map((imageId, key) => {
+                        const uploadedImage = this.state.uploadedImages[imageId]
+                        if (uploadedImage === undefined || typeof uploadedImage === 'undefined') return;
+                        return (
+                          <li>
+                            <div className="RoomImagesContainer mr2 flex flex-column pb4">
+                              <img src={uploadedImage.url} width="auto" height="100%" />
+                              <button
+                                onClick={() => this.removeUploadedImage(imageId)}
+                                className="flex flex-row items-center self-center dinLabel f8 mid-gray pointer bn bg-transparent dim ttu">
+                                delete
+                                <div className="ArrowIcon mh2"><TrashIcon /></div>
+                              </button>
                             </div>
                           </li>
                         )
