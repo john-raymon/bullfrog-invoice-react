@@ -23,17 +23,11 @@ const requests = {
   put: (url, body) =>
     superagent.put(`${API_ROOT}${url}`, body).use(tokenPlugin).then(responseBody),
   post: (url, body, files) => {
-    const __superagent = superagent.post(`${API_ROOT}${url}`, body)
-    const fileUUIDs = Object.keys(files)
+    const fileUUIDs = Object.keys((files || {}))
     if (fileUUIDs.length > 0) {
-      fileUUIDs.forEach((fileUUID) => {
-        if (files[fileUUID] === undefined || typeof files[fileUUID] === 'undefined') {
-          return;
-        }
-        __superagent.attach(fileUUID, files[fileUUID].file)
-      })
+      return superagent.post(`${API_ROOT}${url}`, body).attach("invoiceImages", files)
     }
-    return __superagent.use(tokenPlugin).then(responseBody)
+    return superagent.post(`${API_ROOT}${url}`, body).use(tokenPlugin).then(responseBody)
   }
 };
 
