@@ -22,12 +22,15 @@ const requests = {
     superagent.get(`${API_ROOT}${url}`).use(tokenPlugin).then(responseBody),
   put: (url, body) =>
     superagent.put(`${API_ROOT}${url}`, body).use(tokenPlugin).then(responseBody),
-  post: (url, body, files) => {
-    const fileUUIDs = Object.keys((files || {}))
-    if (fileUUIDs.length > 0) {
-      return superagent.post(`${API_ROOT}${url}`, body).attach("invoiceImages", files)
-    }
+  post: (url, body) => {
+    // const fileUUIDs = Object.keys((files || {}))
+    // if (fileUUIDs.length > 0) {
+    //   return superagent.post(`${API_ROOT}${url}`).use(tokenPlugin).attach("invoiceImages", files[0]).then(responseBody)
+    // }
     return superagent.post(`${API_ROOT}${url}`, body).use(tokenPlugin).then(responseBody)
+  },
+  postImage: (url, file) => {
+    return superagent.post(`${API_ROOT}${url}`).use(tokenPlugin).attach("invoiceImages", file).then(responseBody)
   }
 };
 
