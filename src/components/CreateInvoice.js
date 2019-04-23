@@ -2,6 +2,7 @@ import React, { Component, createRef } from 'react'
 import { connect } from 'react-redux'
 import { Route, Link } from 'react-router-dom'
 
+import compareKeys from '../util/compareWhitelistedKeys.js'
 import createUUID from '../util/createUUID'
 import agent from '../util/agent'
 
@@ -388,18 +389,42 @@ class CreateInvoice extends Component {
     this.removePreviewImage = this.removePreviewImage.bind(this)
     this.removeUploadedImage = this.removeUploadedImage.bind(this)
     this.sumRoomTotals = this.sumRoomTotals.bind(this)
+    this.uploadImage = this.uploadImage.bind(this)
     this.invoiceContainerRef = createRef()
-    this.draftTimeoutId = null;
+    this.draftTimeoutId = null
+    this.customerKnackId = ''
+    this.whitelistedKeys = [
+      'invoiceName',
+      // customer details
+      'customersFullName',
+      'customersAddress',
+      'customersCityState',
+      'customersZipCode',
+      // claim details
+      'insuranceCarrier',
+      'policyNumber',
+      'claimNumber',
+      'dateOfLoss',
+      // rooms, includes lineItems
+      'rooms',
+      // totals
+      'totalLaborCost',
+      'totalMaterialCost',
+      'totalCost'
+      ]
     const test1 = createUUID();
     const test2 = createUUID();
     const lineItemTest1 = createUUID();
     this.state = {
       invoiceName: '',
+      insuranceCarrier: '',
+      policyNumber: '',
+      claimNumber: '',
+      dateOfLoss: "2019-01-01",
       customersFullName: '',
       customersAddress: '',
       customersCityState: '',
       customersZipCode: '',
-      dateOfLoss: "2019-01-01",
       newRoomName: '',
       newRoomLength: '',
       newRoomWidth: '',
@@ -410,6 +435,7 @@ class CreateInvoice extends Component {
       newLineItemUOM: '',
       newLineItemLaborCost: '0.00',
       newLineItemMaterialCost: '0.00',
+
       rooms: {
         [test1]: {
           name: 'Living Room',
@@ -438,22 +464,24 @@ class CreateInvoice extends Component {
       totalLaborCost: '0',
       totalMaterialCost: '0',
       totalCost: '0',
+
       errors: {
         newRoom: '',
         newLineItem: '',
         roomImages: ''
       },
+
       notUploadedImages: {
 
       },
       uploadedImages: {
 
-      }
+      },
+      beginAutoSave: false
     }
   }
 
   sumTotals(roomUUID, lineItems) {
-    console.log('sumTotals() was invoked')
     const currentRoom = this.state.rooms[roomUUID]
     if (currentRoom === undefined) return;
     const lineItemTotals = Object.keys(lineItems).reduce((totalsObj, lineItemUUID) => {
@@ -468,7 +496,6 @@ class CreateInvoice extends Component {
       totalMaterial: '0',
       totalCost: '0'
     })
-    console.log('inside sumTotals() the line item totals are', lineItemTotals)
     return lineItemTotals;
   }
 
@@ -494,75 +521,159 @@ class CreateInvoice extends Component {
         ...this.sumRoomTotals()
       })
     }
-    // If a timer is already started, clear it
-    if (this.draftTimeoutId) clearTimeout(this.draftTimeoutId);
 
-    // Set timer that will autosave this invoice on the backend when it fires
-    this.draftTimeoutId = setTimeout(this.autoSave, 1250)
+    if ( Object.keys((this.state.notUploadedImages || {})).length > 0 ) {
+      this.uploadImage()
+    }
+
+    if (this.state.beginAutoSave && compareKeys(prevState, this.state, this.whitelistedKeys)) {
+      console.log('component updated prevstate ===, and current state ===', {...prevState}, {...this.state})
+      // If a timer is already started, clear it
+      if (this.draftTimeoutId) clearTimeout(this.draftTimeoutId);
+
+      // Set timer that will autosave this invoice on the backend when it fires
+      this.draftTimeoutId = setTimeout(this.autoSave, 1250)
+    }
   }
 
   componentDidMount() {
     const { token } = this.props
     // check if we have query param
     if (this.props.location.search) {
+
       const query = this.props.location.search.replace(/(^\?)/,'').split("&").reduce((queryObj, keyValue) => {
         const [key, value] = keyValue.split("=")
         queryObj[key] = value
         return queryObj
       },{})
+
       if (query.customer_id) {
+        this.customerKnackId = query.customer_id
         agent.setToken(token)
-        agent.requests.get(`knack/search-customers/${query.customer_id}`).then(({response:res}) => {
-          if (res.statusCode === 401) {
+        agent.requests.get(`knack/search-customers/${query.customer_id}`).then((response) => {
+          if (response.response.statusCode === 401) {
             this.props.dispatch({ type: "LOGOUT" })
           }
-          const customersFullName = res.body["field_15_raw"]
+          return response
+        }).then(({response: res}) => {
+          const knackCustomersFullName = res.body["field_15_raw"]
           const { city, state, zip, street, street2 } = res.body["field_59_raw"]
-          this.setState({
-            ...this.state,
-            customersFullName,
-            customersAddress: `${street || ''} ${street2 || ''}`,
-            customersCityState: ((city && state) ? `${city} , ${state}` : ''),
-            customersZipCode: (zip || ''),
+          // initialize draft invoice on backend, will find existing draft invoice,
+          // or create new draft invoice
+          agent.setToken(token)
+          return agent.requests.post(`invoices/${this.props.match.params.draftId}`).then((invoice) => {
+
+            this.setState({
+              ...this.state,
+              invoiceName: invoice.invoiceName,
+
+              customersFullName: knackCustomersFullName,
+              customersAddress: `${street || ''} ${street2 || ''}`,
+              customersCityState: ((city && state) ? `${city} , ${state}` : ''),
+              customersZipCode: (zip || ''),
+
+              insuranceCarrier: invoice.claim.insuranceCarrier,
+              policyNumber: invoice.claim.policyNumber,
+              claimNumber: invoice.claim.claimNumber,
+              dateOfLoss: invoice.claim.dateOfLoss,
+              rooms: invoice.rooms || {},
+              totalLaborCost: invoice.totalLaborCost,
+              totalMaterialCost: invoice.totalMaterialCost,
+              totalCost: invoice.totalCost,
+              uploadedImages: invoice.images ? invoice.images : {},
+              customerKnackId: invoice.customer.customerKnackId
+            })
           })
-        }).catch((err) => {
+        })
+        .catch((err) => {
           console.log('error fetching customer in CreateInvoice', err)
         })
       }
-    }
-    // initialize draft invoice on backend, will find existing draft invoice,
-    // or create new draft invoice
-    agent.setToken(token)
-    agent.requests.post(`invoices/${this.props.match.params.draftId}`).then((invoice) => {
-      console.log('the invoice is', invoice)
-      this.setState({
-        uploadedImages: invoice.images ? invoice.images : {}
+    } else {
+      // initialize draft invoice on backend, will find existing draft invoice,
+      // or create new draft invoice
+      agent.setToken(token)
+      agent.requests.post(`invoices/${this.props.match.params.draftId}`).then((invoice) => {
+        console.log('the customer full name is', {...invoice.customer})
+        this.setState({
+          ...this.state,
+          invoiceName: invoice.invoiceName,
+          customersFullname: invoice.customer.fullName,
+          customersAddress: invoice.customer.address,
+          customersCityState: invoice.customer.cityState,
+          customersZipCode: invoice.customer.zipCode,
+          insuranceCarrier: invoice.claim.insuranceCarrier,
+          policyNumber: invoice.claim.policyNumber,
+          claimNumber: invoice.claim.claimNumber,
+          dateOfLoss: invoice.claim.dateOfLoss,
+          rooms: invoice.rooms || {},
+          totalLaborCost: invoice.totalLaborCost,
+          totalMaterialCost: invoice.totalMaterialCost,
+          totalCost: invoice.totalCost,
+          uploadedImages: invoice.images ? invoice.images : {},
+          customerKnackId: invoice.customer.customerKnackId,
+          beginAutoSave: true
+        })
+      }).catch((err) => {
+        if (err.status === 422 && err.response && err.response.body.error === "NOT_DRAFT") {
+          // redirect to pdf detailed version since invoice can no longer be updated
+          alert("NOT A DRAFT")
+        }
+        console.log('There was an error when attempting find or create a draft invoice on CreateInvoice componentDidMount', { ...err })
       })
-    }).catch((err) => {
-      if (err.status === 422 && err.response && err.response.body.error === "NOT_DRAFT") {
-        // redirect to pdf detailed version since invoice can no longer be updated
-        alert("NOT A DRAFT")
-      }
-      console.log('There was an error when attempting find or create a draft invoice on CreateInvoice componentDidMount', { ...err })
-    })
-    this.invoiceContainerRef.current.addEventListener('keydown', () => {
-      // If a timer is already started, clear it
-      if (this.draftTimeoutId) clearTimeout(this.draftTimeoutId);
-      // Set timer that will autosave this invoice on the backend when it fires
-      this.draftTimeoutId = setTimeout(this.autoSave, 1250)
-    })
+    }
+
+    //
+    // this.invoiceContainerRef.current.addEventListener('keydown', () => {
+    //   // If a timer is already started, clear it
+    //   if (this.draftTimeoutId) clearTimeout(this.draftTimeoutId);
+    //   // Set timer that will autosave this invoice on the backend when it fires
+    //   this.draftTimeoutId = setTimeout(this.autoSave, 1250)
+    // })
   }
 
   componentWillUnmount() {
     if (this.draftTimeoutId) clearTimeout(this.draftTimeoutId)
   }
 
+  uploadImage(){
+    const imageUUID = Object.keys(this.state.notUploadedImages)[0]
+    const file = this.state.notUploadedImages[imageUUID].file
+    agent.requests.postImage(`invoices/${this.props.match.params.draftId}`, file).then((invoice) => {
+      const copyNotUploadedImages = { ...this.state.notUploadedImages }
+      delete copyNotUploadedImages[imageUUID]
+      this.setState({
+        ...this.state,
+        notUploadedImages: copyNotUploadedImages,
+        uploadedImages: invoice.images
+      })
+    }).catch((err) => {
+      if (err.status === 422 && err.response && err.response.body.error === "NOT_DRAFT") {
+        // redirect to pdf detailed version since invoice can no longer be updated
+        alert("NOT A DRAFT")
+      }
+      console.log('There was an error when attempting find or create a draft invoice on CreateInvoice uploadImage', { ...err })
+    })
+  }
+
   autoSave() {
-    // auto SAVE
-    // use an instance of the agent, with the token from the state to make a request to the server
-    // creating a new draft invoice with the UUID, or updating a draft invoice that has the same UUID
-    // if not a draft invoice anymore then redirect to pdf detailed version
-    console.log('saved')
+    const currentState = {...this.state}
+    const requestBody = this.whitelistedKeys.reduce((requestBodyObj, whitelistedKey) => {
+      requestBodyObj[whitelistedKey] = currentState[whitelistedKey]
+      return requestBodyObj
+    }, {})
+    console.log('the request body in autosave is', requestBody)
+    const { token } = this.props
+    agent.setToken(token)
+    agent.requests.post(`invoices/${this.props.match.params.draftId}`, { customerKnackId: this.customerKnackId, ...requestBody } ).then((invoice) => {
+      // succesfully updated invoice
+    }).catch((err) => {
+      if (err.status === 422 && err.response && err.response.body.error === "NOT_DRAFT") {
+        // redirect to pdf detailed version since invoice can no longer be updated
+        alert("NOT A DRAFT")
+      }
+      console.log('There was an error when attempting find or create a draft invoice on CreateInvoice autoSave', { ...err })
+    })
   }
 
   // this handles updating existing lineItem's by being passed the roomUUID of
@@ -570,7 +681,6 @@ class CreateInvoice extends Component {
   handleLineItemChange(e, roomUUID, lineItemUUID) {
     const eventTargetName = e.target.name
     const eventTargetValue = e.target.value
-    console.log('sumTotal() about to be invoked with', eventTargetName, eventTargetValue)
     const calcCB = (prevState) => {
       const { laborTotal, materialTotal, combinedTotal } = this.calculateTotals(
         (eventTargetName === 'quantity' ? (eventTargetValue.trim() || '0') : (prevState.rooms[roomUUID].lineItems[lineItemUUID].quantity.trim() || '0')),
@@ -871,7 +981,6 @@ class CreateInvoice extends Component {
   }
 
   handleImageChange(e) {
-    console.log('These are the user files', e.target.files)
     const acceptedMimeTypes = ['image/jpeg', 'image/png']
     const file = e.target.files[0]
     if (!file) return;
@@ -1292,7 +1401,7 @@ class CreateInvoice extends Component {
                         return (
                           <li>
                             <div className="RoomImagesContainer mr2 flex flex-column pb4">
-                              <img src={newImage.previewUrl} width="auto" height="100%" />
+                              <img src={newImage.previewUrl} width="auto" height="270" />
                               <button
                                 onClick={() => {
                                   this.removePreviewImage(imageUUID)
@@ -1314,7 +1423,7 @@ class CreateInvoice extends Component {
                         return (
                           <li>
                             <div className="RoomImagesContainer mr2 flex flex-column pb4">
-                              <img src={uploadedImage.url} width="auto" height="100%" />
+                              <img src={uploadedImage.url} width="auto" height="270" />
                               <button
                                 onClick={() => this.removeUploadedImage(imageId)}
                                 className="flex flex-row items-center self-center dinLabel f8 mid-gray pointer bn bg-transparent dim ttu">
