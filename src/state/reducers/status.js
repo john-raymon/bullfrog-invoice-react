@@ -2,7 +2,8 @@ const initialState = {
   authLoading: false,
   dashboard: {
     invoicesToDo: false,
-    customers: false
+    customers: false,
+    allInvoices: false
   }
 }
 
@@ -17,6 +18,23 @@ export default (state = initialState, { type, payload = {} } ) => {
       return {...state, authLoading: false}
 
     // status of dashboardActions
+    case "FETCH_ALL_INVOICES_PENDING":
+      return {
+        ...state,
+        dashboard: {
+          ...state.dashboard,
+          allInvoices: true
+        }
+      }
+    case "FETCH_ALL_INVOICES_FULFILLED":
+    case "FETCH_ALL_INVOICES_REJECTED":
+    return {
+      ...state,
+      dashboard: {
+        ...state.dashboard,
+        allInvoices: false
+      }
+    }
     case "FETCH_INVOICES_TO_DO_PENDING":
       return {
         ...state,
