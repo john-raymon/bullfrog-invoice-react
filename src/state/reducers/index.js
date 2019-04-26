@@ -6,6 +6,7 @@ import auth from './auth'
 import status from './status'
 import errors from './errors'
 import dashboard from './dashboard'
+import globals from './globals'
 
 export default (history) => {
   return combineReducers({
@@ -13,6 +14,7 @@ export default (history) => {
     status,
     errors,
     dashboard,
-    router: connectRouter(history)
+    globals,
+    router : connectRouter(history)
   })
 }
