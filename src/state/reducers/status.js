@@ -4,6 +4,9 @@ const initialState = {
     invoicesToDo: false,
     customers: false,
     allInvoices: false
+  },
+  globals: {
+    settings: false
   }
 }
 
@@ -16,6 +19,25 @@ export default (state = initialState, { type, payload = {} } ) => {
     case "LOGOUT":
     case `${"LOGIN"}_REJECTED`:
       return {...state, authLoading: false}
+
+    // status of FETCH SETTINGS
+    case "FETCH_SETTINGS_PENDING":
+      return {
+        ...state,
+        globals: {
+          ...state.globals,
+          settings: true
+        }
+      }
+    case "FETCH_SETTINGS_FULFILLED":
+    case "FETCH_SETTINGS_REJECTED":
+    return {
+      ...state,
+      globals: {
+        ...state.globals,
+        settings: false
+      }
+    }
 
     // status of dashboardActions
     case "FETCH_ALL_INVOICES_PENDING":
@@ -35,6 +57,7 @@ export default (state = initialState, { type, payload = {} } ) => {
         allInvoices: false
       }
     }
+
     case "FETCH_INVOICES_TO_DO_PENDING":
       return {
         ...state,
@@ -69,6 +92,7 @@ export default (state = initialState, { type, payload = {} } ) => {
         customers: false
       }
     }
+
     default:
       return state;
   }
