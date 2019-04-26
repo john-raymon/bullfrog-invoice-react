@@ -4,7 +4,9 @@ const initialState = {
     customers: null,
     allInvoices: null
   },
-  settings: null
+  globals: {
+    settings: null
+  }
 }
 
 export default (state = initialState, { type, payload = {} } ) => {
@@ -14,12 +16,16 @@ export default (state = initialState, { type, payload = {} } ) => {
     case "FETCH_SETTINGS_FULFILLED":
     return {
       ...state,
-      settings: null
+      globals: {
+        settings: null
+      }
     }
     case "FETCH_SETTINGS_REJECTED":
     return {
       ...state,
-      settings: payload
+      globals: {
+        settings: payload
+      }
     }
 
     // FETCH ALL INVOICES ERRORS
