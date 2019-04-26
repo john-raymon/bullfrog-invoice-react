@@ -4,6 +4,7 @@ import createUUID from '../util/createUUID'
 import { NavLink } from 'react-router-dom'
 
 // Selectors
+import getAllInvoices from '../state/selectors/getAllInvoices'
 import getInvoicesToDo from '../state/selectors/getInvoicesToDo'
 import getCustomerSearchResults from '../state/selectors/getCustomerSearchResults'
 
@@ -14,7 +15,7 @@ import ListButton from '../views/ListButton'
 import searchIcon from '../images/search-icon.png';
 
 // Dashboard Actions
-import { fetchKnackCustomers } from '../state/actions/dashboardActions'
+import { fetchKnackCustomers, fetchInvoicesToDo, fetchAllInvoices } from '../state/actions/dashboardActions'
 
 
 class Dashboard extends Component {
@@ -24,6 +25,10 @@ class Dashboard extends Component {
     this.state = {
       searchQuery: ''
     }
+  }
+
+  componentDidMount(){
+    this.props.fetchAllInvoices()
   }
 
   handleSearchChange(e) {
@@ -91,6 +96,37 @@ class Dashboard extends Component {
         )
       })
     }
+
+    const allInvoices = () => {
+      if (props.isLoading.allInvoices) {
+        return (<p>Loading</p>)
+      }
+      if (props.isError.allInvoices) {
+        return (<p>There seems to be an error</p>)
+      }
+      if (!props.allInvoices.length) {
+        return (
+          <p>There are no invoices.</p>
+        )
+      }
+      return props.allInvoices.map((invoice, index) => {
+        return (
+          <li key={index}>
+            <div className="flex flex-row justify-between items-center bb b--light-gray pv1">
+              <p className="dinLabel near-black f7 ma0 w-50 tracked-mega small-caps">
+                {invoice.invoiceName}
+              </p>
+              <NavLink to={`/invoices/${(invoice.isDraft ? 'new' : 'pdf')}/${invoice.invoiceUUID}`}>
+                <ListButton>
+                  { invoice.isDraft ? 'cont. draft' : 'view pdf' }
+                </ListButton>
+              </NavLink>
+            </div>
+          </li>
+        )
+      })
+    }
+
     return(
       <div className="flex flex-column w-100 measure-80 center pt5 ph3 mb4">
         <div className="flex flex-row w-100 items-start">
@@ -110,11 +146,11 @@ class Dashboard extends Component {
             </p>
             <div className="w-100">
               <div className="flex flex-row items-center bb b--light-gray bw1 pb1">
-                <p className="dinLabel mid-gray f7 ma0 w-25 tracked-mega">
-                  DATE
+                <p className="dinLabel mid-gray f7 ma0 w-25 tracked-mega ttu">
+                  date
                 </p>
-                <p className="dinLabel mid-gray f7 ma0 w-50 tracked-mega">
-                  CUSTOMER
+                <p className="dinLabel mid-gray f7 ma0 w-50 tracked-mega ttu">
+                  customer
                 </p>
               </div>
               <ul className="list ma0 pa0 overflow-scroll h4">
@@ -127,23 +163,11 @@ class Dashboard extends Component {
          <div className="w-50 pr4">
             <div className="w-100 ba b--light-gray bw1 h6 br3 ph4 pt1 shadow-custom">
               <p className="dinLabel tl mid-gray mb0">
-                Previous Estimates ({`0`})
+                Previous Estimates ({props.allInvoices.length || '0'})
               </p>
               <div className="w-100 mt2">
-                <ul className="list ma0 pa0 overflow-scroll h4">
-                  <li>
-                    <div className="flex flex-row items-center bb b--light-gray pv1">
-                      <p className="dinLabel near-black f7 ma0 w-25 tracked-mega">
-                        03/16/19
-                      </p>
-                      <p className="dinLabel near-black f7 ma0 w-50 tracked-mega small-caps">
-                        Alexson Wilson
-                      </p>
-                      <ListButton>
-                        CREATE INVOICE
-                      </ListButton >
-                    </div>
-                  </li>
+                <ul className="list ma0 pa0 overflow-scroll h5">
+                  { allInvoices() }
                 </ul>
               </div>
             </div>
@@ -181,15 +205,18 @@ const mapStateToProps = state => {
   return {
     isLoading: {
       invoicesToDo: dashboardStatus.invoicesToDo,
-      customers: dashboardStatus.customers
+      customers: dashboardStatus.customers,
+      allInvoices: dashboardStatus.allInvoices
     },
     isError: {
       invoicesToDo: dashboardErrors.invoicesToDo,
-      customers: dashboardErrors.customers
+      customers: dashboardErrors.customers,
+      allInvoices: dashboardErrors.allInvoices
     },
     invoicesToDo: !(dashboardErrors.invoicesToDo && dashboardStatus.invoicesToDo) ? getInvoicesToDo(state) : [],
-    customers: !(dashboardErrors.customers && dashboardStatus.customers) ? getCustomerSearchResults(state) : []
+    customers: !(dashboardErrors.customers && dashboardStatus.customers) ? getCustomerSearchResults(state) : [],
+    allInvoices: !(dashboardErrors.allInvoices && dashboardStatus.allInvoices) ? getAllInvoices(state) : []
   }
 }
 
-export default connect(mapStateToProps, { fetchKnackCustomers })(Dashboard)
+export default connect(mapStateToProps, { fetchKnackCustomers, fetchInvoicesToDo, fetchAllInvoices })(Dashboard)
