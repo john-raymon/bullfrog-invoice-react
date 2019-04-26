@@ -1040,494 +1040,494 @@ class CreateInvoice extends Component {
           this.state.generatingInvoice ?
           (<p className="dinTitle pa0 ma0 f3 mb3">Generating Invoice ...</p>) :
           (
-            <div ref={this.invoiceContainerRef}>
-          <Route
-            path={`${this.props.match.path}/line-items/:roomId`}
-            render={
-              (props) =>
-                <LineItems
-                  handleCostInputBlur={this.handleCostInputBlur}
-                  addNewLineItem={this.addNewLineItem}
-                  newLineItemLaborCost={this.state.newLineItemLaborCost}
-                  newLineItemMaterialCost={this.state.newLineItemMaterialCost}
-                  newLineItemUOM={this.state.newLineItemUOM}
-                  newLineItemDescription={this.state.newLineItemDescription}
-                  newLineItemQuantity={this.state.newLineItemQuantity}
-                  handleLineItemChange={this.handleLineItemChange}
-                  errors={this.state.errors}
-                  handleChange={this.handleChange}
-                  removeLineItem={this.removeLineItem}
-                  room={this.state.rooms[props.match.params.roomId] || {}}
-                  {...this.props}
-                  {...props}
-                  />
-              }
-          />
-          <div className="flex flex-column measure-70 center pt5 mb5">
-            <div className="flex flex-row w100">
+          <div ref={this.invoiceContainerRef}>
+            <Route
+              path={`${this.props.match.path}/line-items/:roomId`}
+              render={
+                (props) =>
+                  <LineItems
+                    handleCostInputBlur={this.handleCostInputBlur}
+                    addNewLineItem={this.addNewLineItem}
+                    newLineItemLaborCost={this.state.newLineItemLaborCost}
+                    newLineItemMaterialCost={this.state.newLineItemMaterialCost}
+                    newLineItemUOM={this.state.newLineItemUOM}
+                    newLineItemDescription={this.state.newLineItemDescription}
+                    newLineItemQuantity={this.state.newLineItemQuantity}
+                    handleLineItemChange={this.handleLineItemChange}
+                    errors={this.state.errors}
+                    handleChange={this.handleChange}
+                    removeLineItem={this.removeLineItem}
+                    room={this.state.rooms[props.match.params.roomId] || {}}
+                    {...this.props}
+                    {...props}
+                    />
+                }
+            />
+            <div className="flex flex-column measure-70 center pt5 mb5">
+              <div className="flex flex-row w100">
 
-              <div className="flex flex-column w-50 pr5">
-                <p className="dinTitle pa0 ma0 f3 mb3">
-                  Invoice Details
-                </p>
-
-                <input
-                  className="InputField"
-                  type="text"
-                  name="invoiceName"
-                  placeholder="Enter the invoice name here"
-                  value={this.state.invoiceName}
-                  onChange={this.handleChange}
-                />
-                <label htmlFor="invoiceName">
-                  <p className="dinLabel pa0 ma0 mb3 f6">
-                    Invoice Name
+                <div className="flex flex-column w-50 pr5">
+                  <p className="dinTitle pa0 ma0 f3 mb3">
+                    Invoice Details
                   </p>
-                </label>
 
-                <p className="dinTitle pa0 ma0 f3 mb3 mt4">
-                  Customer Details
-                </p>
-
-                <input
-                  className="InputField"
-                  type="text"
-                  name="customersFullName"
-                  placeholder="Enter the customer's full here"
-                  value={this.state.customersFullName}
-                  onChange={this.handleChange}
-                />
-                <label htmlFor="customersFullName">
-                  <p className="dinLabel pa0 ma0 mb3 f6">
-                    Customers Full Name
-                  </p>
-                </label>
-
-                <input
-                  className="InputField"
-                  type="text"
-                  name="customersAddress"
-                  placeholder="Enter the customer's address here"
-                  value={this.state.customersAddress}
-                  onChange={this.handleChange}
-                />
-                <label htmlFor="customersAddress">
-                  <p className="dinLabel pa0 ma0 mb3 f6">
-                    Customer's Address
-                  </p>
-                </label>
-
-                <input
-                  className="InputField"
-                  type="text"
-                  name="customersCityState"
-                  placeholder="City, State"
-                  value={this.state.customersCityState}
-                  onChange={this.handleChange}
-                />
-                <label htmlFor="customersCityState">
-                  <p className="dinLabel pa0 ma0 mb3 f6">
-                    City, State
-                  </p>
-                </label>
-
-                <input
-                  className="InputField"
-                  type="text"
-                  name="customersZipCode"
-                  placeholder="Zipcode"
-                  value={this.state.customersZipCode}
-                  onChange={this.handleChange}
-                />
-                <label htmlFor="customersZipcode">
-                  <p className="dinLabel pa0 ma0 mb3 f6">
-                    Zip Code
-                  </p>
-                </label>
-
-                <p className="dinTitle pa0 ma0 f4 mid-gray mb3 mt4 ttu">
-                  claim details
-                </p>
-
-                <input
-                  className="InputField"
-                  type="text"
-                  name="insuranceCarrier"
-                  placeholder="Enter the name of the insurance carrier"
-                  value={this.state.insuranceCarrier}
-                  onChange={this.handleChange}
-                />
-                <label htmlFor="insuranceCarrier">
-                  <p className="dinLabel pa0 ma0 mb3 f6">
-                    Insurance Carrier
-                  </p>
-                </label>
-
-                <input
-                  className="InputField"
-                  type="text"
-                  name="policyNumber"
-                  placeholder="Policy Number"
-                  value={this.state.policyNumber}
-                  onChange={this.handleChange}
-                />
-                <label htmlFor="policyNumber">
-                  <p className="dinLabel pa0 ma0 mb3 f6">
-                    Policy Number
-                  </p>
-                </label>
-
-                <input
-                  className="InputField"
-                  type="text"
-                  name="claimNumber"
-                  placeholder="Claim Number"
-                  value={this.state.claimNumber}
-                  onChange={this.handleChange}
-                />
-                <label htmlFor="claimNumber">
-                  <p className="dinLabel pa0 ma0 mb3 f6">
-                    Claim Number
-                  </p>
-                </label>
-
-                <input
-                  className="InputField measure-1"
-                  type="date"
-                  name="dateOfLoss"
-                  value={this.state.dateOfLoss}
-                  onChange={this.handleChange}
-                />
-                <label htmlFor="dateOfLoss">
-                  <p className="dinLabel pa0 ma0 mb3 f6">
-                    Date of Loss
-                  </p>
-                </label>
-              </div>
-
-              <div className="flex flex-column w-50 pl5">
-                <p className="dinTitle pa0 ma0 f3 mb3">
-                  Rooms
-                </p>
-
-                <div className="NewRoom__container">
-                  { this.state.errors.newRoom && ( <p className="dinLabel red f6 o-70"> {this.state.errors.newRoom } </p> )}
                   <input
-                    className="InputField measure-1"
+                    className="InputField"
                     type="text"
-                    name="newRoomName"
-                    placeholder="Enter the room name"
-                    value={this.state.newRoomName}
+                    name="invoiceName"
+                    placeholder="Enter the invoice name here"
+                    value={this.state.invoiceName}
                     onChange={this.handleChange}
                   />
-                  <label htmlFor="newRoomName">
+                  <label htmlFor="invoiceName">
                     <p className="dinLabel pa0 ma0 mb3 f6">
-                      Room Name
+                      Invoice Name
                     </p>
                   </label>
 
-                  <div className="flex flex-row items-center justify-between">
+                  <p className="dinTitle pa0 ma0 f3 mb3 mt4">
+                    Customer Details
+                  </p>
 
-                    <div className="flex flex-row items-center justify-between w-50">
+                  <input
+                    className="InputField"
+                    type="text"
+                    name="customersFullName"
+                    placeholder="Enter the customer's full here"
+                    value={this.state.customersFullName}
+                    onChange={this.handleChange}
+                  />
+                  <label htmlFor="customersFullName">
+                    <p className="dinLabel pa0 ma0 mb3 f6">
+                      Customers Full Name
+                    </p>
+                  </label>
 
-                      <div className="w-30 flex flex-column items-center">
-                        <input
-                          className="InputField tc"
-                          type="number"
-                          name="newRoomLength"
-                          placeholder="0"
-                          onChange={this.handleChange}
-                          value={this.state.newRoomLength}
-                        />
-                        <label htmlFor="newRoomLength">
-                          <p className="dinLabel pa0 ma0 mb3 f6">
-                            Length
-                          </p>
-                        </label>
-                      </div>
+                  <input
+                    className="InputField"
+                    type="text"
+                    name="customersAddress"
+                    placeholder="Enter the customer's address here"
+                    value={this.state.customersAddress}
+                    onChange={this.handleChange}
+                  />
+                  <label htmlFor="customersAddress">
+                    <p className="dinLabel pa0 ma0 mb3 f6">
+                      Customer's Address
+                    </p>
+                  </label>
 
-                      <div className="w-30 flex flex-column items-center">
-                        <input
-                          className="InputField tc"
-                          type="number"
-                          name="newRoomWidth"
-                          placeholder="0"
-                          onChange={this.handleChange}
-                          value={this.state.newRoomWidth}
-                        />
-                        <label htmlFor="newRoomWidth">
-                          <p className="dinLabel pa0 ma0 mb3 f6">
-                            Width
-                          </p>
-                        </label>
-                      </div>
+                  <input
+                    className="InputField"
+                    type="text"
+                    name="customersCityState"
+                    placeholder="City, State"
+                    value={this.state.customersCityState}
+                    onChange={this.handleChange}
+                  />
+                  <label htmlFor="customersCityState">
+                    <p className="dinLabel pa0 ma0 mb3 f6">
+                      City, State
+                    </p>
+                  </label>
 
-                      <div className="w-30 flex flex-column items-center">
-                        <input
-                          className="InputField tc"
-                          type="number"
-                          name="newRoomHeight"
-                          placeholder="0"
-                          value={this.state.newRoomHeight}
-                          onChange={this.handleChange}
-                        />
-                      <label htmlFor="newRoomHeight">
-                          <p className="dinLabel pa0 ma0 mb3 f6">
-                            Height
-                          </p>
-                        </label>
+                  <input
+                    className="InputField"
+                    type="text"
+                    name="customersZipCode"
+                    placeholder="Zipcode"
+                    value={this.state.customersZipCode}
+                    onChange={this.handleChange}
+                  />
+                  <label htmlFor="customersZipcode">
+                    <p className="dinLabel pa0 ma0 mb3 f6">
+                      Zip Code
+                    </p>
+                  </label>
+
+                  <p className="dinTitle pa0 ma0 f4 mid-gray mb3 mt4 ttu">
+                    claim details
+                  </p>
+
+                  <input
+                    className="InputField"
+                    type="text"
+                    name="insuranceCarrier"
+                    placeholder="Enter the name of the insurance carrier"
+                    value={this.state.insuranceCarrier}
+                    onChange={this.handleChange}
+                  />
+                  <label htmlFor="insuranceCarrier">
+                    <p className="dinLabel pa0 ma0 mb3 f6">
+                      Insurance Carrier
+                    </p>
+                  </label>
+
+                  <input
+                    className="InputField"
+                    type="text"
+                    name="policyNumber"
+                    placeholder="Policy Number"
+                    value={this.state.policyNumber}
+                    onChange={this.handleChange}
+                  />
+                  <label htmlFor="policyNumber">
+                    <p className="dinLabel pa0 ma0 mb3 f6">
+                      Policy Number
+                    </p>
+                  </label>
+
+                  <input
+                    className="InputField"
+                    type="text"
+                    name="claimNumber"
+                    placeholder="Claim Number"
+                    value={this.state.claimNumber}
+                    onChange={this.handleChange}
+                  />
+                  <label htmlFor="claimNumber">
+                    <p className="dinLabel pa0 ma0 mb3 f6">
+                      Claim Number
+                    </p>
+                  </label>
+
+                  <input
+                    className="InputField measure-1"
+                    type="date"
+                    name="dateOfLoss"
+                    value={this.state.dateOfLoss}
+                    onChange={this.handleChange}
+                  />
+                  <label htmlFor="dateOfLoss">
+                    <p className="dinLabel pa0 ma0 mb3 f6">
+                      Date of Loss
+                    </p>
+                  </label>
+                </div>
+
+                <div className="flex flex-column w-50 pl5">
+                  <p className="dinTitle pa0 ma0 f3 mb3">
+                    Rooms
+                  </p>
+
+                  <div className="NewRoom__container">
+                    { this.state.errors.newRoom && ( <p className="dinLabel red f6 o-70"> {this.state.errors.newRoom } </p> )}
+                    <input
+                      className="InputField measure-1"
+                      type="text"
+                      name="newRoomName"
+                      placeholder="Enter the room name"
+                      value={this.state.newRoomName}
+                      onChange={this.handleChange}
+                    />
+                    <label htmlFor="newRoomName">
+                      <p className="dinLabel pa0 ma0 mb3 f6">
+                        Room Name
+                      </p>
+                    </label>
+
+                    <div className="flex flex-row items-center justify-between">
+
+                      <div className="flex flex-row items-center justify-between w-50">
+
+                        <div className="w-30 flex flex-column items-center">
+                          <input
+                            className="InputField tc"
+                            type="number"
+                            name="newRoomLength"
+                            placeholder="0"
+                            onChange={this.handleChange}
+                            value={this.state.newRoomLength}
+                          />
+                          <label htmlFor="newRoomLength">
+                            <p className="dinLabel pa0 ma0 mb3 f6">
+                              Length
+                            </p>
+                          </label>
+                        </div>
+
+                        <div className="w-30 flex flex-column items-center">
+                          <input
+                            className="InputField tc"
+                            type="number"
+                            name="newRoomWidth"
+                            placeholder="0"
+                            onChange={this.handleChange}
+                            value={this.state.newRoomWidth}
+                          />
+                          <label htmlFor="newRoomWidth">
+                            <p className="dinLabel pa0 ma0 mb3 f6">
+                              Width
+                            </p>
+                          </label>
+                        </div>
+
+                        <div className="w-30 flex flex-column items-center">
+                          <input
+                            className="InputField tc"
+                            type="number"
+                            name="newRoomHeight"
+                            placeholder="0"
+                            value={this.state.newRoomHeight}
+                            onChange={this.handleChange}
+                          />
+                        <label htmlFor="newRoomHeight">
+                            <p className="dinLabel pa0 ma0 mb3 f6">
+                              Height
+                            </p>
+                          </label>
+                        </div>
+
                       </div>
 
                     </div>
-
-                  </div>
-                  {
-                  //   <button
-                  //   className="flex flex-row items-center dinLabel f7 mid-gray self-start pointer bt-0 bl-0 br-0 bg-transparent mt2"
-                  // >
-                  //   ADD LINE ITEMS
-                  // </button>
-                  }
-                  <button
-                    className="GenericButton tc dinLabel pv3 f7 mt3 ttu"
-                    onClick={this.addNewRoom}
-                    >
-                    add room
-                  </button>
-                </div>
-
-                <div className="RoomsAccordion__container mt5">
-                  <Accordion>
                     {
-                      Object.keys(this.state.rooms).map((roomUUID, key) => {
-                        const room = this.state.rooms[roomUUID]
-                        if (room === undefined) return;
-                        return (
-                          <AccordionItem
-                            key={key}
-                          >
-                            <AccordionItemHeading className="w-100">
-                              <AccordionItemButton className="accordion__button flex flex-row items-center justify-between">
-                                <p className="tc dinLabel f7 ttu"> { room.name || roomUUID } </p>
-                                <div className="flex flex-row items-center justify-between">
+                    //   <button
+                    //   className="flex flex-row items-center dinLabel f7 mid-gray self-start pointer bt-0 bl-0 br-0 bg-transparent mt2"
+                    // >
+                    //   ADD LINE ITEMS
+                    // </button>
+                    }
+                    <button
+                      className="GenericButton tc dinLabel pv3 f7 mt3 ttu"
+                      onClick={this.addNewRoom}
+                      >
+                      add room
+                    </button>
+                  </div>
+
+                  <div className="RoomsAccordion__container mt5">
+                    <Accordion>
+                      {
+                        Object.keys(this.state.rooms).map((roomUUID, key) => {
+                          const room = this.state.rooms[roomUUID]
+                          if (room === undefined) return;
+                          return (
+                            <AccordionItem
+                              key={key}
+                            >
+                              <AccordionItemHeading className="w-100">
+                                <AccordionItemButton className="accordion__button flex flex-row items-center justify-between">
+                                  <p className="tc dinLabel f7 ttu"> { room.name || roomUUID } </p>
+                                  <div className="flex flex-row items-center justify-between">
+                                    <button
+                                      onClick={() => this.removeRoom(roomUUID)}
+                                      className="flex flex-row items-center self-center dinLabel f8 mid-gray pointer bn bg-transparent dim ttu">
+                                      delete
+                                      <div className="ArrowIcon mh2"><TrashIcon /></div>
+                                    </button>
+                                    <div className="ArrowIcon mh2"><Arrow /></div>
+                                  </div>
+                                </AccordionItemButton>
+                              </AccordionItemHeading>
+                              <AccordionItemPanel>
+                                <div className="EditRoom__container pv4">
+                                  <input
+                                    className="InputField measure-1"
+                                    type="text"
+                                    name="name"
+                                    onChange={(e) => this.handleChange(e, roomUUID)}
+                                    placeholder="Enter the room name"
+                                    value={room.name}
+                                  />
+                                  <label htmlFor="newRoomName">
+                                    <p className="dinLabel pa0 ma0 mb3 f6">
+                                      Room Name
+                                    </p>
+                                  </label>
+
+                                  <div className="flex flex-row items-center justify-between">
+
+                                    <div className="flex flex-row items-center justify-between w-50">
+
+                                      <div className="w-30 flex flex-column items-center">
+                                        <input
+                                          className="InputField tc"
+                                          type="number"
+                                          name="length"
+                                          placeholder="0"
+                                          onChange={(e) => this.handleChange(e, roomUUID)}
+                                          value={room.length}
+                                        />
+                                        <label htmlFor="newRoomLength">
+                                          <p className="dinLabel pa0 ma0 mb3 f6">
+                                            Length
+                                          </p>
+                                        </label>
+                                      </div>
+
+                                      <div className="w-30 flex flex-column items-center">
+                                        <input
+                                          className="InputField tc"
+                                          type="number"
+                                          name="width"
+                                          placeholder="0"
+                                          onChange={(e) => this.handleChange(e, roomUUID)}
+                                          value={room.width}
+                                        />
+                                        <label htmlFor="newRoomWidth">
+                                          <p className="dinLabel pa0 ma0 mb3 f6">
+                                            Width
+                                          </p>
+                                        </label>
+                                      </div>
+
+                                      <div className="w-30 flex flex-column items-center">
+                                        <input
+                                          className="InputField tc"
+                                          type="number"
+                                          name="height"
+                                          placeholder="8"
+                                          onChange={(e) => this.handleChange(e, roomUUID)}
+                                          value={room.height}
+                                        />
+                                      <label htmlFor="newRoomHeight">
+                                          <p className="dinLabel pa0 ma0 mb3 f6">
+                                            Height
+                                          </p>
+                                        </label>
+                                      </div>
+                                    </div>
+
+                                  </div>
+                                  <Link to={`${this.props.match.path.replace(':draftId', this.props.match.params.draftId)}/line-items/${roomUUID}`}>
+                                    <div
+                                      className="flex flex-row items-center dinLabel f7 mid-gray self-start pointer bt-0 bl-0 br-0 bg-transparent mt2"
+                                    >
+                                      ADD/EDIT LINE ITEMS
+                                    </div>
+                                  </Link>
+                                </div>
+                              </AccordionItemPanel>
+                            </AccordionItem>
+                          )
+                        })
+                      }
+                    </Accordion>
+                  </div>
+
+                  <div className="mt4">
+                    { this.state.errors.roomImages && ( <p className="dinLabel red f6 o-70"> {this.state.errors.roomImages } </p> )}
+                    <div className="ImageUploads__container relative w-40 ba bw1 flex items-center justify-center pv2 b--light-gray br2 flex-row">
+                      <input
+                        type="file"
+                        name="roomImages"
+                        className="absolute w-100 h-100 o-0 pointer"
+                        onChange={this.handleImageChange}
+                      />
+                      <p className="dinLabel pa0 ma0 f7 gray ttu dib">
+                        Upload an image
+                      </p>
+                    </div>
+                    <div className="w-100 mt3">
+                      <ul className="list pa0 ma0 flex flex-row overflow-x-scroll overflow-y-hidden h100 pb2">
+                        {
+                          Object.keys(this.state.notUploadedImages).map((imageUUID, key) => {
+                            const newImage = this.state.notUploadedImages[imageUUID]
+                            if (newImage === undefined || typeof newImage === 'undefined') return;
+                            return (
+                              <li key={key}>
+                                <div className="RoomImagesContainer mr2 flex flex-column pb4">
+                                  <img src={newImage.previewUrl} width="auto" height="270" />
                                   <button
-                                    onClick={() => this.removeRoom(roomUUID)}
+                                    onClick={() => {
+                                      this.removePreviewImage(imageUUID)
+                                      }
+                                    }
                                     className="flex flex-row items-center self-center dinLabel f8 mid-gray pointer bn bg-transparent dim ttu">
                                     delete
                                     <div className="ArrowIcon mh2"><TrashIcon /></div>
                                   </button>
-                                  <div className="ArrowIcon mh2"><Arrow /></div>
                                 </div>
-                              </AccordionItemButton>
-                            </AccordionItemHeading>
-                            <AccordionItemPanel>
-                              <div className="EditRoom__container pv4">
-                                <input
-                                  className="InputField measure-1"
-                                  type="text"
-                                  name="name"
-                                  onChange={(e) => this.handleChange(e, roomUUID)}
-                                  placeholder="Enter the room name"
-                                  value={room.name}
-                                />
-                                <label htmlFor="newRoomName">
-                                  <p className="dinLabel pa0 ma0 mb3 f6">
-                                    Room Name
-                                  </p>
-                                </label>
-
-                                <div className="flex flex-row items-center justify-between">
-
-                                  <div className="flex flex-row items-center justify-between w-50">
-
-                                    <div className="w-30 flex flex-column items-center">
-                                      <input
-                                        className="InputField tc"
-                                        type="number"
-                                        name="length"
-                                        placeholder="0"
-                                        onChange={(e) => this.handleChange(e, roomUUID)}
-                                        value={room.length}
-                                      />
-                                      <label htmlFor="newRoomLength">
-                                        <p className="dinLabel pa0 ma0 mb3 f6">
-                                          Length
-                                        </p>
-                                      </label>
-                                    </div>
-
-                                    <div className="w-30 flex flex-column items-center">
-                                      <input
-                                        className="InputField tc"
-                                        type="number"
-                                        name="width"
-                                        placeholder="0"
-                                        onChange={(e) => this.handleChange(e, roomUUID)}
-                                        value={room.width}
-                                      />
-                                      <label htmlFor="newRoomWidth">
-                                        <p className="dinLabel pa0 ma0 mb3 f6">
-                                          Width
-                                        </p>
-                                      </label>
-                                    </div>
-
-                                    <div className="w-30 flex flex-column items-center">
-                                      <input
-                                        className="InputField tc"
-                                        type="number"
-                                        name="height"
-                                        placeholder="8"
-                                        onChange={(e) => this.handleChange(e, roomUUID)}
-                                        value={room.height}
-                                      />
-                                    <label htmlFor="newRoomHeight">
-                                        <p className="dinLabel pa0 ma0 mb3 f6">
-                                          Height
-                                        </p>
-                                      </label>
-                                    </div>
-                                  </div>
-
+                              </li>
+                            )
+                          })
+                        }
+                        {
+                          Object.keys(this.state.uploadedImages).map((imageId, key) => {
+                            const uploadedImage = this.state.uploadedImages[imageId]
+                            if (uploadedImage === undefined || typeof uploadedImage === 'undefined') return;
+                            return (
+                              <li key={key}>
+                                <div className="RoomImagesContainer mr2 flex flex-column pb4">
+                                  <img src={uploadedImage.url} width="auto" height="270" />
+                                  <button
+                                    onClick={() => this.removeUploadedImage(imageId)}
+                                    className="flex flex-row items-center self-center dinLabel f8 mid-gray pointer bn bg-transparent dim ttu">
+                                    delete
+                                    <div className="ArrowIcon mh2"><TrashIcon /></div>
+                                  </button>
                                 </div>
-                                <Link to={`${this.props.match.path.replace(':draftId', this.props.match.params.draftId)}/line-items/${roomUUID}`}>
-                                  <div
-                                    className="flex flex-row items-center dinLabel f7 mid-gray self-start pointer bt-0 bl-0 br-0 bg-transparent mt2"
-                                  >
-                                    ADD/EDIT LINE ITEMS
-                                  </div>
-                                </Link>
-                              </div>
-                            </AccordionItemPanel>
-                          </AccordionItem>
-                        )
-                      })
-                    }
-                  </Accordion>
-                </div>
-
-                <div className="mt4">
-                  { this.state.errors.roomImages && ( <p className="dinLabel red f6 o-70"> {this.state.errors.roomImages } </p> )}
-                  <div className="ImageUploads__container relative w-40 ba bw1 flex items-center justify-center pv2 b--light-gray br2 flex-row">
-                    <input
-                      type="file"
-                      name="roomImages"
-                      className="absolute w-100 h-100 o-0 pointer"
-                      onChange={this.handleImageChange}
-                    />
-                    <p className="dinLabel pa0 ma0 f7 gray ttu dib">
-                      Upload an image
-                    </p>
+                              </li>
+                            )
+                          })
+                        }
+                      </ul>
+                    </div>
                   </div>
-                  <div className="w-100 mt3">
-                    <ul className="list pa0 ma0 flex flex-row overflow-x-scroll overflow-y-hidden h100 pb2">
-                      {
-                        Object.keys(this.state.notUploadedImages).map((imageUUID, key) => {
-                          const newImage = this.state.notUploadedImages[imageUUID]
-                          if (newImage === undefined || typeof newImage === 'undefined') return;
-                          return (
-                            <li key={key}>
-                              <div className="RoomImagesContainer mr2 flex flex-column pb4">
-                                <img src={newImage.previewUrl} width="auto" height="270" />
-                                <button
-                                  onClick={() => {
-                                    this.removePreviewImage(imageUUID)
-                                    }
-                                  }
-                                  className="flex flex-row items-center self-center dinLabel f8 mid-gray pointer bn bg-transparent dim ttu">
-                                  delete
-                                  <div className="ArrowIcon mh2"><TrashIcon /></div>
-                                </button>
-                              </div>
-                            </li>
-                          )
-                        })
-                      }
-                      {
-                        Object.keys(this.state.uploadedImages).map((imageId, key) => {
-                          const uploadedImage = this.state.uploadedImages[imageId]
-                          if (uploadedImage === undefined || typeof uploadedImage === 'undefined') return;
-                          return (
-                            <li key={key}>
-                              <div className="RoomImagesContainer mr2 flex flex-column pb4">
-                                <img src={uploadedImage.url} width="auto" height="270" />
-                                <button
-                                  onClick={() => this.removeUploadedImage(imageId)}
-                                  className="flex flex-row items-center self-center dinLabel f8 mid-gray pointer bn bg-transparent dim ttu">
-                                  delete
-                                  <div className="ArrowIcon mh2"><TrashIcon /></div>
-                                </button>
-                              </div>
-                            </li>
-                          )
-                        })
-                      }
-                    </ul>
-                  </div>
-                </div>
 
+                </div>
               </div>
-            </div>
-            <div className="flex flex-column w-100 mt4">
-              <ul className="list bb b-w1 b--light-gray pa0">
-                {
-                  Object.keys(this.state.rooms).map((roomUUID, key) => {
-                    const room = this.state.rooms[roomUUID]
-                    if (room === undefined) return;
-                    return (
-                      <li className="flex flex-row items-center justify-between" key={key}>
-                        <p className="dinLabel f6 ttu">
-                          { room.name || roomUUID }
-                        </p>
-                        <div className="flex flex-row flex-row-reverse">
-                          <p className="dinLabel f7 pa0 mh1">
-                            <span className="ttu black-60">total: </span>
-                            ${ room.roomTotals.totalCost }
+              <div className="flex flex-column w-100 mt4">
+                <ul className="list bb b-w1 b--light-gray pa0">
+                  {
+                    Object.keys(this.state.rooms).map((roomUUID, key) => {
+                      const room = this.state.rooms[roomUUID]
+                      if (room === undefined) return;
+                      return (
+                        <li className="flex flex-row items-center justify-between" key={key}>
+                          <p className="dinLabel f6 ttu">
+                            { room.name || roomUUID }
                           </p>
-                          <p className="dinLabel f7 pa0 mh1">
-                            <span className="ttu black-60">total material: </span>
-                            ${ room.roomTotals.totalMaterial }
-                          </p>
-                          <p className="dinLabel f7 pa0 mh1">
-                            <span className="ttu black-60">total labor: </span>
-                            ${ room.roomTotals.totalLabor }
-                          </p>
-                        </div>
-                      </li>
-                    )
-                  })
-                }
-              </ul>
-              <div className="flex items-row items-center justify-between">
-                <ul className="list pa0 tl">
-                  <li>
-                    <p className="dinLabel f6">
-                      <span className="ttu black-70">total labor: </span>
-                      ${ this.state.totalLaborCost }
-                    </p>
-                  </li>
-                  <li>
-                    <p className="dinLabel f6">
-                      <span className="ttu black-70">total material: </span>
-                      ${ this.state.totalMaterialCost }
-                    </p>
-                  </li>
-                  <li>
-                    <p className="dinLabel f6">
-                      <span className="ttu black-70">total cost: </span>
-                      ${ this.state.totalCost }
-                    </p>
-                  </li>
+                          <div className="flex flex-row flex-row-reverse">
+                            <p className="dinLabel f7 pa0 mh1">
+                              <span className="ttu black-60">total: </span>
+                              ${ room.roomTotals.totalCost }
+                            </p>
+                            <p className="dinLabel f7 pa0 mh1">
+                              <span className="ttu black-60">total material: </span>
+                              ${ room.roomTotals.totalMaterial }
+                            </p>
+                            <p className="dinLabel f7 pa0 mh1">
+                              <span className="ttu black-60">total labor: </span>
+                              ${ room.roomTotals.totalLabor }
+                            </p>
+                          </div>
+                        </li>
+                      )
+                    })
+                  }
                 </ul>
-                <div className="w-40">
-                  <button className="GenericButton tc dinLabel pv3 f7 mt3 ttu" disabled={this.state.autoSaving} onClick={this.generateInvoice}>
-                    generate invoice
-                  </button>
+                <div className="flex items-row items-center justify-between">
+                  <ul className="list pa0 tl">
+                    <li>
+                      <p className="dinLabel f6">
+                        <span className="ttu black-70">total labor: </span>
+                        ${ this.state.totalLaborCost }
+                      </p>
+                    </li>
+                    <li>
+                      <p className="dinLabel f6">
+                        <span className="ttu black-70">total material: </span>
+                        ${ this.state.totalMaterialCost }
+                      </p>
+                    </li>
+                    <li>
+                      <p className="dinLabel f6">
+                        <span className="ttu black-70">total cost: </span>
+                        ${ this.state.totalCost }
+                      </p>
+                    </li>
+                  </ul>
+                  <div className="w-40">
+                    <button className="GenericButton tc dinLabel pv3 f7 mt3 ttu" disabled={this.state.autoSaving} onClick={this.generateInvoice}>
+                      generate invoice
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
           )
         }
       </Fragment>
