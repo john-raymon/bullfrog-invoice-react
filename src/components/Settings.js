@@ -223,9 +223,8 @@ class Settings extends Component {
               </p>
             </label>
 
-
             <textarea
-              className="InputField p2"
+              className="InputField ph4 pt2"
               type="text"
               name="companyOpeningStatement"
               placeholder="Enter the opening statement"
