@@ -8,9 +8,6 @@
 # testing
 /coverage
 
-# production
-/build
-
 # minified js and compiled css
 *.min.js
 *.css
