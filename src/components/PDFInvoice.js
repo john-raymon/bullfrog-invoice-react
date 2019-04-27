@@ -1,6 +1,6 @@
 import React, { Component, PureComponent } from 'react'
 import { connect } from 'react-redux'
-import { Page, Text, View, Document, StyleSheet, PDFViewer, Image } from '@react-pdf/renderer';
+import { Page, Text, View, Document, StyleSheet, PDFViewer, Image, PDFDownloadLink } from '@react-pdf/renderer';
 
 // Utils
 import createUUID from '../util/createUUID'
@@ -74,46 +74,64 @@ const PDFdocument = ({
   companyZip,
   companyAddress,
   companyCityState,
-  companyOpeningStatement
+  companyOpeningStatement,
+  allRooms,
+  allImages,
+  fullName,
+  address,
+  cityState,
+  zipCode,
+  insuranceCarrier,
+  policyNumber,
+  invoiceUUID,
+  totalCost
   }) => {
   return (
-    <Document>
-      <Page size="A4" style={styles.page}>
+    <Document
+      title={`Invoice for ${fullName} - $${totalCost}`}
+    >
+      <Page size="LETTER" style={styles.page}>
 
-        <View style={styles.headerContainer} fixed>
+        <View style={[styles.headerContainer, { justifyContent: "space-between" }]} fixed>
+          <View style={{flexDirection: "row", alignItems: "center"}}>
+            <View style={{ width: "10%"}}>
+              <Image
+                src={logo}
+                style={{width: "100%"}}
+              />
+            </View>
 
-          <View style={{ width: "10%"}}>
-            <Image
-              src={logo}
-              style={{width: "100%"}}
-            />
+            <View style={{ marginLeft: "2%" }}>
+              <Text
+                style={styles.smallText}
+              >
+                { companyName }
+              </Text>
+              <Text style={styles.smallText}>
+                {`Telephone | ${companyPhoneNumber}`}
+              </Text>
+              <Text style={styles.smallText}>
+                {`Billing Email | ${companyEmail}`}
+              </Text>
+              <Text style={styles.smallText}>
+                {`Mailing Address | ${companyAddress} ${companyCityState} ${companyZip}`}
+              </Text>
+            </View>
           </View>
 
-          <View style={{ marginLeft: "2%" }}>
-            <Text
-              style={styles.smallText}
-            >
-              { companyName }
-            </Text>
-            <Text style={styles.smallText}>
-              {`Telephone | ${companyPhoneNumber}`}
-            </Text>
-            <Text style={styles.smallText}>
-              {`Billing Email | ${companyEmail}`}
-            </Text>
-            <Text style={styles.smallText}>
-              {`Mailing Address | ${companyAddress} ${companyCityState} ${companyZip}`}
-            </Text>
-          </View>
+          <Image
+            src={`/invoices/${invoiceUUID}/qr`}
+            style={{width: 30}}
+          />
         </View>
 
-        <View style={{ flexDirection: "column", justifyContent: "center" }}>
+        <View style={{ flexDirection: "column", justifyContent: "center", flexGrow: 1 }}>
           <View style={{flexDirection: "row", width: "80%", alignSelf: "center", paddingVertical: 20}}>
             <Text style={[styles.smallText, {width: "30%"}]}>
               Customer Name
             </Text>
             <Text style={[styles.smallText, {width: "70%", flexWrap: "wrap"}]}>
-              { "John Mendez" }
+              { fullName }
             </Text>
           </View>
           <View style={{flexDirection: "row", width: "80%", alignSelf: "center", paddingVertical: 20}}>
@@ -122,10 +140,10 @@ const PDFdocument = ({
             </Text>
             <View style={{flexDirection: "column", width: "70%"}}>
               <Text style={styles.smallText}>
-                { "11 ChestNut Circle" }
+                { address }
               </Text>
               <Text style={styles.smallText}>
-                { "HollyWood, Fl 33026 " }
+                { `${cityState} ${zipCode}` }
               </Text>
             </View>
           </View>
@@ -134,7 +152,7 @@ const PDFdocument = ({
               Insurance Carrier
             </Text>
             <Text style={[styles.smallText, {width: "70%", flexWrap: "wrap"}]}>
-              { "Gieco" }
+              { insuranceCarrier }
             </Text>
           </View>
           <View style={{flexDirection: "row", width: "80%", alignSelf: "center", paddingVertical: 20}}>
@@ -142,7 +160,7 @@ const PDFdocument = ({
               Policy Number
             </Text>
             <Text style={[styles.smallText, {width: "70%", flexWrap: "wrap"}]}>
-              { "555555" }
+              { policyNumber }
             </Text>
           </View>
           <Text style={[styles.smallText, { width: "80%", borderTop: "1 solid black", alignSelf: "center", paddingTop: 10 }]}>
@@ -150,10 +168,186 @@ const PDFdocument = ({
           </Text>
         </View>
 
+        <View style={{ flexDirection: "column", width: "90%", alignSelf: "center", minHeight: 500 }} break>
+          {
+            allRooms.map((room) => {
+              return (
+                <View style={{ flexDirection: "column", width:"100%", marginBottom: 30}}>
+                  <View style={{flexDirection: "row", justifyContent: "space-between", borderBottom: "1 solid black", paddingBottom: 5, marginBottom: 8 }}>
+                    <Text style={styles.smallText}>
+                      { room.name }
+                    </Text>
+                    <Text style={styles.smallText}>
+                      {`L: ${room.length} | W: ${room.width } | H: ${room.height}` }
+                    </Text>
+                  </View>
+                  <View style={{ flexDirection: "row", marginBottom: 2, justifyContent: "space-between" }}>
+                    <Text style={[styles.smallText, { marginRight: 20 }]}>
+                      Square Footage of Floor
+                    </Text>
+                    <Text style={styles.smallText}>
+                      {`${room.SFFloor} sq. ft.`}
+                    </Text>
+                  </View>
+                  <View style={{ flexDirection: "row", marginBottom: 2, justifyContent: "space-between" }}>
+                    <Text style={[styles.smallText, { marginRight: 20 }]}>
+                      Square Footage of Ceiling
+                    </Text>
+                    <Text style={styles.smallText}>
+                      {`${room.SFCeiling} sq. ft.`}
+                    </Text>
+                  </View>
+                  <View style={{ flexDirection: "row", marginBottom: 2, justifyContent: "space-between" }}>
+                    <Text style={[styles.smallText, { marginRight: 20 }]}>
+                      Square Footage of Walls
+                    </Text>
+                    <Text style={styles.smallText}>
+                      {`${room.SFWalls} sq. ft.`}
+                    </Text>
+                  </View>
+                  <View style={{ flexDirection: "row", marginBottom: 2, justifyContent: "space-between" }}>
+                    <Text style={[styles.smallText, { marginRight: 20 }]}>
+                      Square Footage of Walls & Ceiling
+                    </Text>
+                    <Text style={styles.smallText}>
+                      {`${room.SFWallsCeiling} sq. ft.`}
+                    </Text>
+                  </View>
+                  <View style={{ flexDirection: "row", marginBottom: 2, justifyContent: "space-between" }}>
+                    <Text style={[styles.smallText, { marginRight: 20 }]}>
+                      Square Footage of Walls, Floor & Ceiling
+                    </Text>
+                    <Text style={styles.smallText}>
+                      {`${room.SFWallsFloorCeiling} sq. ft.`}
+                    </Text>
+                  </View>
+                  <View style={{ flexDirection: "row", marginBottom: 2, justifyContent: "space-between" }}>
+                    <Text style={[styles.smallText, { marginRight: 20 }]}>
+                      Linear Footage of Floor Perimeter
+                    </Text>
+                    <Text style={styles.smallText}>
+                      {`${room.LFFloorPerim} ft.`}
+                    </Text>
+                  </View>
+                  <View style={{ flexDirection: "row", marginBottom: 2, justifyContent: "space-between" }}>
+                    <Text style={[styles.smallText, { marginRight: 20 }]}>
+                      Linear Footage of Ceiling Perimeter
+                    </Text>
+                    <Text style={styles.smallText}>
+                      {`${room.LFCeilingPerim} ft.`}
+                    </Text>
+                  </View>
+                  <View style={{ flexDirection: "row", marginBottom: 2, justifyContent: "space-between" }}>
+                    <Text style={[styles.smallText, { marginRight: 20 }]}>
+                      Linear Footage of Floor & Ceiling Perimeter
+                    </Text>
+                    <Text style={styles.smallText}>
+                      {`${room.LFFloorCeilingPerim} ft.`}
+                    </Text>
+                  </View>
+                  <View style={{ flexDirection: "row", justifyContent: "center", borderBottom: "1 solid gray", paddingBottom: 5, marginTop: 10, marginBottom: 5}}>
+                    <Text style={[styles.smallText, {width: "20%"}]}>
+                      Qty
+                    </Text>
+                    <Text style={[styles.smallText, {width: "50%"}]}>
+                      Description
+                    </Text>
+                    <Text style={[styles.smallText, {width: "10%"}]}>
+                      Labor Cost
+                    </Text>
+                    <Text style={[styles.smallText, {width: "10%"}]}>
+                      Unit Cost
+                    </Text>
+                    <Text style={[styles.smallText, {width: "10%", textAlign: "right"}]}>
+                      Total
+                    </Text>
+                  </View>
+                  {
+                    room.lineItems.map((item) => {
+                      return (
+                        <View style={{ flexDirection: "row", justifyContent: "center", paddingBottom: 10}}>
+                          <Text style={[styles.smallText, {width: "20%"}]}>
+                            {`${item.quantity} ${item.uom}`}
+                          </Text>
+                          <Text style={[styles.smallText, {width: "50%", flexWrap: "wrap", paddingRight: 1 }]}>
+                            { item.description }
+                          </Text>
+                          <Text style={[styles.smallText, {width: "10%"}]}>
+                            ${ item.laborCost }
+                          </Text>
+                          <Text style={[styles.smallText, {width: "10%"}]}>
+                            ${ item.materialCost }
+                          </Text>
+                          <Text style={[styles.smallText, {width: "10%", textAlign: "right"}]}>
+                            ${ item.total }
+                          </Text>
+                        </View>
+                      )
+                    })
+                  }
+                  <View style={{flexDirection: "row", justifyContent: "space-between", borderBottom: "1 solid black", paddingBottom: 5, marginBottom: 5 }}>
+                    <Text style={styles.smallText}>
+                      {`Totals - ${room.name}`}
+                    </Text>
+                    <Text style={styles.smallText}>
+                      {`Labor Totals: $${room.roomTotals.totalLabor} | Unit Totals: $${room.roomTotals.totalMaterial} | Totals: $${room.roomTotals.totalCost}`}
+                    </Text>
+                  </View>
+                </View>
+              )
+            })
+          }
 
-        <View style={{ flexDirection: "column", width: "80%", position: "absolute", bottom: 10, borderTop: "1 solid gray", paddingVertical: 10, alignSelf: "center"}} fixed>
+        </View>
+
+        <View style={{ flexDirection: "column", width: "90%", alignSelf: "center"}} break>
+          <Text style={[styles.smallText, { marginBottom: 10 }]} fixed>
+            { allImages.length > 0 && 'Images'}
+          </Text>
+          <View style={{ flexDirection: "row", width: "100%", alignSelf: "center", flexWrap: "wrap" }} break>
+            {
+              allImages.map((url) =>
+                <Image
+                  src={url}
+                  style={{width: "40%", marginRight: 10, marginBottom: 10}}
+                />
+              )
+            }
+          </View>
+        </View>
+
+
+        <View style={{ flexDirection: "column", width: "90%", alignSelf: "center", minHeight: 500}} break>
+          <Text style={[styles.smallText, { textAlign: "right", textDecoration: "underline"}]}>
+            Totals
+          </Text>
+          {
+            allRooms.map((room) => {
+              return (
+                <View style={{ flexDirection: "row", marginBottom: 2, justifyContent: "space-between" }}>
+                  <Text style={[styles.smallText, { marginRight: 20 }]}>
+                    { room.name }
+                  </Text>
+                  <Text style={styles.smallText}>
+                    ${room.roomTotals.totalCost}
+                  </Text>
+                </View>
+              )
+            })
+          }
+          <View style={{ flexDirection: "row", marginTop: 20, justifyContent: "space-between" }}>
+            <Text style={[styles.smallText, { marginRight: 20 }]}>
+              Total Amount
+            </Text>
+            <Text style={styles.smallText}>
+              ${totalCost}
+            </Text>
+          </View>
+        </View>
+
+        <View style={{ flexDirection: "column", width: "80%", position: "absolute", bottom: 0, borderTop: "1 solid gray", paddingVertical: 10, marginBottom: 10, alignSelf: "center"}} fixed>
           <Text style={[styles.smallText, { color: "gray", textAlign: "center" }]} render={({ pageNumber, totalPages }) => (
-            `Customer Name Page ${pageNumber} / ${totalPages === undefined ? pageNumber : totalPages }`
+            `Invoice for ${ fullName } - Invoice ID : ${invoiceUUID}`
           )} />
         </View>
       </Page>
@@ -180,7 +374,8 @@ class PDFInvoice extends Component {
       })
     }).catch((err) => {
       if (err.status === 404) {
-        // redirect to pdf detailed version since invoice can no longer be updated
+        // redirect to dashboard with error since pdf does not exist
+        this.props.history.push("/")
         this.setState({
           invoice: null
         })
@@ -190,17 +385,66 @@ class PDFInvoice extends Component {
 
   render() {
     const { companyName, companyPhoneNumber } = this.props.globals.settings
+    let allRooms = []
+    let allImages = []
+    let customer = {}
+    let claim = {}
+    let invoiceUUID = ''
+    let totalCost = ''
     if (this.state.invoice) {
       const roomIds = Object.keys(this.state.invoice.rooms || {})
-      const room = roomIds.length > 0 && this.state.invoice.rooms[roomIds[0]]
-      console.log('the measurements are', calculateRoomMeasurements(room.length, room.width, room.height))
+      const roomsById = this.state.invoice.rooms
+      allRooms = roomIds.map((uuid) => {
+        const room = roomsById[uuid]
+        const roomLineItemsIds = Object.keys(room.lineItems)
+        const roomLineItemsById = room.lineItems
+        const roomLineItems = roomLineItemsIds.map((uuid) => roomLineItemsById[uuid])
+        const roomMeasurements = calculateRoomMeasurements(room.length, room.width, room.height)
+        return {
+          ...roomMeasurements,
+          ...room,
+          lineItems: roomLineItems
+        }
+      })
 
+      const imageIds = Object.keys(this.state.invoice.images || {})
+      const imagesById = this.state.invoice.images
+      allImages = imageIds.map((uuid) => imagesById[uuid].url)
+
+      customer = this.state.invoice.customer
+      claim = this.state.invoice.claim
+      invoiceUUID = this.state.invoice.id
+      totalCost = this.state.invoice.totalCost
     }
     return (
-      <div className="flex justify-center pv4">
+      <div className="flex flex-column justify-center pv4">
+        <PDFDownloadLink
+        document={
+          <PDFdocument
+            {...this.props.globals.settings}
+            allRooms={allRooms || []}
+            allImages={allImages}
+            {...customer}
+            {...claim}
+            invoiceUUID={invoiceUUID}
+            totalCost={totalCost}
+          />
+        }
+        fileName={createUUID()}
+        className="dinTitle f4 mid-gray center mv4"
+        key={createUUID()}
+        >
+          {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Download PDF')}
+        </PDFDownloadLink>
         <PDFViewer height="800px" className="center w-60" key={createUUID()}>
           <PDFdocument
             {...this.props.globals.settings}
+            allRooms={allRooms || []}
+            allImages={allImages}
+            {...customer}
+            {...claim}
+            invoiceUUID={invoiceUUID}
+            totalCost={totalCost}
           />
         </PDFViewer>
       </div>
