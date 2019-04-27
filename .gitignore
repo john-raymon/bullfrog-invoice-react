@@ -9,8 +9,8 @@
 /coverage
 
 # minified js and compiled css
-*.min.js
-*.css
+# *.min.js
+# *.css
 
 # misc
 .DS_Store

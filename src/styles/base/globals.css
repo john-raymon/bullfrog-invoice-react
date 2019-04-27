@@ -1,0 +1,67 @@
+.html {
+  font-size: 16px; }
+
+img {
+  max-width: none; }
+
+a {
+  text-decoration: none; }
+
+.ArrowIcon {
+  width: 0.68rem;
+  height: 1.18rem; }
+
+.InputField {
+  outline: none;
+  background: #fff;
+  width: 100%;
+  border: 0.12rem solid #E4E4E4;
+  border-radius: 0.25rem;
+  height: 56px; }
+
+.RoomImagesContainer {
+  height: 20rem;
+  width: auto; }
+
+.GenericButton {
+  outline: none;
+  background: #fff;
+  width: 100%;
+  border: 0.1rem solid #E4E4E4;
+  cursor: pointer; }
+
+/**
+* ----------------------------------------------
+* Demo styles
+* ----------------------------------------------
+**/
+.accordion {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 2px; }
+
+.accordion__item + .accordion__item {
+  border-top: 1px solid rgba(0, 0, 0, 0.1); }
+
+.accordion__button {
+  color: #444;
+  cursor: pointer; }
+
+.accordion__button:before {
+  display: flex;
+  transform: rotate(-45deg); }
+
+.accordion__button[aria-expanded='true']::before,
+.accordion__button[aria-selected='true']::before {
+  transform: rotate(45deg); }
+
+.accordion__panel {
+  animation: fadein 0.35s ease-in; }
+
+/* -------------------------------------------------- */
+/* ---------------- Animation part ------------------ */
+/* -------------------------------------------------- */
+@keyframes fadein {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
