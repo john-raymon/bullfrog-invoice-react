@@ -16,6 +16,7 @@ import '../styles/application.css';
 const mapStateToProps = (state) => ({
   isAuth: state.auth.isAuth
 })
+
 const ProtectedRoute = connect(mapStateToProps ,null)(({ component: Component, isAuth, ...rest}) => {
   return (
     <Route
