@@ -559,8 +559,8 @@ class CreateInvoice extends Component {
           }
           return response
         }).then(({response: res}) => {
-          const knackCustomersFullName = res.body["field_15_raw"]
-          const { city, state, zip, street, street2 } = res.body["field_59_raw"]
+          const knackCustomersFullName = res.body[`${process.env.REACT_APP_KNACK_CUSTOMERS_TABLE_NAME_FIELD}_raw`]
+          const { city, state, zip, street, street2 } = res.body[`${process.env.REACT_APP_KNACK_CUSTOMERS_TABLE_ADDRESS_FIELD}_raw`]
           // initialize draft invoice on backend, will find existing draft invoice,
           // or create new draft invoice
           agent.setToken(token)
@@ -619,7 +619,7 @@ class CreateInvoice extends Component {
       }).catch((err) => {
         if (err.status === 422 && err.response && err.response.body.error === "NOT_DRAFT") {
           // redirect to pdf detailed version since invoice can no longer be updated
-          alert("NOT A DRAFT")
+          this.props.history.push(`/invoices/pdf/${this.props.match.params.draftId}`)
         }
         console.log('There was an error when attempting find or create a draft invoice on CreateInvoice componentDidMount', { ...err })
       })
