@@ -6,6 +6,7 @@ import Header from './Header'
 import Dashboard from './Dashboard'
 import CreateInvoice from './CreateInvoice'
 import Settings from './Settings'
+import PDFInvoice from './PDFInvoice'
 import NotFound from './../views/NotFound'
 
 import { initApp } from '../state/actions/applicationActions'
@@ -35,6 +36,7 @@ class Main extends Component {
             <Route exact path={this.props.match.path} component={Dashboard} />
             <Route path={this.props.match.path + 'invoices/new/:draftId'} component={CreateInvoice} />
             <Route path={`${this.props.match.path}settings`} component={Settings} />
+            <Route path={`${this.props.match.path}invoices/pdf/:invoiceId`} exact component={PDFInvoice} />
             <Route path="/*" component={NotFound} />
           </Switch>
         </main>
