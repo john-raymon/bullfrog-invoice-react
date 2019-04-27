@@ -8,7 +8,7 @@ export default createSelector(
   },
   customers => {
     const records = _get(customers, "records", []).map((customer, index) => {
-      const { id:customerId, field_15:customerName } = customer
+      const { id:customerId, [process.env.REACT_APP_KNACK_CUSTOMERS_TABLE_NAME_FIELD]:customerName } = customer
       return {
           id: customerId,
           customerName
