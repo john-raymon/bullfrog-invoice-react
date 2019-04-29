@@ -101,7 +101,7 @@ class LineItems extends Component {
                             <div className="absolute right-0 h-100 items-center flex flex-row">
                               <button
                                 onClick={() => this.props.removeLineItem(roomUUID, lineItemUUID)}
-                                className="flex flex-row items-center dinLabel f8 mid-gray pointer bn bg-transparent dim ttu">
+                                className="flex flex-row items-center dinLabel f7 mid-gray pointer bn bg-transparent dim ttu">
                                 <div className="ArrowIcon mh1"><TrashIcon /></div>
                               </button>
                               <div className="ArrowIcon rotate-90 mh1">
@@ -1312,7 +1312,7 @@ class CreateInvoice extends Component {
                                   <div className="flex flex-row items-center justify-between">
                                     <button
                                       onClick={() => this.removeRoom(roomUUID)}
-                                      className="flex flex-row items-center self-center dinLabel f8 mid-gray pointer bn bg-transparent dim ttu">
+                                      className="flex flex-row items-center self-center dinLabel f7 mid-gray pointer bn bg-transparent dim ttu">
                                       delete
                                       <div className="ArrowIcon mh2"><TrashIcon /></div>
                                     </button>
@@ -1434,7 +1434,7 @@ class CreateInvoice extends Component {
                                       this.removePreviewImage(imageUUID)
                                       }
                                     }
-                                    className="flex flex-row items-center self-center dinLabel f8 mid-gray pointer bn bg-transparent dim ttu">
+                                    className="flex flex-row items-center self-center dinLabel f7 mid-gray pointer bn bg-transparent dim ttu">
                                     delete
                                     <div className="ArrowIcon mh2"><TrashIcon /></div>
                                   </button>
@@ -1453,7 +1453,7 @@ class CreateInvoice extends Component {
                                   <img src={uploadedImage.url} width="auto" height="270" />
                                   <button
                                     onClick={() => this.removeUploadedImage(imageId)}
-                                    className="flex flex-row items-center self-center dinLabel f8 mid-gray pointer bn bg-transparent dim ttu">
+                                    className="flex flex-row items-center self-center dinLabel f7 mid-gray pointer bn bg-transparent dim ttu">
                                     delete
                                     <div className="ArrowIcon mh2"><TrashIcon /></div>
                                   </button>

@@ -51,10 +51,10 @@ class Dashboard extends Component {
         return (
           <li key={index}>
             <div className="flex flex-row items-center bb b--light-gray pv1">
-              <p className="dinLabel near-black f8 f7-l ma0 w-25 tracked-mega">
+              <p className="dinLabel near-black f7 ma0 w-25 tracked-mega">
                 { invoice.date }
               </p>
-              <p className="dinLabel near-black f8 f7-l ma0 w-50 tracked-mega small-caps">
+              <p className="dinLabel near-black f7 ma0 w-50 tracked-mega small-caps">
                 { invoice.customer.name || 'No Name' }
               </p>
               <NavLink to={`/invoices/new/${createUUID()}?customer_id=${invoice.customer.id}`}>
