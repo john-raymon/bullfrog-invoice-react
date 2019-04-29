@@ -34,7 +34,7 @@ class LineItems extends Component {
     return (
       <div className="LineItems fixed top-0 left-0 w-100 z-1 vh-100 bg-black-70">
         <div className="fixed top-0 left-0 vh-85 w-100 bg-white overflow-scroll">
-          <div className="measure-70 flex flex-column center">
+          <div className="measure-70 flex flex-column center ph2">
             <p className="sticky top-0 dinTitle pa0 ma0 f3 mb3 ttc pt4 bg-white-70">
               line items
               <span className="mid-gray f5 ttc db pt1">
@@ -43,25 +43,25 @@ class LineItems extends Component {
             </p>
             <div className="relative h-auto w-100 min-height-vh-75">
               <div className="LineItemLabels flex flex-row items-centers ttu bb bw1 pb1 b--light-gray">
-                <p className="dinLabel f7 mid-gray w-25 pa0 ma0">
+                <p className="dinLabel f9 f7-l mid-gray w-25 pa0 ma0">
                   description
                 </p>
-                <p className="dinLabel f7 mid-gray w-25 pa0 ma0">
+                <p className="dinLabel f9 f7-l mid-gray w-25 pa0 ma0">
                   qty
                 </p>
-                <p className="dinLabel f7 mid-gray w-25 pa0 ma0">
+                <p className="dinLabel f9 f7-l mid-gray w-25 pa0 ma0">
                   uom
                 </p>
-                <p className="dinLabel f7 mid-gray w-25 pa0 ma0">
+                <p className="dinLabel f9 f7-l mid-gray w-25 pa0 ma0">
                   labor unit
                 </p>
-                <p className="dinLabel f7 mid-gray w-25 pa0 ma0">
+                <p className="dinLabel f9 f7-l mid-gray w-25 pa0 ma0">
                   material unit
                 </p>
-                <p className="dinLabel f7 mid-gray w-25 pa0 ma0">
+                <p className="dinLabel f9 f7-l mid-gray w-25 pa0 ma0">
                   total material
                 </p>
-                <p className="dinLabel f7 mid-gray w-25 pa0 ma0">
+                <p className="dinLabel f9 f7-l mid-gray w-25 pa0 ma0">
                   total labor
                 </p>
               </div>
@@ -111,7 +111,7 @@ class LineItems extends Component {
                           </AccordionItemButton>
                         </AccordionItemHeading>
                         <AccordionItemPanel>
-                          <div className="LineItem__container w-50 pv2">
+                          <div className="LineItem__container w-100 w-50-l pv2">
                             <input
                               className="InputField measure-1"
                               type="text"
@@ -229,8 +229,8 @@ class LineItems extends Component {
                 }
               </Accordion>
 
-              <div className="flex flex-row justify-between mt4">
-                <div className="w-50 br bw1 b--light-gray pr4">
+              <div className="flex flex-column flex-row-l justify-between mt4">
+                <div className="w-100 w-50-l br bw1 b--light-gray pr4">
                   <div className="NewLineItem__container">
                     { this.props.errors.newLineItem && ( <p className="dinLabel red f6 o-70"> {this.props.errors.newLineItem } </p> )}
                     <input
@@ -1063,10 +1063,10 @@ class CreateInvoice extends Component {
                     />
                 }
             />
-            <div className="flex flex-column measure-70 center pt5 mb5">
-              <div className="flex flex-row w100">
+           <div className="flex flex-column measure-70 center ph4 pt5 mb5">
+              <div className="flex flex-column flex-row-l w100">
 
-                <div className="flex flex-column w-50 pr5">
+                <div className="flex flex-column w-100 w-50-l pr5-l">
                   <p className="dinTitle pa0 ma0 f3 mb3">
                     Invoice Details
                   </p>
@@ -1205,7 +1205,7 @@ class CreateInvoice extends Component {
                   </label>
                 </div>
 
-                <div className="flex flex-column w-50 pl5">
+                <div className="flex flex-column w-100 w-50-l pl5-l">
                   <p className="dinTitle pa0 ma0 f3 mb3">
                     Rooms
                   </p>
@@ -1475,11 +1475,11 @@ class CreateInvoice extends Component {
                       const room = this.state.rooms[roomUUID]
                       if (room === undefined) return;
                       return (
-                        <li className="flex flex-row items-center justify-between" key={key}>
+                        <li className="flex flex-column flex-row-l items-center justify-between" key={key}>
                           <p className="dinLabel f6 ttu">
                             { room.name || roomUUID }
                           </p>
-                          <div className="flex flex-row flex-row-reverse">
+                          <div className="flex flex-column flex-column-reverse flex-row-l flex-row-reverse-l">
                             <p className="dinLabel f7 pa0 mh1">
                               <span className="ttu black-60">total: </span>
                               ${ room.roomTotals.totalCost }
@@ -1498,7 +1498,7 @@ class CreateInvoice extends Component {
                     })
                   }
                 </ul>
-                <div className="flex items-row items-center justify-between">
+                <div className="flex flex-column flex-row-l items-center justify-between">
                   <ul className="list pa0 tl">
                     <li>
                       <p className="dinLabel f6">
