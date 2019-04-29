@@ -130,7 +130,7 @@ class Settings extends Component {
 
         <div className="flex flex-row w100">
 
-          <div className="flex flex-column w-60 pr5">
+          <div className="flex flex-column w-100 ph4 w-60-l pr5">
 
             <p className="dinTitle pa0 ma0 f2 mb1">
               Settings
