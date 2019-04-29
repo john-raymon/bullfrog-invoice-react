@@ -9,10 +9,10 @@ import logo from '../images/small_logo.png';
 export default ({onLogout}) => {
   return (
   <header>
-    <div className="flex flex-row items-center justify-around pv3 ph1 bb b--light-gray">
+    <div className="flex flex-column flex-row-l items-center justify-around pv3 ph1 bb b--light-gray">
       <img src={logo} width="65px" height="auto" alt="" />
-      <nav className="flex flex-row self-stretch">
-        <ul className="flex flex-row items-end list pa0 ma0">
+      <nav className="flex self-stretch">
+        <ul className="flex flex-column center mv4 mv0-l flex-row-l items-center list pa0 ma0">
           <li>
             <NavLink to='/' exact className="pa0 ma0 mh4 dinLabel gray">Dashboard</NavLink>
           </li>
