@@ -51,10 +51,10 @@ class Dashboard extends Component {
         return (
           <li key={index}>
             <div className="flex flex-row items-center bb b--light-gray pv1">
-              <p className="dinLabel near-black f7 ma0 w-25 tracked-mega">
+              <p className="dinLabel near-black f8 f7-l ma0 w-25 tracked-mega">
                 { invoice.date }
               </p>
-              <p className="dinLabel near-black f7 ma0 w-50 tracked-mega small-caps">
+              <p className="dinLabel near-black f8 f7-l ma0 w-50 tracked-mega small-caps">
                 { invoice.customer.name || 'No Name' }
               </p>
               <NavLink to={`/invoices/new/${createUUID()}?customer_id=${invoice.customer.id}`}>
@@ -128,10 +128,10 @@ class Dashboard extends Component {
     }
 
     return(
-      <div className="flex flex-column w-100 measure-80 center pt5 ph3 mb4">
-        <div className="flex flex-row w-100 items-start">
-          <div className="w-50">
-            <p className="dinTitle tl mid-gray pa0 ma0">
+      <div className="flex flex-column w-100 measure-80 center pt5-l ph3 mb4">
+        <div className="flex flex-column flex-row-l w-100 items-start">
+          <div className="w-100 w-50-l">
+            <p className="dinTitle tl mid-gray pa0 mb4 ma0-l">
               Hello,
               <br/>
               get started now and
@@ -140,7 +140,7 @@ class Dashboard extends Component {
             </p>
           </div>
 
-          <div className="w-50 ba b--light-gray bw1 h5 br3 ph4 pt1 shadow-custom">
+          <div className="w-100 w-50-l ba b--light-gray bw1 h5 br3 ph4 pt1 shadow-custom">
             <p className="dinLabel tr mid-gray mb0">
               Invoices To Do ({props.invoicesToDo.length ||`0`})
             </p>
@@ -159,8 +159,8 @@ class Dashboard extends Component {
             </div>
           </div>
         </div>
-        <div className="flex flex-row w-100 items-start pt4">
-         <div className="w-50 pr4">
+        <div className="flex flex-column flex-row-l w-100 items-start pt4">
+          <div className="w-100 pr0 w-50-l pb4 pb0-l pr4-l">
             <div className="w-100 ba b--light-gray bw1 h6 br3 ph4 pt1 shadow-custom">
               <p className="dinLabel tl mid-gray mb0">
                 Previous Estimates ({props.allInvoices.length || '0'})
@@ -172,7 +172,7 @@ class Dashboard extends Component {
               </div>
             </div>
           </div>
-          <div className="w-50">
+          <div className="w-100 w-50-l">
             <div className="w-100 ba b--light-gray bw1 h6 br3 ph4 pt1 shadow-custom">
               <div className="flex flex-row items-center bt- bl-0 br-0 bb b--light-gray mt3 mb2 w-70 pv1">
                 <span>
