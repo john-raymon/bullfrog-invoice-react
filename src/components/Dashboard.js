@@ -136,7 +136,9 @@ class Dashboard extends Component {
               <br/>
               get started now and
               <br/>
-              <span className="blue lh-title b--blue bb bw2 pointer dim">create an invoice.</span>
+              <NavLink to={`/invoices/new/${createUUID()}`}>
+                <span className="blue lh-title b--blue bb bw2 pointer dim">create an invoice.</span>
+              </NavLink>
             </p>
           </div>
 
