@@ -58,9 +58,9 @@ class Login extends Component {
 
   render() {
     return(
-      <div className="w-100 vh-100 flex flex-row items-center measure-1024 center">
-        <div className="fl w-50 flex flex-column items-cen7ter">
-          <p className="dinTitle">
+      <div className="w-100 vh-100 flex flex-column ph2 justify-center flex-row-l items-center measure-1024 center">
+        <div className="fl w-90 w-50-l flex flex-column items-center">
+          <p className="self-start dinTitle">
             Welcome back,
             <br />
             Sign in.
@@ -69,8 +69,8 @@ class Login extends Component {
             </span>
           </p>
         </div>
-        <div className="fl w-50 flex flex-column items-center">
-          <div className="w-100 measure ph3">
+        <div className="fl w-90 w-50-l flex flex-column items-center">
+          <div className="self-start w-100 measure ph3">
             <input className="InputField" type="email" name="email" value={this.state.email} placeholder="Knack Email" onChange={this.handleChange}/>
             <input className="InputField" type="password" name="password" value={this.state.password} placeholder="Knack Password" onChange={this.handleChange}/>
             <button
