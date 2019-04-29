@@ -94,7 +94,7 @@ const PDFdocument = ({
 
         <View style={[styles.headerContainer, { justifyContent: "space-between" }]} fixed>
           <View style={{flexDirection: "row", alignItems: "center"}}>
-            <View style={{ width: "10%"}}>
+            <View style={{ width: 35}}>
               <Image
                 src={logo}
                 style={{width: "100%"}}
@@ -436,7 +436,7 @@ class PDFInvoice extends Component {
         >
           {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Download PDF')}
         </PDFDownloadLink>
-        <PDFViewer height="800px" className="center w-60" key={createUUID()}>
+        <PDFViewer height="800px" className="center w-90 w-60-l" key={createUUID()}>
           <PDFdocument
             {...this.props.globals.settings}
             allRooms={allRooms || []}
