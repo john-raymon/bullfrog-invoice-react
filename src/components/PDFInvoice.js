@@ -391,6 +391,7 @@ class PDFInvoice extends Component {
     let claim = {}
     let invoiceUUID = ''
     let totalCost = ''
+    let pdfFileName = `${createUUID()}.pdf`
     if (this.state.invoice) {
       const roomIds = Object.keys(this.state.invoice.rooms || {})
       const roomsById = this.state.invoice.rooms
@@ -415,9 +416,11 @@ class PDFInvoice extends Component {
       claim = this.state.invoice.claim
       invoiceUUID = this.state.invoice.id
       totalCost = this.state.invoice.totalCost
+
+      pdfFileName = `${customer.fullName.replace(/\s+/g, '')}-${invoiceUUID}.pdf`
     }
     return (
-      <div className="flex flex-column justify-center pv4">
+      <div className="flex flex-column justify-center pv4 ph2 w-100">
         <PDFDownloadLink
         document={
           <PDFdocument
@@ -430,7 +433,7 @@ class PDFInvoice extends Component {
             totalCost={totalCost}
           />
         }
-        fileName={createUUID()}
+        fileName={pdfFileName}
         className="dinTitle f4 mid-gray center mv4"
         key={createUUID()}
         >
