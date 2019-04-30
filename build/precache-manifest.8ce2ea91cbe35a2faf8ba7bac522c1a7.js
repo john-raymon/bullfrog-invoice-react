@@ -1,7 +1,7 @@
 self.__precacheManifest = [
   {
-    "revision": "af09051e5eaded507a73a0b6064fe5df",
-    "url": "/static/media/din_alternate_bold-webfont.af09051e.eot"
+    "revision": "dca24aeb21335902a97fea7c0a03d270",
+    "url": "/static/media/din_alternate_bold-webfont.dca24aeb.woff2"
   },
   {
     "revision": "551f398844d637a286af",
@@ -24,8 +24,8 @@ self.__precacheManifest = [
     "url": "/static/js/main.551f3988.chunk.js"
   },
   {
-    "revision": "dca24aeb21335902a97fea7c0a03d270",
-    "url": "/static/media/din_alternate_bold-webfont.dca24aeb.woff2"
+    "revision": "af09051e5eaded507a73a0b6064fe5df",
+    "url": "/static/media/din_alternate_bold-webfont.af09051e.eot"
   },
   {
     "revision": "3e2990aa4d0545bfdcbdaf65482eba62",
