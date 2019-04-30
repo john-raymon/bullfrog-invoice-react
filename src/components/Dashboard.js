@@ -17,6 +17,31 @@ import searchIcon from '../images/search-icon.png';
 // Dashboard Actions
 import { fetchKnackCustomers, fetchInvoicesToDo, fetchAllInvoices } from '../state/actions/dashboardActions'
 
+// Material-UI
+import { withStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+
+const styles = theme => ({
+  root: {
+    width: '100%',
+    marginTop: theme.spacing.unit * 0,
+    overflowX: 'auto',
+    overflowY: 'auto',
+    height: "12rem"
+  },
+  header: {
+    position: "sticky",
+    top: 0
+  },
+  table: {
+    minWidth: "100%"
+  },
+});
 
 class Dashboard extends Component {
   constructor(props) {
@@ -40,6 +65,7 @@ class Dashboard extends Component {
 
   render() {
     const { props } = this
+    const { classes } = props
     const invoicesToDo = () => {
       if (props.isLoading.invoicesToDo) {
         return (<p>Loading ... </p>)
@@ -47,25 +73,36 @@ class Dashboard extends Component {
       if (props.isError.invoicesToDo) {
         return (<p>There seems to be an error</p>)
       }
-      return props.invoicesToDo.map((invoice, index) => {
-        return (
-          <li key={index}>
-            <div className="flex flex-row items-center bb b--light-gray pv1">
-              <p className="dinLabel near-black f7 ma0 w-25 tracked-mega">
-                { invoice.date }
-              </p>
-              <p className="dinLabel near-black f7 ma0 w-50 tracked-mega small-caps">
-                { invoice.customer.name || 'No Name' }
-              </p>
-              <NavLink to={`/invoices/new/${createUUID()}?customer_id=${invoice.customer.id}`}>
-                <ListButton>
-                  create invoice
-                </ListButton>
-              </NavLink>
-            </div>
-          </li>
-        )
-      })
+      return (
+        <Paper className={classes.root}>
+          <Table className={classes.table}>
+            <TableHead>
+              <TableRow>
+                <TableCell align="left">Date</TableCell>
+                <TableCell align="left">Customer</TableCell>
+                <TableCell align="left">Action</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {
+                props.invoicesToDo.map((invoice, key) => (
+                  <TableRow key={key}>
+                    <TableCell align="left">{invoice.date}</TableCell>
+                    <TableCell align="left">{ invoice.customer.name || 'No Name' }</TableCell>
+                    <TableCell align="left">
+                      <NavLink to={`/invoices/new/${createUUID()}?customer_id=${invoice.customer.id}`}>
+                        <ListButton>
+                          create invoice
+                        </ListButton>
+                      </NavLink>
+                    </TableCell>
+                  </TableRow>
+                ))
+              }
+            </TableBody>
+          </Table>
+        </Paper>
+      )
     }
     const customerSearchResults = () => {
       if (props.isLoading.customers) {
@@ -109,22 +146,34 @@ class Dashboard extends Component {
           <p>There are no invoices.</p>
         )
       }
-      return props.allInvoices.map((invoice, index) => {
-        return (
-          <li key={index}>
-            <div className="flex flex-row justify-between items-center bb b--light-gray pv1">
-              <p className="dinLabel near-black f7 ma0 w-50 tracked-mega small-caps">
-                {invoice.invoiceName}
-              </p>
-              <NavLink to={`/invoices/${(invoice.isDraft ? 'new' : 'pdf')}/${invoice.invoiceUUID}`}>
-                <ListButton>
-                  { invoice.isDraft ? 'cont. draft' : 'view pdf' }
-                </ListButton>
-              </NavLink>
-            </div>
-          </li>
-        )
-      })
+      return (
+        <Paper className={classes.root} style={{ height: "20rem" }}>
+          <Table className={classes.table}>
+            <TableHead>
+              <TableRow>
+                <TableCell align="left">Invoice Name</TableCell>
+                <TableCell align="left">Action</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {
+                props.allInvoices.map((invoice, key) => (
+                  <TableRow key={key}>
+                    <TableCell align="left">{invoice.invoiceName}</TableCell>
+                    <TableCell align="left">
+                      <NavLink to={`/invoices/${(invoice.isDraft ? 'new' : 'pdf')}/${invoice.invoiceUUID}`}>
+                        <ListButton>
+                          { invoice.isDraft ? 'cont. draft' : 'view pdf' }
+                        </ListButton>
+                      </NavLink>
+                    </TableCell>
+                  </TableRow>
+                ))
+              }
+            </TableBody>
+          </Table>
+        </Paper>
+      )
     }
 
     return(
@@ -142,35 +191,23 @@ class Dashboard extends Component {
             </p>
           </div>
 
-          <div className="w-100 w-50-l ba b--light-gray bw1 h5 br3 ph4 pt1 shadow-custom">
-            <p className="dinLabel tr mid-gray mb0">
+          <div className="w-100 w-50-l ba b--light-gray bw1 h-auto br3 pt1 shadow-custom overflow-hidden">
+            <p className="dinLabel tr mid-gray mb0 ph3">
               Invoices To Do ({props.invoicesToDo.length ||`0`})
             </p>
-            <div className="w-100">
-              <div className="flex flex-row items-center bb b--light-gray bw1 pb1">
-                <p className="dinLabel mid-gray f7 ma0 w-25 tracked-mega ttu">
-                  date
-                </p>
-                <p className="dinLabel mid-gray f7 ma0 w-50 tracked-mega ttu">
-                  customer
-                </p>
-              </div>
-              <ul className="list ma0 pa0 overflow-scroll h4">
-                { invoicesToDo() }
-              </ul>
+            <div className="w-100 flex-grow-1 mt2">
+              { invoicesToDo() }
             </div>
           </div>
         </div>
         <div className="flex flex-column flex-row-l w-100 items-start pt4">
           <div className="w-100 pr0 w-50-l pb4 pb0-l pr4-l">
-            <div className="w-100 ba b--light-gray bw1 h6 br3 ph4 pt1 shadow-custom">
-              <p className="dinLabel tl mid-gray mb0">
-                Previous Estimates ({props.allInvoices.length || '0'})
+            <div className="w-100 ba b--light-gray bw1 br3 pt1 shadow-custom overflow-hidden">
+              <p className="dinLabel tl mid-gray mb0 ph4">
+                Previous Invoices ({props.allInvoices.length || '0'})
               </p>
-              <div className="w-100 mt2">
-                <ul className="list ma0 pa0 overflow-scroll h5">
-                  { allInvoices() }
-                </ul>
+              <div className="w-100 flex-grow-1 mt2">
+                { allInvoices() }
               </div>
             </div>
           </div>
@@ -221,4 +258,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, { fetchKnackCustomers, fetchInvoicesToDo, fetchAllInvoices })(Dashboard)
+export default connect(mapStateToProps, { fetchKnackCustomers, fetchInvoicesToDo, fetchAllInvoices })(withStyles(styles)(Dashboard))
