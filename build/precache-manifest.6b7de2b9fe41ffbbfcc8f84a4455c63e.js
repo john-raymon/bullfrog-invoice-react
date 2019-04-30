@@ -28,12 +28,12 @@ self.__precacheManifest = [
     "url": "/static/media/din_alternate_bold-webfont.af09051e.eot"
   },
   {
-    "revision": "3e2990aa4d0545bfdcbdaf65482eba62",
-    "url": "/static/media/din_alternate_bold-webfont.3e2990aa.ttf"
-  },
-  {
     "revision": "f35490c7130a68dc13888ad107de9bd8",
     "url": "/static/media/din_alternate_bold-webfont.f35490c7.woff"
+  },
+  {
+    "revision": "3e2990aa4d0545bfdcbdaf65482eba62",
+    "url": "/static/media/din_alternate_bold-webfont.3e2990aa.ttf"
   },
   {
     "revision": "1e8aa4f1affd474cfe4a375e88e22ede",
