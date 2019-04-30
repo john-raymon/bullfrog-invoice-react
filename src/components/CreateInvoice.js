@@ -222,9 +222,9 @@ class LineItems extends Component {
     const { classes } = this.props
     return (
       <div className="LineItems fixed top-0 left-0 w-100 z-1 vh-100 bg-black-70">
-        <div className="fixed top-0 left-0 vh-85 w-100 bg-white overflow-scroll">
-          <div className="measure-70 flex flex-column center ph2">
-            <p className="sticky top-0 dinTitle pa0 ma0 f3 mb3 ttc pt4 bg-white-70">
+        <div className="fixed top-0 left-0 vh-75 w-100 bg-white overflow-scroll">
+          <div className="measure-70 flex flex-column center ph2 z-3">
+            <p className="sticky top-0 dinTitle pa0 ma0 f3 mb3 ttc pt4 bg-white-70 z-4">
               line items
               <span className="mid-gray f5 ttc db pt1">
                 {this.props.room.name}
@@ -276,7 +276,7 @@ class LineItems extends Component {
 
               <div className="flex flex-column flex-row-l justify-between mt4">
                 <div className="w-100 w-50-l br bw1 b--light-gray pr4">
-                  <div className="NewLineItem__container ph1">
+                  <div className="NewLineItem__container ph1 pb2">
                     { this.props.errors.newLineItem && ( <p className="dinLabel red f6 o-70"> {this.props.errors.newLineItem } </p> )}
                     <input
                       className="InputField measure-1 ml3"
@@ -309,7 +309,7 @@ class LineItems extends Component {
                         </label>
                       </div>
 
-                      <div className="w-auto w-20-l flex flex-column items-center mr2">
+                      <div className="w-auto w-20-l flex flex-column items-center mr2 ml3">
                         <div className="relative InputField flex flex-row justify-center pointer ph3">
                           <p className="dinLabel ttu mid-gray f7 pa0 ma0 self-center mr3">
                             { this.props.newLineItemUOM || 'UOM'}
