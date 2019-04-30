@@ -18,6 +18,194 @@ import {
   AccordionItemState
 } from 'react-accessible-accordion'
 
+// Material-UI
+import { withStyles } from "@material-ui/core/styles";
+import Collapse from "@material-ui/core/Collapse";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Paper from "@material-ui/core/Paper";
+import Button from "@material-ui/core/Button";
+
+const styles = theme => ({
+  root: {
+    width: '100%',
+    marginTop: theme.spacing.unit * 1,
+    overflowX: 'auto',
+    paddingBottom: theme.spacing.unit * 2
+  },
+  header: {
+    position: "sticky",
+    top: 0
+  },
+  table: {
+    minWidth: "100%"
+  },
+});
+
+class ExpandingRow extends Component {
+  state = { open: false };
+
+  render() {
+    const { lineItem, lineItemUUID, roomUUID } = this.props;
+    const { open } = this.state;
+
+    return (
+      <Fragment>
+        <TableRow>
+          <TableCell align="right">
+            <div
+              className="h-100 items-center flex flex-row pointer dim"
+              onClick={() => this.setState(({ open }) => ({ open: !open }))}
+              >
+              <p className="dinTitle f7 mid-gray tc">Edit</p>
+              <div className="ArrowIcon rotate-90 mh2">
+                <Arrow />
+              </div>
+            </div>
+          </TableCell>
+          <TableCell align="right">
+            <div
+              className="h-100 items-center flex flex-row pointer dim"
+              onClick={() => this.props.removeLineItem(roomUUID, lineItemUUID)}
+              >
+              <p className="dinTitle f7 mid-gray tc">Delete</p>
+              <div className="ArrowIcon mh1"><TrashIcon /></div>
+            </div>
+          </TableCell>
+          <TableCell align="right">{lineItem.description}</TableCell>
+          <TableCell align="right">{lineItem.quantity}</TableCell>
+          <TableCell align="right">{lineItem.uom}</TableCell>
+          <TableCell align="right">{lineItem.laborCost}</TableCell>
+          <TableCell align="right">{lineItem.materialCost}</TableCell>
+          <TableCell align="right">{lineItem.totalMaterial}</TableCell>
+          <TableCell align="right">{lineItem.totalLabor}</TableCell>
+        </TableRow>
+        <TableRow className="relative" style={{ height: "auto" }}>
+          <td colSpan="12">
+            <Collapse in={open} component="div" style={{display: "block", width: "50%"}}>
+              <div className="LineItem__container w-100 pv2 ph2">
+                  <input
+                    className="InputField measure-1"
+                    type="text"
+                    name="description"
+                    placeholder="Enter the line-item's description"
+                    value={lineItem.description}
+                    onChange={(e) => this.props.handleLineItemChange(e, roomUUID, lineItemUUID)}
+                  />
+                  <label htmlFor="newLineItemDescription">
+                    <p className="dinLabel pa0 ma0 mb2 f7 ttc">
+                      description
+                    </p>
+                  </label>
+
+                  <div className="flex flex-row items-center flex-wrap justify-start">
+                    <div className="w-20 flex flex-column items-center mr2">
+                      <input
+                        className="InputField tc"
+                        type="number"
+                        name="quantity"
+                        placeholder="1"
+                        onBlur={(e) => this.props.handleCostInputBlur(e, roomUUID, lineItemUUID)}
+                        value={lineItem.quantity}
+                        onChange={(e) => this.props.handleLineItemChange(e, roomUUID, lineItemUUID)}
+                      />
+                      <label htmlFor="newLineItemQuantity">
+                        <p className="dinLabel pa0 ma0 mb2 f7 ttc">
+                          qty
+                        </p>
+                      </label>
+                    </div>
+
+                    <div className="w-20 flex flex-column items-center mr2">
+                      <div className="relative InputField flex flex-row justify-center pointer">
+                        <p className="dinLabel ttu mid-gray f7 pa0 ma0 self-center mr3">
+                          { lineItem.uom || 'UOM'}
+                        </p>
+                        <div className="ArrowIcon self-center rotate-90"><Arrow /></div>
+                        <select onChange={(e) => this.props.handleLineItemChange(e, roomUUID, lineItemUUID)} name="uom" className="absolute z-2 top-0 left-0 w-100 h-100 o-0 pointer ttc">
+                          <option value="CY">cubic yard</option>
+                          <option value="DA">day</option>
+                          <option value="EA">each</option>
+                          <option value="HR">hour</option>
+                          <option value="JC">job cost</option>
+                          <option value="LF">linear foot</option>
+                          <option value="LS">lump sum</option>
+                          <option value="MC">mininum change</option>
+                          <option value="MO">month</option>
+                          <option value="RM">room</option>
+                          <option value="SF">square foot</option>
+                          <option value="SQ">square</option>
+                          <option value="SY">square yard</option>
+                          <option value="TN">ton</option>
+                          <option value="WK">week</option>
+                        </select>
+                      </div>
+                      <label htmlFor="newLineItemUOM">
+                        <p className="dinLabel pa0 ma0 mb2 f7 ttu">
+                          uom
+                        </p>
+                      </label>
+                    </div>
+
+                    <div className="w-20 flex flex-column items-center mr2">
+                      <div className="flex flex-row items-center">
+                        <span className="dinLabel f7 mh1">
+                          $
+                        </span>
+                        <input
+                          type="number"
+                          step="0.01"
+                          min="0.00"
+                          onBlur={(e) => this.props.handleCostInputBlur(e, roomUUID, lineItemUUID)}
+                          className="InputField tc"
+                          name="laborCost"
+                          value={lineItem.laborCost}
+                          onChange={(e) => this.props.handleLineItemChange(e, roomUUID, lineItemUUID)}
+                        />
+                      </div>
+                      <label htmlFor="newLineItemLaborCost">
+                        <p className="dinLabel pa0 ma0 mb2 f7 ttc">
+                          labor
+                        </p>
+                      </label>
+                    </div>
+
+                    <div className="w-20 flex flex-column items-center mr2">
+                      <div className="flex flex-row items-center">
+                        <span className="dinLabel f7 mh1">
+                          $
+                        </span>
+                        <input
+                          type="number"
+                          step="0.01"
+                          min="0.00"
+                          onBlur={(e) => this.props.handleCostInputBlur(e, roomUUID, lineItemUUID)}
+                          className="InputField tc"
+                          name="materialCost"
+                          value={lineItem.materialCost}
+                          onChange={(e) => this.props.handleLineItemChange(e, roomUUID, lineItemUUID)}
+                        />
+                      </div>
+                      <label htmlFor="newLineItemMaterialCost">
+                        <p className="dinLabel pa0 ma0 mb2 f7 ttc">
+                          material
+                        </p>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+            </Collapse>
+          </td>
+        </TableRow>
+      </Fragment>
+    );
+  }
+}
+
+
 class LineItems extends Component {
   constructor(props) {
     super(props)
@@ -31,6 +219,7 @@ class LineItems extends Component {
 
   render() {
     const roomUUID = this.props.match.params.roomId
+    const { classes } = this.props
     return (
       <div className="LineItems fixed top-0 left-0 w-100 z-1 vh-100 bg-black-70">
         <div className="fixed top-0 left-0 vh-85 w-100 bg-white overflow-scroll">
@@ -42,199 +231,55 @@ class LineItems extends Component {
               </span>
             </p>
             <div className="relative h-auto w-100 min-height-vh-75">
-              <div className="LineItemLabels flex flex-row items-centers ttu bb bw1 pb1 b--light-gray">
-                <p className="dinLabel f9 f7-l mid-gray w-25 pa0 ma0">
-                  description
-                </p>
-                <p className="dinLabel f9 f7-l mid-gray w-25 pa0 ma0">
-                  qty
-                </p>
-                <p className="dinLabel f9 f7-l mid-gray w-25 pa0 ma0">
-                  uom
-                </p>
-                <p className="dinLabel f9 f7-l mid-gray w-25 pa0 ma0">
-                  labor unit
-                </p>
-                <p className="dinLabel f9 f7-l mid-gray w-25 pa0 ma0">
-                  material unit
-                </p>
-                <p className="dinLabel f9 f7-l mid-gray w-25 pa0 ma0">
-                  total material
-                </p>
-                <p className="dinLabel f9 f7-l mid-gray w-25 pa0 ma0">
-                  total labor
-                </p>
-              </div>
-
-              <Accordion>
-                { Object.keys(this.props.room).length &&
-                  Object.keys(this.props.room.lineItems).map((lineItemUUID, key) => {
-                    const lineItem = this.props.room.lineItems[lineItemUUID]
-                    if (lineItem === undefined) return;
-                    return (
-                      <AccordionItem
-                        key={key}
-                      >
-                        <AccordionItemHeading className="w-100">
-                          <AccordionItemButton className="relative accordion__button flex flex-row items-center ttc pv3">
-                            <p className="dinLabel f7 mid-gray w-25 pa0 ma0 overflow-scroll pr2 pt2 pb3">
-                              { lineItem.description }
-                            </p>
-                            <p className="dinLabel f7 mid-gray w-25 pa0 ma0 overflow-scroll pr2 pt2 pb3">
-                              { lineItem.quantity }
-                            </p>
-                            <p className="dinLabel f7 mid-gray w-25 pa0 ma0 overflow-scroll pr2 pt2 pb3">
-                              { lineItem.uom }
-                            </p>
-                            <p className="dinLabel f7 mid-gray w-25 pa0 ma0 overflow-scroll pr2 pt2 pb3">
-                              { lineItem.laborCost }
-                            </p>
-                            <p className="dinLabel f7 mid-gray w-25 pa0 ma0 overflow-scroll pr2 pt2 pb3">
-                              { lineItem.materialCost }
-                            </p>
-                            <p className="dinLabel f7 mid-gray w-25 pa0 ma0 overflow-scroll pr2 pt2 pb3">
-                              { lineItem.totalMaterial }
-                            </p>
-                            <p className="dinLabel f7 mid-gray w-25 pa0 ma0 overflow-scroll pr2 pt2 pb3">
-                              { lineItem.totalLabor }
-                            </p>
-                            <div className="absolute right-0 h-100 items-center flex flex-row">
-                              <button
-                                onClick={() => this.props.removeLineItem(roomUUID, lineItemUUID)}
-                                className="flex flex-row items-center dinLabel f7 mid-gray pointer bn bg-transparent dim ttu">
-                                <div className="ArrowIcon mh1"><TrashIcon /></div>
-                              </button>
-                              <div className="ArrowIcon rotate-90 mh1">
-                                <Arrow />
-                              </div>
-                            </div>
-                          </AccordionItemButton>
-                        </AccordionItemHeading>
-                        <AccordionItemPanel>
-                          <div className="LineItem__container w-100 w-50-l pv2">
-                            <input
-                              className="InputField measure-1"
-                              type="text"
-                              name="description"
-                              placeholder="Enter the line-item's description"
-                              value={this.props.room.lineItems[lineItemUUID].description}
-                              onChange={(e) => this.props.handleLineItemChange(e, roomUUID, lineItemUUID)}
+              <div className="w-100">
+                <Paper className={classes.root}>
+                  <Table className={classes.table}>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell align="right">
+                          Edit
+                        </TableCell>
+                        <TableCell align="right">Delete</TableCell>
+                        <TableCell align="right">Description</TableCell>
+                        <TableCell align="right">Quantity</TableCell>
+                        <TableCell align="right">UOM</TableCell>
+                        <TableCell align="right">Labor Cost</TableCell>
+                        <TableCell align="right">Material Cost</TableCell>
+                        <TableCell align="right">Total Material</TableCell>
+                        <TableCell align="right">Total Labor</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {
+                        Object.keys(this.props.room).length &&
+                        Object.keys(this.props.room.lineItems)
+                        .map((lineItemUUID, key) => {
+                          const lineItem = this.props.room.lineItems[lineItemUUID]
+                          if (lineItem === undefined) return;
+                          return (
+                            <ExpandingRow
+                              lineItem={lineItem}
+                              key={key}
+                              roomUUID={roomUUID}
+                              lineItemUUID={lineItemUUID}
+                              handleLineItemChange={this.props.handleLineItemChange}
+                              handleCostInputBlur={this.props.handleCostInputBlur}
+                              removeLineItem={this.props.removeLineItem}
                             />
-                            <label htmlFor="newLineItemDescription">
-                              <p className="dinLabel pa0 ma0 mb2 f7 ttc">
-                                description
-                              </p>
-                            </label>
-
-                            <div className="flex flex-row items-center flex-wrap justify-start">
-                              <div className="w-20 flex flex-column items-center mr2">
-                                <input
-                                  className="InputField tc"
-                                  type="number"
-                                  name="quantity"
-                                  placeholder="1"
-                                  onBlur={(e) => this.props.handleCostInputBlur(e, roomUUID, lineItemUUID)}
-                                  value={this.props.room.lineItems[lineItemUUID].quantity}
-                                  onChange={(e) => this.props.handleLineItemChange(e, roomUUID, lineItemUUID)}
-                                />
-                                <label htmlFor="newLineItemQuantity">
-                                  <p className="dinLabel pa0 ma0 mb2 f7 ttc">
-                                    qty
-                                  </p>
-                                </label>
-                              </div>
-
-                              <div className="w-20 flex flex-column items-center mr2">
-                                <div className="relative InputField flex flex-row justify-center pointer">
-                                  <p className="dinLabel ttu mid-gray f7 pa0 ma0 self-center mr3">
-                                    { this.props.room.lineItems[lineItemUUID].uom || 'UOM'}
-                                  </p>
-                                  <div className="ArrowIcon self-center rotate-90"><Arrow /></div>
-                                  <select onChange={(e) => this.props.handleLineItemChange(e, roomUUID, lineItemUUID)} name="uom" className="absolute z-2 top-0 left-0 w-100 h-100 o-0 pointer ttc">
-                                    <option value="CY">cubic yard</option>
-                                    <option value="DA">day</option>
-                                    <option value="EA">each</option>
-                                    <option value="HR">hour</option>
-                                    <option value="JC">job cost</option>
-                                    <option value="LF">linear foot</option>
-                                    <option value="LS">lump sum</option>
-                                    <option value="MC">mininum change</option>
-                                    <option value="MO">month</option>
-                                    <option value="RM">room</option>
-                                    <option value="SF">square foot</option>
-                                    <option value="SQ">square</option>
-                                    <option value="SY">square yard</option>
-                                    <option value="TN">ton</option>
-                                    <option value="WK">week</option>
-                                  </select>
-                                </div>
-                                <label htmlFor="newLineItemUOM">
-                                  <p className="dinLabel pa0 ma0 mb2 f7 ttu">
-                                    uom
-                                  </p>
-                                </label>
-                              </div>
-
-                              <div className="w-20 flex flex-column items-center mr2">
-                                <div className="flex flex-row items-center">
-                                  <span className="dinLabel f7 mh1">
-                                    $
-                                  </span>
-                                  <input
-                                    type="number"
-                                    step="0.01"
-                                    min="0.00"
-                                    onBlur={(e) => this.props.handleCostInputBlur(e, roomUUID, lineItemUUID)}
-                                    className="InputField tc"
-                                    name="laborCost"
-                                    value={this.props.room.lineItems[lineItemUUID].laborCost}
-                                    onChange={(e) => this.props.handleLineItemChange(e, roomUUID, lineItemUUID)}
-                                  />
-                                </div>
-                                <label htmlFor="newLineItemLaborCost">
-                                  <p className="dinLabel pa0 ma0 mb2 f7 ttc">
-                                    labor
-                                  </p>
-                                </label>
-                              </div>
-
-                              <div className="w-20 flex flex-column items-center mr2">
-                                <div className="flex flex-row items-center">
-                                  <span className="dinLabel f7 mh1">
-                                    $
-                                  </span>
-                                  <input
-                                    type="number"
-                                    step="0.01"
-                                    min="0.00"
-                                    onBlur={(e) => this.props.handleCostInputBlur(e, roomUUID, lineItemUUID)}
-                                    className="InputField tc"
-                                    name="materialCost"
-                                    value={this.props.room.lineItems[lineItemUUID].materialCost}
-                                    onChange={(e) => this.props.handleLineItemChange(e, roomUUID, lineItemUUID)}
-                                  />
-                                </div>
-                                <label htmlFor="newLineItemMaterialCost">
-                                  <p className="dinLabel pa0 ma0 mb2 f7 ttc">
-                                    material
-                                  </p>
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </AccordionItemPanel>
-                      </AccordionItem>
-                    )
-                  })
-                }
-              </Accordion>
+                          )
+                        })
+                      }
+                    </TableBody>
+                  </Table>
+                </Paper>
+              </div>
 
               <div className="flex flex-column flex-row-l justify-between mt4">
                 <div className="w-100 w-50-l br bw1 b--light-gray pr4">
-                  <div className="NewLineItem__container">
+                  <div className="NewLineItem__container ph1">
                     { this.props.errors.newLineItem && ( <p className="dinLabel red f6 o-70"> {this.props.errors.newLineItem } </p> )}
                     <input
-                      className="InputField measure-1"
+                      className="InputField measure-1 ml3"
                       type="text"
                       name="newLineItemDescription"
                       placeholder="Enter the line-item's description"
@@ -242,13 +287,13 @@ class LineItems extends Component {
                       onChange={this.props.handleChange}
                     />
                     <label htmlFor="newLineItemDescription">
-                      <p className="dinLabel pa0 ma0 mb2 f7 ttc">
+                      <p className="dinLabel pa0 ma0 mb2 f7 ttc tc">
                         description
                       </p>
                     </label>
 
                     <div className="flex flex-row items-center flex-wrap justify-start">
-                      <div className="w-20 flex flex-column items-center mr2">
+                      <div className="w-auto w-20-l flex flex-column items-center mr2 ml3">
                         <input
                           className="InputField tc"
                           type="number"
@@ -264,8 +309,8 @@ class LineItems extends Component {
                         </label>
                       </div>
 
-                      <div className="w-20 flex flex-column items-center mr2">
-                        <div className="relative InputField flex flex-row justify-center pointer">
+                      <div className="w-auto w-20-l flex flex-column items-center mr2">
+                        <div className="relative InputField flex flex-row justify-center pointer ph3">
                           <p className="dinLabel ttu mid-gray f7 pa0 ma0 self-center mr3">
                             { this.props.newLineItemUOM || 'UOM'}
                           </p>
@@ -295,7 +340,7 @@ class LineItems extends Component {
                         </label>
                       </div>
 
-                      <div className="w-20 flex flex-column items-center mr2">
+                      <div className="w-auto w-20-l flex flex-column items-center mr2">
                         <div className="flex flex-row items-center">
                           <span className="dinLabel f7 mh1">
                             $
@@ -318,7 +363,7 @@ class LineItems extends Component {
                         </label>
                       </div>
 
-                      <div className="w-20 flex flex-column items-center mr2">
+                      <div className="w-auto w-20-l flex flex-column items-center mr2">
                         <div className="flex flex-row items-center">
                           <span className="dinLabel f7 mh1">
                             $
@@ -359,8 +404,8 @@ class LineItems extends Component {
                 </div>
               </div>
             </div>
-            <div className="sticky bottom-0 dib self-center">
-              <p className="dinLabel mid-gray f6 ttu pointer"
+            <div className="sticky bottom-0 dib self-center w-100 bg-white">
+              <p className="dinLabel mid-gray f6 ttu pointer tc"
                 onClick={() => this.props.history.goBack()}>
                 close
               </p>
@@ -625,13 +670,6 @@ class CreateInvoice extends Component {
       })
     }
 
-    //
-    // this.invoiceContainerRef.current.addEventListener('keydown', () => {
-    //   // If a timer is already started, clear it
-    //   if (this.draftTimeoutId) clearTimeout(this.draftTimeoutId);
-    //   // Set timer that will autosave this invoice on the backend when it fires
-    //   this.draftTimeoutId = setTimeout(this.autoSave, 1250)
-    // })
   }
 
   componentWillUnmount() {
@@ -1228,7 +1266,7 @@ class CreateInvoice extends Component {
 
                     <div className="flex flex-row items-center justify-between">
 
-                      <div className="flex flex-row items-center justify-between w-50">
+                      <div className="flex flex-row items-center justify-between w-50 flex-grow-1">
 
                         <div className="w-30 flex flex-column items-center">
                           <input
@@ -1338,7 +1376,7 @@ class CreateInvoice extends Component {
 
                                   <div className="flex flex-row items-center justify-between">
 
-                                    <div className="flex flex-row items-center justify-between w-50">
+                                    <div className="flex flex-row items-center justify-between w-50 flex-grow-1">
 
                                       <div className="w-30 flex flex-column items-center">
                                         <input
@@ -1415,7 +1453,7 @@ class CreateInvoice extends Component {
                         className="absolute w-100 h-100 o-0 pointer"
                         onChange={this.handleImageChange}
                       />
-                      <p className="dinLabel pa0 ma0 f7 gray ttu dib">
+                    <p className="dinLabel pa0 ma0 f7 gray ttu dib tc">
                         Upload an image
                       </p>
                     </div>
@@ -1539,4 +1577,4 @@ const mapStateToProps = state => ({
   token: state.auth.token
 })
 
-export default connect(mapStateToProps)(CreateInvoice)
+export default connect(mapStateToProps)(withStyles(styles)(CreateInvoice))
