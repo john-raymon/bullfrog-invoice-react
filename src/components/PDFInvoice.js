@@ -86,10 +86,10 @@ const PDFdocument = ({
   invoiceUUID,
   totalCost
   }) => {
+  
   return (
     <Document
-      title={`Invoice for ${fullName} - $${totalCost}`}
-    >
+      title={`Invoice for ${fullName} - $${totalCost}`}>
       <Page size="LETTER" style={styles.page}>
 
         <View style={[styles.headerContainer, { justifyContent: "space-between" }]} fixed>
@@ -431,6 +431,7 @@ class PDFInvoice extends Component {
             {...claim}
             invoiceUUID={invoiceUUID}
             totalCost={totalCost}
+            pdfVersion="VERSION_1"
           />
         }
         fileName={pdfFileName}
@@ -448,6 +449,7 @@ class PDFInvoice extends Component {
             {...claim}
             invoiceUUID={invoiceUUID}
             totalCost={totalCost}
+            pdfVersion="VERSION_1"
           />
         </PDFViewer>
       </div>
