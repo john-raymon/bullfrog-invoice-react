@@ -458,9 +458,7 @@ class CreateInvoice extends Component {
       'totalMaterialCost',
       'totalCost'
       ]
-    const test1 = createUUID();
-    const test2 = createUUID();
-    const lineItemTest1 = createUUID();
+
     this.state = {
       invoiceName: '',
       insuranceCarrier: '',
@@ -482,31 +480,7 @@ class CreateInvoice extends Component {
       newLineItemLaborCost: '0.00',
       newLineItemMaterialCost: '0.00',
 
-      rooms: {
-        [test1]: {
-          name: 'Living Room',
-          length: '12',
-          width: '10',
-          height: '8',
-          lineItems: {
-            [lineItemTest1]: {
-              description: 'floor',
-              uom: 'LF',
-              materialCost: '4',
-              laborCost: '14',
-              totalMaterial: '',
-              totalLabor: '',
-              quantity: '14',
-              total: '0.00'
-            }
-          },
-          roomTotals: {
-            totalLabor: '0',
-            totalMaterial: '0',
-            totalCost: '0'
-          }
-        }
-      },
+      rooms: {},
       totalLaborCost: '0',
       totalMaterialCost: '0',
       totalCost: '0',
@@ -517,9 +491,6 @@ class CreateInvoice extends Component {
         roomImages: ''
       },
 
-      notUploadedImages: {
-
-      },
       uploadedImages: {
 
       },
@@ -570,12 +541,7 @@ class CreateInvoice extends Component {
       })
     }
 
-    if ( Object.keys((this.state.notUploadedImages || {})).length > 0 ) {
-      this.uploadImage()
-    }
-
     if (this.state.beginAutoSave && compareKeys(prevState, this.state, this.whitelistedKeys)) {
-      console.log('component updated prevstate ===, and current state ===', {...prevState}, {...this.state})
       // If a timer is already started, clear it
       if (this.draftTimeoutId) clearTimeout(this.draftTimeoutId);
 
@@ -641,7 +607,6 @@ class CreateInvoice extends Component {
       // or create new draft invoice
       agent.setToken(token)
       agent.requests.post(`invoices/${this.props.match.params.draftId}`).then((invoice) => {
-        console.log('the customer full name is', {...invoice.customer})
         this.setState({
           ...this.state,
           invoiceName: invoice.invoiceName,
@@ -676,23 +641,23 @@ class CreateInvoice extends Component {
     if (this.draftTimeoutId) clearTimeout(this.draftTimeoutId)
   }
 
-  uploadImage(){
-    const imageUUID = Object.keys(this.state.notUploadedImages)[0]
-    const file = this.state.notUploadedImages[imageUUID].file
-    agent.requests.postImage(`invoices/${this.props.match.params.draftId}`, file).then((invoice) => {
-      const copyNotUploadedImages = { ...this.state.notUploadedImages }
+  uploadImage(notUploadedImages){
+    Object.keys(notUploadedImages).forEach((imageUUID) => {
+      const file = notUploadedImages[imageUUID].file
+      const copyNotUploadedImages = { ...notUploadedImages }
       delete copyNotUploadedImages[imageUUID]
-      this.setState({
-        ...this.state,
-        notUploadedImages: copyNotUploadedImages,
-        uploadedImages: invoice.images
+      agent.requests.postImage(`invoices/${this.props.match.params.draftId}`, file).then((invoice) => {
+        this.setState({
+          ...this.state,
+          uploadedImages: invoice.images
+        })
+      }).catch((err) => {
+        if (err.status === 422 && err.response && err.response.body.error === "NOT_DRAFT") {
+          // redirect to pdf detailed version since invoice can no longer be updated
+          alert("This invoice is no longer a draft please therefore it can no longer be modified. Either create a new invoice or refresh the page to view the generated PDF.")
+        }
+        console.log('There was an error when attempting find or create a draft invoice on CreateInvoice uploadImage', { ...err })
       })
-    }).catch((err) => {
-      if (err.status === 422 && err.response && err.response.body.error === "NOT_DRAFT") {
-        // redirect to pdf detailed version since invoice can no longer be updated
-        alert("NOT A DRAFT")
-      }
-      console.log('There was an error when attempting find or create a draft invoice on CreateInvoice uploadImage', { ...err })
     })
   }
 
@@ -705,7 +670,6 @@ class CreateInvoice extends Component {
       requestBodyObj[whitelistedKey] = currentState[whitelistedKey]
       return requestBodyObj
     }, {})
-    console.log('the request body in autosave is', requestBody)
     const { token } = this.props
     agent.setToken(token)
     agent.requests.post(`invoices/${this.props.match.params.draftId}`, { customerKnackId: this.state.customerKnackId, ...requestBody } ).then((invoice) => {
@@ -1000,17 +964,6 @@ class CreateInvoice extends Component {
     })
   }
 
-  removePreviewImage(imageUUID) {
-    // not in db or cloudinary yet so simply remove
-    this.setState({
-      ...this.state,
-      notUploadedImages: {
-        ...this.state.notUploadedImages,
-        [imageUUID]: undefined
-      }
-    })
-  }
-
   removeUploadedImage(imageId) {
     const { token } = this.props
     const { draftId } = this.props.match.params
@@ -1031,34 +984,17 @@ class CreateInvoice extends Component {
   }
 
   handleImageChange(e) {
-    const acceptedMimeTypes = ['image/jpeg', 'image/png']
-    const file = e.target.files[0]
-    if (!file) return;
-    if (!acceptedMimeTypes.includes(file.type)) {
-      return this.setState({
-        ...this.state,
-        errors: {
-          ...this.state.errors,
-          roomImages: 'You can only upload JPEG or PNG files'
-        }
-      })
-    }
-    const imageUUID = createUUID()
-    const previewUrl = URL.createObjectURL(file)
-    this.setState({
-      ...this.state,
-      errors: {
-        ...this.state.errors,
-        roomImages: ''
-      },
-      notUploadedImages: {
-        ...this.state.notUploadedImages,
-        [imageUUID]: {
-          file,
-          previewUrl
-        }
+    const notUploadedImages = Array.from(e.target.files).reduce((notUploadedImagesObj, file) => {
+      if (!file) return notUploadedImagesObj;
+      const imageUUID = createUUID()
+      const previewUrl = URL.createObjectURL(file)
+      notUploadedImagesObj[imageUUID] = {
+        file,
+        previewUrl
       }
-    })
+      return notUploadedImagesObj
+    }, {})
+    this.uploadImage(notUploadedImages)
   }
 
   generateInvoice() {
@@ -1461,28 +1397,6 @@ class CreateInvoice extends Component {
                     </div>
                     <div className="w-100 mt3">
                       <ul className="list pa0 ma0 flex flex-row overflow-x-scroll overflow-y-hidden h100 pb2">
-                        {
-                          Object.keys(this.state.notUploadedImages).map((imageUUID, key) => {
-                            const newImage = this.state.notUploadedImages[imageUUID]
-                            if (newImage === undefined || typeof newImage === 'undefined') return;
-                            return (
-                              <li key={key}>
-                                <div className="RoomImagesContainer mr2 flex flex-column pb4">
-                                  <img src={newImage.previewUrl} width="auto" height="270" />
-                                  <button
-                                    onClick={() => {
-                                      this.removePreviewImage(imageUUID)
-                                      }
-                                    }
-                                    className="flex flex-row items-center self-center dinLabel f7 mid-gray pointer bn bg-transparent dim ttu">
-                                    delete
-                                    <div className="ArrowIcon mh2"><TrashIcon /></div>
-                                  </button>
-                                </div>
-                              </li>
-                            )
-                          })
-                        }
                         {
                           Object.keys(this.state.uploadedImages).map((imageId, key) => {
                             const uploadedImage = this.state.uploadedImages[imageId]
