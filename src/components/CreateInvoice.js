@@ -431,7 +431,6 @@ class CreateInvoice extends Component {
     this.removeRoom = this.removeRoom.bind(this)
     this.removeLineItem = this.removeLineItem.bind(this)
     this.sumTotals = this.sumTotals.bind(this)
-    this.removePreviewImage = this.removePreviewImage.bind(this)
     this.removeUploadedImage = this.removeUploadedImage.bind(this)
     this.sumRoomTotals = this.sumRoomTotals.bind(this)
     this.uploadImage = this.uploadImage.bind(this)
