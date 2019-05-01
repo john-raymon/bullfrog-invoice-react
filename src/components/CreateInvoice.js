@@ -1452,9 +1452,11 @@ class CreateInvoice extends Component {
                         name="roomImages"
                         className="absolute w-100 h-100 o-0 pointer"
                         onChange={this.handleImageChange}
+                        accept="image/*"
+                        multiple
                       />
                     <p className="dinLabel pa0 ma0 f7 gray ttu dib tc">
-                        Upload an image
+                        Upload images
                       </p>
                     </div>
                     <div className="w-100 mt3">
