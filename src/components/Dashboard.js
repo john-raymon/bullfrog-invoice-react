@@ -68,7 +68,7 @@ class Dashboard extends Component {
     const { classes } = props
     const invoicesToDo = () => {
       if (props.isLoading.invoicesToDo) {
-        return (<p>Loading ... </p>)
+        return (<p className="tc">Loading ... </p>)
       }
       if (props.isError.invoicesToDo) {
         return (<p>There seems to be an error</p>)
@@ -106,7 +106,7 @@ class Dashboard extends Component {
     }
     const customerSearchResults = () => {
       if (props.isLoading.customers) {
-        return (<p>Loading</p>)
+        return (<p className="tc">Loading</p>)
       }
       if (props.isError.customers) {
         return (<p>There seems to be an error</p>)
@@ -136,7 +136,7 @@ class Dashboard extends Component {
 
     const allInvoices = () => {
       if (props.isLoading.allInvoices) {
-        return (<p>Loading</p>)
+        return (<p className="tc">Loading</p>)
       }
       if (props.isError.allInvoices) {
         return (<p>There seems to be an error</p>)
