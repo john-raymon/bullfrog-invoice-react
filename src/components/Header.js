@@ -10,7 +10,9 @@ export default ({onLogout}) => {
   return (
   <header>
     <div className="flex flex-column flex-row-l items-center justify-around pv3 ph1 bb b--light-gray">
-      <img src={logo} width="65px" height="auto" alt="" />
+      <NavLink to="/">
+        <img src={logo} width="65px" height="auto" alt="" />
+      </NavLink>
       <nav className="flex self-stretch">
         <ul className="flex flex-column center mv4 mv0-l flex-row-l items-center list pa0 ma0">
           <li>
