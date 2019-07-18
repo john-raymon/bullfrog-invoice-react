@@ -86,24 +86,28 @@ const PDFdocument = ({
   invoiceUUID,
   totalCost
   }) => {
-  
+
   return (
     <Document
       title={`Invoice for ${fullName} - $${totalCost}`}>
-      <Page size="LETTER" style={styles.page}>
+      <Page size="LETTER" style={styles.page} debug={false}>
 
         <View style={[styles.headerContainer, { justifyContent: "space-between" }]} fixed>
+          <View style={{ width: 35}}>
+            <Image
+              src={logo}
+              style={{width: "100%"}}
+            />
+          </View>
           <View style={{flexDirection: "row", alignItems: "center"}}>
-            <View style={{ width: 35}}>
-              <Image
-                src={logo}
-                style={{width: "100%"}}
-              />
-            </View>
-
-            <View style={{ marginLeft: "2%" }}>
+            <Image
+              src={`/invoices/${invoiceUUID}/qr`}
+              style={{width: 30}}
+            />
+          <View style={{ marginLeft: "2%"}} debug={false}>
               <Text
                 style={styles.smallText}
+                debug={true}
               >
                 { companyName }
               </Text>
@@ -118,11 +122,6 @@ const PDFdocument = ({
               </Text>
             </View>
           </View>
-
-          <Image
-            src={`/invoices/${invoiceUUID}/qr`}
-            style={{width: 30}}
-          />
         </View>
 
         <View style={{ flexDirection: "column", justifyContent: "center", flexGrow: 1 }}>
