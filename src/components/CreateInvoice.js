@@ -85,24 +85,26 @@ class ExpandingRow extends Component {
         </TableRow>
         <TableRow className="relative" style={{ height: "auto" }}>
           <td colSpan="12">
-            <Collapse in={open} component="div" style={{display: "block", width: "50%"}}>
-              <div className="LineItem__container w-100 pv2 ph2">
-                  <input
-                    className="InputField measure-1"
-                    type="text"
-                    name="description"
-                    placeholder="Enter the line-item's description"
-                    value={lineItem.description}
-                    onChange={(e) => this.props.handleLineItemChange(e, roomUUID, lineItemUUID)}
-                  />
-                  <label htmlFor="newLineItemDescription">
-                    <p className="dinLabel pa0 ma0 mb2 f7 ttc">
-                      description
-                    </p>
-                  </label>
+            <Collapse in={open} component="div" style={{display: "block", width: "100%"}}>
+              <div className="LineItem__container flex w-100 pv2 ph2">
+                  <div className="flex flex-column flex-grow-1 mr2">
+                    <input
+                      className="InputField w-100"
+                      type="text"
+                      name="description"
+                      placeholder="Enter the line-item's description"
+                      value={lineItem.description}
+                      onChange={(e) => this.props.handleLineItemChange(e, roomUUID, lineItemUUID)}
+                    />
+                    <label htmlFor="newLineItemDescription">
+                      <p className="dinLabel pa0 ma0 mb2 f7 ttc">
+                        description
+                      </p>
+                    </label>
+                  </div>
 
                   <div className="flex flex-row items-center flex-wrap justify-start">
-                    <div className="w-20 flex flex-column items-center mr2">
+                    <div className="w-20 flex flex-column items-start mr2">
                       <input
                         className="InputField tc"
                         type="number"
@@ -119,7 +121,7 @@ class ExpandingRow extends Component {
                       </label>
                     </div>
 
-                    <div className="w-20 flex flex-column items-center mr2">
+                    <div className="w-20 flex flex-column items-start mr2">
                       <div className="relative InputField flex flex-row justify-center pointer">
                         <p className="dinLabel ttu mid-gray f7 pa0 ma0 self-center mr3">
                           { lineItem.uom || 'UOM'}
@@ -150,7 +152,7 @@ class ExpandingRow extends Component {
                       </label>
                     </div>
 
-                    <div className="w-20 flex flex-column items-center mr2">
+                    <div className="w-20 flex flex-column items-start mr2">
                       <div className="flex flex-row items-center">
                         <span className="dinLabel f7 mh1">
                           $
@@ -173,7 +175,7 @@ class ExpandingRow extends Component {
                       </label>
                     </div>
 
-                    <div className="w-20 flex flex-column items-center mr2">
+                    <div className="w-20 flex flex-column items-start mr2">
                       <div className="flex flex-row items-center">
                         <span className="dinLabel f7 mh1">
                           $
