@@ -219,7 +219,7 @@ class LineItems extends Component {
 
   render() {
     const roomUUID = this.props.match.params.roomId
-    const { classes } = this.props
+    const { classes, allSavedLineItems = {}, setNewLineItemInState } = this.props
     return (
       <div className="LineItems fixed top-0 left-0 w-100 z-1 vh-100 bg-black-70">
         <div className="fixed top-0 left-0 vh-75 w-100 bg-white overflow-scroll">
@@ -236,10 +236,8 @@ class LineItems extends Component {
                   <Table className={classes.table}>
                     <TableHead>
                       <TableRow>
-                        <TableCell align="right">
-                          Edit
-                        </TableCell>
-                        <TableCell align="right">Delete</TableCell>
+                        <TableCell align="right"><span className="green">Edit</span></TableCell>
+                        <TableCell align="right"><span className="red">Delete</span></TableCell>
                         <TableCell align="right">Description</TableCell>
                         <TableCell align="right">Quantity</TableCell>
                         <TableCell align="right">UOM</TableCell>
@@ -274,7 +272,7 @@ class LineItems extends Component {
                 </Paper>
               </div>
 
-              <div className="flex flex-column flex-row-l justify-between mt4">
+              <div className="flex flex-column flex-row-l justify-between pv4">
                 <div className="w-100 w-50-l br bw1 b--light-gray pr4">
                   <div className="NewLineItem__container ph1 pb2">
                     { this.props.errors.newLineItem && ( <p className="dinLabel red f6 o-70"> {this.props.errors.newLineItem } </p> )}
@@ -402,10 +400,65 @@ class LineItems extends Component {
                     </button>
                   </div>
                 </div>
+                <div className="w-100 w-50-l bt b--light-gray bw1 pt2 mt2 mt0-l bn-l pt0-l">
+                  <p className="dinTitle f7 mid-gray tc tr-l pt1">
+                    Saved Line-Items
+                  </p>
+                  <div className="pl3-l">
+                    <Paper className={classes.root}>
+                      <Table className={classes.table}>
+                        <TableHead>
+                          <TableRow>
+                            <TableCell align="right"><span className="green">Re-use</span></TableCell>
+                            <TableCell align="right">Description</TableCell>
+                            <TableCell align="right">Quantity</TableCell>
+                            <TableCell align="right">UOM</TableCell>
+                            <TableCell align="right">Labor Cost</TableCell>
+                            <TableCell align="right">Material Cost</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {
+                            Object.keys(allSavedLineItems)
+                            .map((lineItemKey) => {
+                              const lineItem = allSavedLineItems[lineItemKey]
+                              if (lineItem === undefined) return;
+                              return (
+                                <TableRow key={lineItem.id}>
+                                  <TableCell align="right">
+                                    <div
+                                      className="h-100 items-center flex flex-row pointer dim"
+                                      onClick={() => {
+                                        setNewLineItemInState({
+                                          description: lineItem.description,
+                                          quantity: lineItem.quantity,
+                                          UOM: lineItem.uom,
+                                          laborUnitPrice: lineItem.laborUnitPrice,
+                                          materialUnitPrice: lineItem.materialUnitPrice
+                                        })
+                                      }}
+                                      >
+                                      <p className="dinTitle f7 mid-gray tc">Re-use</p>
+                                    </div>
+                                  </TableCell>
+                                  <TableCell align="right">{lineItem.description}</TableCell>
+                                  <TableCell align="right">{lineItem.quantity || 'n/a'}</TableCell>
+                                  <TableCell align="right">{lineItem.uom || 'n/a'}</TableCell>
+                                  <TableCell align="right">{lineItem.laborUnitPrice || 'n/a'}</TableCell>
+                                  <TableCell align="right">{lineItem.materialUnitPrice || 'n/a'}</TableCell>
+                                </TableRow>
+                              )
+                            })
+                          }
+                        </TableBody>
+                      </Table>
+                    </Paper>
+                  </div>
+                </div>
               </div>
             </div>
             <div className="sticky bottom-0 dib self-center w-100 bg-white">
-              <p className="dinLabel mid-gray f6 ttu pointer tc"
+              <p className="dinLabel mid-gray f6 ttu pointer tc dim"
                 onClick={() => this.props.history.goBack()}>
                 close
               </p>
@@ -435,6 +488,7 @@ class CreateInvoice extends Component {
     this.sumRoomTotals = this.sumRoomTotals.bind(this)
     this.uploadImage = this.uploadImage.bind(this)
     this.generateInvoice = this.generateInvoice.bind(this)
+    this.setNewLineItemInState = this.setNewLineItemInState.bind(this)
     this.invoiceContainerRef = createRef()
     this.draftTimeoutId = null
     this.customerKnackId = ''
@@ -473,11 +527,15 @@ class CreateInvoice extends Component {
       newRoomWidth: '',
       newRoomHeight: '8',
       newRoomLineItems: '',
+      // new line-item properties (Labor/Material Cost, Unit, Quantity, Description)
       newLineItemDescription: '',
       newLineItemQuantity: '1',
       newLineItemUOM: '',
       newLineItemLaborCost: '0.00',
       newLineItemMaterialCost: '0.00',
+
+      // saved line-items
+      savedLineItems: null,
 
       rooms: {},
       totalLaborCost: '0',
@@ -487,7 +545,8 @@ class CreateInvoice extends Component {
       errors: {
         newRoom: '',
         newLineItem: '',
-        roomImages: ''
+        roomImages: '',
+        allSavedLineItems: ''
       },
 
       uploadedImages: {
@@ -551,6 +610,31 @@ class CreateInvoice extends Component {
 
   componentDidMount() {
     const { token } = this.props
+    agent.setToken(token)
+
+    // fetch all current saved line-items to pass to lineItems components
+    agent.requests
+      .get(`line-items`)
+      .then(body => {
+        const {
+          success,
+          allSavedLineItems
+        } = body;
+        if (success) {
+          this.setState({
+            allSavedLineItems
+          })
+        }
+      })
+      .catch(error => {
+        console.log("Error while fetching all saved line-items", error)
+        this.setState({
+          errors: {
+            ...this.state.errors,
+            allSavedLineItems: "Sorry, we could not load the saved line-items right now. Please refresh the page and try again."
+          }
+        })
+      })
     // check if we have query param
     if (this.props.location.search) {
 
@@ -604,7 +688,6 @@ class CreateInvoice extends Component {
     } else {
       // initialize draft invoice on backend, will find existing draft invoice,
       // or create new draft invoice
-      agent.setToken(token)
       agent.requests.post(`invoices/${this.props.match.params.draftId}`).then((invoice) => {
         this.setState({
           ...this.state,
@@ -819,6 +902,16 @@ class CreateInvoice extends Component {
     }
   }
 
+  setNewLineItemInState(newLineItem) {
+    this.setState({
+      newLineItemDescription: newLineItem.description || '',
+      newLineItemQuantity: newLineItem.quantity || '1',
+      newLineItemUOM: newLineItem.UOM || '',
+      newLineItemLaborCost: newLineItem.laborUnitPrice || '0.00',
+      newLineItemMaterialCost: newLineItem.materialUnitPrice || '0.00'
+    })
+  }
+
   addNewLineItem(roomUUID) {
     const {
       newLineItemDescription : description,
@@ -1031,12 +1124,14 @@ class CreateInvoice extends Component {
                     handleChange={this.handleChange}
                     removeLineItem={this.removeLineItem}
                     room={this.state.rooms[props.match.params.roomId] || {}}
+                    allSavedLineItems={this.state.allSavedLineItems}
+                    setNewLineItemInState={this.setNewLineItemInState}
                     {...this.props}
                     {...props}
                     />
                 }
             />
-           <div className="flex flex-column measure-70 center ph4 pt5 mb5">
+            <div className="flex flex-column measure-70 center ph4 pt5 mb5">
               <div className="flex flex-column flex-row-l w100">
 
                 <div className="flex flex-column w-100 w-50-l pr5-l">
