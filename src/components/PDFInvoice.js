@@ -84,13 +84,14 @@ const PDFdocument = ({
   insuranceCarrier,
   policyNumber,
   invoiceUUID,
-  totalCost
+  totalCost,
+  creditApplied
   }) => {
 
   return (
     <Document
       title={`Invoice for ${fullName} - $${totalCost}`}>
-      <Page size="LETTER" style={styles.page} debug={false}>
+      <Page size="LETTER" style={styles.page}>
 
         <View style={[styles.headerContainer, { justifyContent: "space-between" }]} fixed>
           <View style={{ width: 35}}>
@@ -104,10 +105,9 @@ const PDFdocument = ({
               src={`/invoices/${invoiceUUID}/qr`}
               style={{width: 30}}
             />
-          <View style={{ marginLeft: "2%"}} debug={false}>
+          <View style={{ marginLeft: "2%"}}>
               <Text
                 style={styles.smallText}
-                debug={true}
               >
                 { companyName }
               </Text>
@@ -336,6 +336,14 @@ const PDFdocument = ({
           }
           <View style={{ flexDirection: "row", marginTop: 20, justifyContent: "space-between" }}>
             <Text style={[styles.smallText, { marginRight: 20 }]}>
+              Credit Applied
+            </Text>
+            <Text style={styles.smallText}>
+              - ${creditApplied}
+            </Text>
+          </View>
+          <View style={{ flexDirection: "row", marginTop: 20, justifyContent: "space-between" }}>
+            <Text style={[styles.smallText, { marginRight: 20 }]}>
               Total Amount
             </Text>
             <Text style={styles.smallText}>
@@ -391,6 +399,7 @@ class PDFInvoice extends Component {
     let invoiceUUID = ''
     let totalCost = ''
     let pdfFileName = `${createUUID()}.pdf`
+    let creditApplied = ''
     if (this.state.invoice) {
       const roomIds = Object.keys(this.state.invoice.rooms || {})
       const roomsById = this.state.invoice.rooms
@@ -415,6 +424,7 @@ class PDFInvoice extends Component {
       claim = this.state.invoice.claim
       invoiceUUID = this.state.invoice.id
       totalCost = this.state.invoice.totalCost
+      creditApplied = this.state.invoice.creditToApply
 
       pdfFileName = `${customer.fullName.replace(/\s+/g, '')}-${invoiceUUID}.pdf`
     }
@@ -430,6 +440,7 @@ class PDFInvoice extends Component {
             {...claim}
             invoiceUUID={invoiceUUID}
             totalCost={totalCost}
+            creditApplied={creditApplied}
             pdfVersion="VERSION_1"
           />
         }
@@ -448,6 +459,7 @@ class PDFInvoice extends Component {
             {...claim}
             invoiceUUID={invoiceUUID}
             totalCost={totalCost}
+            creditApplied={creditApplied}
             pdfVersion="VERSION_1"
           />
         </PDFViewer>
