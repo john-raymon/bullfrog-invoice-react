@@ -504,6 +504,7 @@ class CreateInvoice extends Component {
     this.generateInvoice = this.generateInvoice.bind(this)
     this.setNewLineItemInState = this.setNewLineItemInState.bind(this)
     this.saveCopyOfLineItem = this.saveCopyOfLineItem.bind(this)
+    this.addCreditToRunningTotals = this.addCreditToRunningTotals.bind(this)
     this.invoiceContainerRef = createRef()
     this.draftTimeoutId = null
     this.customerKnackId = ''
@@ -524,7 +525,8 @@ class CreateInvoice extends Component {
       // totals
       'totalLaborCost',
       'totalMaterialCost',
-      'totalCost'
+      'totalCost',
+      'creditToApply'
       ]
 
     this.state = {
@@ -556,6 +558,7 @@ class CreateInvoice extends Component {
       totalLaborCost: '0',
       totalMaterialCost: '0',
       totalCost: '0',
+      creditToApply: '30.00',
 
       errors: {
         newRoom: '',
@@ -607,10 +610,18 @@ class CreateInvoice extends Component {
     })
   }
 
+  addCreditToRunningTotals(totalsObj, creditToApply) {
+    const totalCostWithCredit = (parseFloat(totalsObj.totalCost) - parseFloat(creditToApply)).toFixed(2);
+    return {
+      ...totalsObj,
+      totalCost: (totalCostWithCredit < 0) ? '0' : totalCostWithCredit
+    }
+  }
+
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.rooms !== this.state.rooms) {
+    if ((prevState.rooms !== this.state.rooms) || (prevState.creditToApply !== this.state.creditToApply)) {
       this.setState({
-        ...this.sumRoomTotals()
+        ...this.addCreditToRunningTotals(this.sumRoomTotals(), this.state.creditToApply)
       })
     }
 
@@ -1624,6 +1635,12 @@ class CreateInvoice extends Component {
                       <p className="dinLabel f6">
                         <span className="ttu black-70">total cost: </span>
                         ${ this.state.totalCost }
+                        {
+                          this.state.creditToApply > 0 &&
+                          (
+                            <span className="db tl ttu f8 green o-2">(credit applied ${this.state.creditToApply})</span>
+                          )
+                        }
                       </p>
                     </li>
                   </ul>
