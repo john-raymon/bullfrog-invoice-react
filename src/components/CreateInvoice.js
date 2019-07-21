@@ -67,13 +67,11 @@ class ExpandingRow extends Component {
             </div>
           </TableCell>
           <TableCell align="right">
-            <div
-              className="h-100 items-center flex flex-row pointer dim"
+            <button
               onClick={() => this.props.removeLineItem(roomUUID, lineItemUUID)}
-              >
-              <p className="dinTitle f7 mid-gray tc">Delete</p>
-              <div className="ArrowIcon mh1"><TrashIcon /></div>
-            </div>
+              className='dinTitle f8 mid-gray ba b--red tracked ttu tc pa1 br2 red dim pointer o-70'>
+              Delete
+            </button>
           </TableCell>
           <TableCell align="right">{lineItem.description}</TableCell>
           <TableCell align="right">{lineItem.quantity}</TableCell>
