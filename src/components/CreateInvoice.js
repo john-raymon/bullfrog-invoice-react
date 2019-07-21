@@ -86,7 +86,7 @@ class ExpandingRow extends Component {
         <TableRow className="relative" style={{ height: "auto" }}>
           <td colSpan="12">
             <Collapse in={open} component="div" style={{display: "block", width: "100%"}}>
-              <div className="LineItem__container flex w-100 pv2 ph2">
+              <div className="LineItem__container flex flex-column vw-100 w-100-l pv2 ph2">
                   <div className="flex flex-column flex-grow-1 mr2">
                     <input
                       className="InputField w-100"
@@ -152,7 +152,7 @@ class ExpandingRow extends Component {
                       </label>
                     </div>
 
-                    <div className="w-20 flex flex-column items-start mr2">
+                    <div className="flex flex-grow-0 flex-column items-start mr2">
                       <div className="flex flex-row items-center">
                         <span className="dinLabel f7 mh1">
                           $
@@ -169,7 +169,7 @@ class ExpandingRow extends Component {
                         />
                       </div>
                       <label htmlFor="newLineItemLaborCost">
-                        <p className="dinLabel pa0 ma0 mb2 f7 ttc">
+                        <p className="dinLabel pa0 ma0 mb2 f7 ttc pl1">
                           labor
                         </p>
                       </label>
@@ -192,11 +192,24 @@ class ExpandingRow extends Component {
                         />
                       </div>
                       <label htmlFor="newLineItemMaterialCost">
-                        <p className="dinLabel pa0 ma0 mb2 f7 ttc">
+                        <p className="dinLabel pa0 ma0 mb2 f7 ttc pl1">
                           material
                         </p>
                       </label>
                     </div>
+                  </div>
+
+                  <div className="flex flex-column w-100 mt4">
+                    {
+                      // TODO: create state identifying whether or not current line-item
+                      // is being updated, set that state as the `disabled` value of the
+                      // button below.
+                    }
+                    <button
+                      onClick={() => this.props.saveCopyOfLineItem(roomUUID, lineItemUUID)}
+                      className="dinTitle f7 mid-gray tracked ttu tc bn pa3 bg-black-10 dim">
+                      save copy of line-item for reuse
+                    </button>
                   </div>
                 </div>
             </Collapse>
@@ -221,7 +234,7 @@ class LineItems extends Component {
 
   render() {
     const roomUUID = this.props.match.params.roomId
-    const { classes, allSavedLineItems = {}, setNewLineItemInState } = this.props
+    const { classes, allSavedLineItems, setNewLineItemInState, saveCopyOfLineItem } = this.props
     return (
       <div className="LineItems fixed top-0 left-0 w-100 z-1 vh-100 bg-black-70">
         <div className="fixed top-0 left-0 vh-75 w-100 bg-white overflow-scroll">
@@ -265,6 +278,7 @@ class LineItems extends Component {
                               handleLineItemChange={this.props.handleLineItemChange}
                               handleCostInputBlur={this.props.handleCostInputBlur}
                               removeLineItem={this.props.removeLineItem}
+                              saveCopyOfLineItem={saveCopyOfLineItem}
                             />
                           )
                         })
@@ -421,12 +435,10 @@ class LineItems extends Component {
                         </TableHead>
                         <TableBody>
                           {
-                            Object.keys(allSavedLineItems)
-                            .map((lineItemKey) => {
-                              const lineItem = allSavedLineItems[lineItemKey]
+                            allSavedLineItems.map((lineItem, id) => {
                               if (lineItem === undefined) return;
                               return (
-                                <TableRow key={lineItem.id}>
+                                <TableRow key={id}>
                                   <TableCell align="right">
                                     <div
                                       className="h-100 items-center flex flex-row pointer dim"
@@ -491,6 +503,7 @@ class CreateInvoice extends Component {
     this.uploadImage = this.uploadImage.bind(this)
     this.generateInvoice = this.generateInvoice.bind(this)
     this.setNewLineItemInState = this.setNewLineItemInState.bind(this)
+    this.saveCopyOfLineItem = this.saveCopyOfLineItem.bind(this)
     this.invoiceContainerRef = createRef()
     this.draftTimeoutId = null
     this.customerKnackId = ''
@@ -537,7 +550,7 @@ class CreateInvoice extends Component {
       newLineItemMaterialCost: '0.00',
 
       // saved line-items
-      savedLineItems: null,
+      allSavedLineItems: [],
 
       rooms: {},
       totalLaborCost: '0',
@@ -637,9 +650,10 @@ class CreateInvoice extends Component {
           }
         })
       })
+
     // check if we have query param
     if (this.props.location.search) {
-
+      // turn query search string from URL into object
       const query = this.props.location.search.replace(/(^\?)/,'').split("&").reduce((queryObj, keyValue) => {
         const [key, value] = keyValue.split("=")
         queryObj[key] = value
@@ -648,7 +662,6 @@ class CreateInvoice extends Component {
 
       if (query.customer_id) {
         this.customerKnackId = query.customer_id
-        agent.setToken(token)
         agent.requests.get(`knack/search-customers/${query.customer_id}`).then((response) => {
           if (response.response.statusCode === 401) {
             this.props.dispatch({ type: "LOGOUT" })
@@ -743,6 +756,49 @@ class CreateInvoice extends Component {
         console.log('There was an error when attempting find or create a draft invoice on CreateInvoice uploadImage', { ...err })
       })
     })
+  }
+
+  saveCopyOfLineItem(roomUUID, lineItemUUID) {
+    const { token } = this.props;
+    const {
+      [roomUUID]: {
+        lineItems: {
+          [lineItemUUID]: {
+            description: lineItemDescription,
+            laborCost: lineItemLaborUnitPrice,
+            materialCost: lineItemMaterialUnitPrice,
+            quantity: lineItemQuantity,
+            uom: lineItemUnitOM
+          }
+        }
+      }
+    } = this.state.rooms;
+    agent.setToken(token)
+    agent.requests.post('line-items/save', {
+      lineItemDescription,
+      lineItemMaterialUnitPrice,
+      lineItemLaborUnitPrice,
+      lineItemQuantity,
+      lineItemUnitOM
+    })
+    .then(body => {
+      console.log("response is", body)
+      const {
+        success,
+        allSavedLineItems
+      } = body;
+      if (success) {
+        this.setState({
+          allSavedLineItems: [...this.state.allSavedLineItems, ...allSavedLineItems]
+        })
+      }
+    })
+    .catch(error => {
+      console.log("Error while saving line-item", error)
+      // TODO: Add property error state.errors to render it in UI above inputs of existing line-item
+      // in order to reflect an error caught here
+    })
+
   }
 
   autoSave() {
@@ -907,7 +963,7 @@ class CreateInvoice extends Component {
   setNewLineItemInState(newLineItem) {
     this.setState({
       newLineItemDescription: newLineItem.description || '',
-      newLineItemQuantity: newLineItem.quantity || '1',
+      newLineItemQuantity: `${newLineItem.quantity}` || '1',
       newLineItemUOM: newLineItem.UOM || '',
       newLineItemLaborCost: newLineItem.laborUnitPrice || '0.00',
       newLineItemMaterialCost: newLineItem.materialUnitPrice || '0.00'
@@ -1128,6 +1184,7 @@ class CreateInvoice extends Component {
                     room={this.state.rooms[props.match.params.roomId] || {}}
                     allSavedLineItems={this.state.allSavedLineItems}
                     setNewLineItemInState={this.setNewLineItemInState}
+                    saveCopyOfLineItem={this.saveCopyOfLineItem}
                     {...this.props}
                     {...props}
                     />
