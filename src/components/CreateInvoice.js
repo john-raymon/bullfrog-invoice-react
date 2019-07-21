@@ -558,7 +558,7 @@ class CreateInvoice extends Component {
       totalLaborCost: '0',
       totalMaterialCost: '0',
       totalCost: '0',
-      creditToApply: '30.00',
+      creditToApply: '0',
 
       errors: {
         newRoom: '',
@@ -572,7 +572,8 @@ class CreateInvoice extends Component {
       },
       beginAutoSave: false,
       autoSaving: false,
-      generatingInvoice: false
+      generatingInvoice: false,
+      applyCredit: false,
     }
   }
 
@@ -610,11 +611,11 @@ class CreateInvoice extends Component {
     })
   }
 
-  addCreditToRunningTotals(totalsObj, creditToApply) {
+  addCreditToRunningTotals(totalsObj, creditToApply = "0") {
     const totalCostWithCredit = (parseFloat(totalsObj.totalCost) - parseFloat(creditToApply)).toFixed(2);
     return {
       ...totalsObj,
-      totalCost: (totalCostWithCredit < 0) ? '0' : totalCostWithCredit
+      totalCost: (totalCostWithCredit < 0 || isNaN(totalCostWithCredit)) ? totalsObj.totalCost : totalCostWithCredit
     }
   }
 
@@ -1632,16 +1633,48 @@ class CreateInvoice extends Component {
                       </p>
                     </li>
                     <li>
-                      <p className="dinLabel f6">
+                      <div className="dinLabel f6">
                         <span className="ttu black-70">total cost: </span>
                         ${ this.state.totalCost }
                         {
-                          this.state.creditToApply > 0 &&
+                          (!this.state.applyCredit && this.state.creditToApply > 0) ?
                           (
-                            <span className="db tl ttu f8 green o-2">(credit applied ${this.state.creditToApply})</span>
-                          )
+                            <Fragment>
+                              <span className="db tl ttu f8 green o-2">(credit applied ${this.state.creditToApply})</span>
+                              <button
+                                onClick={() => this.setState({ applyCredit: !this.state.applyCredit })}
+                                className="db mt1 dinTitle f8 mid-gray ba b--green tracked ttu tc pa2 br2 green 0-2 dim">
+                                apply credit
+                              </button>
+                            </Fragment>
+                          ) :
+                            (
+                              this.state.applyCredit ?
+                              (
+                                <div className="flex flex-column">
+                                  <input className="InputField tc pa0 green" type="number" name="creditToApply" onChange={this.handleChange} placeholder="0.00" value={this.state.creditToApply}/>
+                                  <label htmlFor="creditToApply">
+                                    <p className="dinLabel pa0 ma0 mb2 f8 green tl ttc">
+                                      credit to apply
+                                    </p>
+                                  </label>
+                                  <button
+                                    onClick={() => this.setState({ applyCredit: !this.state.applyCredit })}
+                                    className="db dinTitle f8 mid-gray ba b--green tracked ttu tc pa2 br2 green 0-2 dim">
+                                    done
+                                  </button>
+                                </div>
+                              ) :
+                              (
+                                <button
+                                  onClick={() => this.setState({ applyCredit: !this.state.applyCredit })}
+                                  className="db mt1 dinTitle f8 mid-gray ba b--green tracked ttu tc pa2 br2 green 0-2 dim">
+                                  apply credit
+                                </button>
+                              )
+                            )
                         }
-                      </p>
+                      </div>
                     </li>
                   </ul>
                   <div className="w-40">
