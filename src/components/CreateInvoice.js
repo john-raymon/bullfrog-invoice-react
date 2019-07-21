@@ -572,6 +572,7 @@ class CreateInvoice extends Component {
       autoSaving: false,
       generatingInvoice: false,
       applyCredit: false,
+      uploadingImage: false
     }
   }
 
@@ -751,20 +752,29 @@ class CreateInvoice extends Component {
 
   uploadImage(notUploadedImages){
     Object.keys(notUploadedImages).forEach((imageUUID) => {
+      this.setState({
+        uploadingImage: true
+      })
       const file = notUploadedImages[imageUUID].file
       const copyNotUploadedImages = { ...notUploadedImages }
       delete copyNotUploadedImages[imageUUID]
       agent.requests.postImage(`invoices/${this.props.match.params.draftId}`, file).then((invoice) => {
         this.setState({
           ...this.state,
-          uploadedImages: invoice.images
+          uploadedImages: invoice.images,
         })
-      }).catch((err) => {
+      })
+      .catch((err) => {
         if (err.status === 422 && err.response && err.response.body.error === "NOT_DRAFT") {
           // redirect to pdf detailed version since invoice can no longer be updated
           alert("This invoice is no longer a draft please therefore it can no longer be modified. Either create a new invoice or refresh the page to view the generated PDF.")
         }
         console.log('There was an error when attempting find or create a draft invoice on CreateInvoice uploadImage', { ...err })
+      })
+      .finally(() => {
+        this.setState({
+          uploadingImage: false
+        })
       })
     })
   }
@@ -1553,10 +1563,15 @@ class CreateInvoice extends Component {
                         className="absolute w-100 h-100 o-0 pointer"
                         onChange={this.handleImageChange}
                         accept="image/*"
+                        disabled={this.state.uploadingImage}
                         multiple
                       />
-                    <p className="dinLabel pa0 ma0 f7 gray ttu dib tc">
-                        Upload images
+                      <p className={`dinLabel pa0 ma0 f7 gray ttu dib pointer tc ${this.state.uploadingImage ? 'o-20' : ''}`}>
+                        {
+                          this.state.uploadingImage ?
+                          'Uploading Image ...' :
+                          'Upload images'
+                        }
                       </p>
                     </div>
                     <div className="w-100 mt3">
