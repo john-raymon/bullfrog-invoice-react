@@ -789,7 +789,7 @@ class CreateInvoice extends Component {
       } = body;
       if (success) {
         this.setState({
-          allSavedLineItems: [...this.state.allSavedLineItems, ...allSavedLineItems]
+          allSavedLineItems
         })
       }
     })
