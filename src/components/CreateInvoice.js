@@ -670,29 +670,30 @@ class CreateInvoice extends Component {
         }).then(({response: res}) => {
           const knackCustomersFullName = res.body[`${process.env.REACT_APP_KNACK_CUSTOMERS_TABLE_NAME_FIELD}_raw`]
           const { city, state, zip, street, street2 } = res.body[`${process.env.REACT_APP_KNACK_CUSTOMERS_TABLE_ADDRESS_FIELD}_raw`]
+          const knackCustomerClaimNumber = res.body[`${process.env.REACT_APP_KNACK_CUSTOMERS_TABLE_CLAIM_NUMBER_FIELD}_raw`]
           // initialize draft invoice on backend, will find existing draft invoice,
           // or create new draft invoice
           agent.setToken(token)
-          return agent.requests.post(`invoices/${this.props.match.params.draftId}`).then((invoice) => {
-
-            this.setState({
-              ...this.state,
-              invoiceName: invoice.invoiceName,
-              customersFullName: (knackCustomersFullName || ''),
-              customersAddress: `${street || ''} ${street2 || ''}`,
-              customersCityState: ((city && state) ? `${city} , ${state}` : ''),
-              customersZipCode: (zip || ''),
-              insuranceCarrier: invoice.claim.insuranceCarrier,
-              policyNumber: invoice.claim.policyNumber,
-              claimNumber: invoice.claim.claimNumber,
-              dateOfLoss: invoice.claim.dateOfLoss,
-              rooms: invoice.rooms || {},
-              totalLaborCost: invoice.totalLaborCost,
-              totalMaterialCost: invoice.totalMaterialCost,
-              totalCost: invoice.totalCost,
-              uploadedImages: invoice.images ? invoice.images : {},
-              customerKnackId: this.customerKnackId,
-              beginAutoSave: true
+          return agent.requests.post(`invoices/${this.props.match.params.draftId}`)
+            .then((invoice) => {
+              this.setState({
+                ...this.state,
+                invoiceName: invoice.invoiceName,
+                customersFullName: (knackCustomersFullName || ''),
+                customersAddress: `${street || ''} ${street2 || ''}`,
+                customersCityState: ((city && state) ? `${city} , ${state}` : ''),
+                customersZipCode: (zip || ''),
+                insuranceCarrier: invoice.claim.insuranceCarrier,
+                policyNumber: invoice.claim.policyNumber,
+                claimNumber: (knackCustomerClaimNumber && knackCustomerClaimNumber.trim()) || invoice.claim.claimNumber,
+                dateOfLoss: invoice.claim.dateOfLoss,
+                rooms: invoice.rooms || {},
+                totalLaborCost: invoice.totalLaborCost,
+                totalMaterialCost: invoice.totalMaterialCost,
+                totalCost: invoice.totalCost,
+                uploadedImages: invoice.images ? invoice.images : {},
+                customerKnackId: this.customerKnackId,
+                beginAutoSave: true
             })
           })
         })
