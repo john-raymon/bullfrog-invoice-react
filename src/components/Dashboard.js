@@ -15,8 +15,9 @@ import ListButton from '../views/ListButton'
 import searchIcon from '../images/search-icon.png';
 
 // Dashboard Actions
-import { fetchKnackCustomers, fetchInvoicesToDo, fetchAllInvoices } from '../state/actions/dashboardActions'
-
+import { fetchKnackCustomers, fetchInvoicesToDo, fetchAllInvoices } from '../state/actions/dashboardActions';
+// Invoice Actions
+import { deleteDraftInvoice } from '../state/actions/invoiceActions';
 // Material-UI
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -153,6 +154,7 @@ class Dashboard extends Component {
               <TableRow>
                 <TableCell align="left">Invoice Name</TableCell>
                 <TableCell align="left">Action</TableCell>
+                <TableCell align="left">Delete Draft</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -167,6 +169,19 @@ class Dashboard extends Component {
                         </ListButton>
                       </NavLink>
                     </TableCell>
+                    {
+                      <TableCell
+                        align="left">
+                        <button
+                          onClick={() => {
+                            this.props.deleteDraftInvoice(invoice.invoiceUUID)
+                          }}
+                          disabled={!invoice.isDraft}
+                          className={`db mt1 dinTitle f8 mid-gray ba b--red tracked ttu tc pa2 br2 red ${!invoice.isDraft ? 'o-10' : 'dim pointer'}`}>
+                          delete
+                        </button>
+                      </TableCell>
+                    }
                   </TableRow>
                 ))
               }
@@ -258,4 +273,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, { fetchKnackCustomers, fetchInvoicesToDo, fetchAllInvoices })(withStyles(styles)(Dashboard))
+export default connect(mapStateToProps, { fetchKnackCustomers, fetchInvoicesToDo, fetchAllInvoices, deleteDraftInvoice })(withStyles(styles)(Dashboard))
