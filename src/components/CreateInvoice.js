@@ -615,7 +615,7 @@ class CreateInvoice extends Component {
     const totalCostWithCredit = (parseFloat(totalsObj.totalCost) - parseFloat(creditToApply)).toFixed(2);
     return {
       ...totalsObj,
-      totalCost: (totalCostWithCredit < 0 || isNaN(totalCostWithCredit)) ? totalsObj.totalCost : totalCostWithCredit
+      totalCost:  isNaN(totalCostWithCredit) ? totalsObj.totalCost : (totalCostWithCredit < 0 ? '0.00' : totalCostWithCredit)
     }
   }
 
@@ -1640,7 +1640,7 @@ class CreateInvoice extends Component {
                           (!this.state.applyCredit && this.state.creditToApply > 0) ?
                           (
                             <Fragment>
-                              <span className="db tl ttu f8 green o-2">(credit applied ${this.state.creditToApply})</span>
+                              <span className="db tl ttu f8 green o-2">(credit applied ${parseFloat(this.state.creditToApply).toFixed(2)})</span>
                               <button
                                 onClick={() => this.setState({ applyCredit: !this.state.applyCredit })}
                                 className="db mt1 dinTitle f8 mid-gray ba b--green tracked ttu tc pa2 br2 green 0-2 dim">
