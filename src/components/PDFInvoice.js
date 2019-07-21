@@ -94,18 +94,14 @@ const PDFdocument = ({
       <Page size="LETTER" style={styles.page}>
 
         <View style={[styles.headerContainer, { justifyContent: "space-between" }]} fixed>
-          <View style={{ width: 35}}>
+          <View style={{ width: 40}}>
             <Image
               src={logo}
               style={{width: "100%"}}
             />
           </View>
           <View style={{flexDirection: "row", alignItems: "center"}}>
-            <Image
-              src={`/invoices/${invoiceUUID}/qr`}
-              style={{width: 30}}
-            />
-          <View style={{ marginLeft: "2%"}}>
+            <View style={{ alignItems: "right", marginRight: "2%"}}>
               <Text
                 style={styles.smallText}
               >
@@ -121,6 +117,10 @@ const PDFdocument = ({
                 {`Mailing Address | ${companyAddress} ${companyCityState} ${companyZip}`}
               </Text>
             </View>
+            <Image
+              src={`/invoices/${invoiceUUID}/qr`}
+              style={{width: 40}}
+            />
           </View>
         </View>
 
