@@ -3673,6 +3673,10 @@ code, .code {
   font-size: .75rem; }
 
 /* Small and hard to read for many people so use with extreme caution */
+.f8 {
+  font-size: .50rem; }
+
+/* Small and hard to read for many people so use with extreme caution */
 /*
 
    TYPOGRAPHY
@@ -5081,6 +5085,8 @@ code, .code {
     font-size: .875rem; }
   .f7-ns {
     font-size: .75rem; }
+  .f8-ns {
+    font-size: .50rem; }
   .measure-ns {
     max-width: 30em; }
   .measure-wide-ns {
@@ -6041,6 +6047,8 @@ code, .code {
     font-size: .875rem; }
   .f7-m {
     font-size: .75rem; }
+  .f8-m {
+    font-size: .50rem; }
   .measure-m {
     max-width: 30em; }
   .measure-wide-m {
@@ -7001,6 +7009,8 @@ code, .code {
     font-size: .875rem; }
   .f7-l {
     font-size: .75rem; }
+  .f8-l {
+    font-size: .50rem; }
   .measure-l {
     max-width: 30em; }
   .measure-wide-l {
@@ -7053,9 +7063,6 @@ code, .code {
 
 .h6 {
   height: 25rem; }
-
-.f8 {
-  font-size: 0.20rem; }
 
 .f9 {
   font-size: 0.18rem; }
