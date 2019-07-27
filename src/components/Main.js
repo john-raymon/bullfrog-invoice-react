@@ -35,13 +35,13 @@ class Main extends Component {
         <main>
           <Switch>
             <Route exact path={this.props.match.path} component={Dashboard} />
-            <Route path={this.props.match.path + 'invoices/new/:draftId'} component={CreateInvoice} />
             <Route exact path={this.props.match.path + 'invoices/new/unknown'} render={() => {
-                //this.props.history.push(`/invoices/new/${createUUID()}`)
-                return <Redirect
-                    to={`/invoices/new/${createUUID()}`}
-                  />
-              }} />
+                  //this.props.history.push(`/invoices/new/${createUUID()}`)
+                  return <Redirect
+                      to={`/invoices/new/${createUUID()}`}
+                    />
+                }} />
+            <Route path={this.props.match.path + 'invoices/new/:draftId'} component={CreateInvoice} />
             <Route path={`${this.props.match.path}settings`} component={Settings} />
             <Route path={`${this.props.match.path}invoices/pdf/:invoiceId`} exact component={PDFInvoice} />
             <Route path="/*" component={NotFound} />
