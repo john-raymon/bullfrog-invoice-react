@@ -125,7 +125,7 @@ class ExpandingRow extends Component {
                           { lineItem.uom || 'UOM'}
                         </p>
                         <div className="ArrowIcon self-center rotate-90"><Arrow /></div>
-                        <select onChange={(e) => this.props.handleLineItemChange(e, roomUUID, lineItemUUID)} name="uom" className="absolute z-2 top-0 left-0 w-100 h-100 o-0 pointer ttc">
+                        <select value={lineItem.uom} onChange={(e) => this.props.handleLineItemChange(e, roomUUID, lineItemUUID)} name="uom" className="absolute z-2 top-0 left-0 w-100 h-100 o-0 pointer ttc">
                           <option value="CY">cubic yard</option>
                           <option value="DA">day</option>
                           <option value="EA">each</option>
@@ -327,7 +327,7 @@ class LineItems extends Component {
                             { this.props.newLineItemUOM || 'UOM'}
                           </p>
                           <div className="ArrowIcon self-center rotate-90"><Arrow /></div>
-                          <select onChange={this.props.handleChange} name="newLineItemUOM" className="absolute z-2 top-0 left-0 w-100 h-100 o-0 pointer ttc">
+                          <select onChange={this.props.handleChange} name="newLineItemUOM" value={this.props.newLineItemUOM} className="absolute z-2 top-0 left-0 w-100 h-100 o-0 pointer ttc">
                             <option value="CY">cubic yard</option>
                             <option value="DA">day</option>
                             <option value="EA">each</option>
